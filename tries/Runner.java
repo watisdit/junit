@@ -32,7 +32,7 @@ public class Runner {
 			invokeMethod(test, method);
 		}
 	}
-	
+
 	private void runCompatibleTest(Class testClass) {
 		List<junit.framework.Test> compatibleTests= getCompatibleTests(testClass);
 		TestResult result= new TestResult();
