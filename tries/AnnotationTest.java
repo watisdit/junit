@@ -173,17 +173,44 @@ public class AnnotationTest extends TestCase {
 		assertEquals(2, tests.size());
 	}
 	
-//	static public class OldTest extends TestCase {
-//		public void test() {
-//			run= true;
-//		}
-//	}
-//	public void testOldTest() throws Exception {
-//		Runner runner= new Runner();
-//		runner.run(OldTest.class);
-//		assertTrue(run);
-//	}
+	static public class OldTest extends TestCase {
+		public void test() {
+			run= true;
+		}
+	}
+	public void testOldTest() throws Exception {
+		Runner runner= new Runner();
+		runner.run(OldTest.class);
+		assertTrue(run);
+	}
 	
+	static public class ExceptionTest {
+		@Test
+		@Expected( Error.class)
+		public void expectedException() {
+			throw new Error();
+		}
+	}
+	
+	public void testException() throws Exception {
+		Runner runner= new Runner();
+		runner.run(ExceptionTest.class);
+		assertEquals(0, runner.getFailureCount());
+	}
+	
+	static public class NoExceptionTest {
+		@Test
+		@Expected( Error.class)
+		public void expectedException() {
+		}
+	}
+
+	public void testExceptionNotThrown() throws Exception {
+		Runner runner= new Runner();
+		runner.run(NoExceptionTest.class);
+		assertEquals(1, runner.getFailureCount());
+	}
+
 	//TODO: Non-public void
 	//TODO: Inherited test methods
 	//TODO: Inherited before methods (make sure overriding works correctly)
