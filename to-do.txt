@@ -1,0 +1,32 @@
+Vision: lower the barriers to entry and enable more sophisticated testing
+
+Items
+*	(separate VM for the runners)
+*   annotation support
+		no need to inherit from test case
+			annotating test
+			annotating setup/teardown
+			annotating expected exceptions
+*  use 1.5 features
+		generify
+		no longer use Vector
+		use Enums, varargs, static imports, enhanced for
+		compatibility with the assert keyword
+*   support testing  run once initialization code
+*	deprecate test suites
+		need a way to describe collections of tests
+*	compatbility with 3.8
+		need a compatibility test suite
+		add an ant compatbility
+*	enable tighther and more flexible IDE integration
+		enable test reordering/prioritization
+			run failures first
+*	dump the graphical runners
+*  get 100% coverage
+* 	logging support
+* 	test listening (test run listener)
+*     we should look into a test execution model which doesn't recquire
+      that all test objects are instantiated during the test run.
+      This might come hand in hand when revisiting the
+      test suites
+

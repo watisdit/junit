@@ -6,10 +6,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -32,7 +33,7 @@ import java.util.zip.ZipFile;
 
 public class TestCaseClassLoader extends ClassLoader {
 	/** scanned class path */
-	private Vector fPathItems;
+	private List<String> fPathItems;
 	/** default excluded paths */
 	private String[] defaultExclusions= {
 		"junit.framework.", 
@@ -42,7 +43,7 @@ public class TestCaseClassLoader extends ClassLoader {
 	/** name of excluded properties file */
 	static final String EXCLUDED_FILE= "excluded.properties";
 	/** excluded paths */
-	private Vector fExcluded;
+	private List<String> fExcluded;
 	 
 	/**
 	 * Constructs a TestCaseLoader. It scans the class path
@@ -63,10 +64,10 @@ public class TestCaseClassLoader extends ClassLoader {
 
 	private void scanPath(String classPath) {
 		String separator= System.getProperty("path.separator");
-		fPathItems= new Vector(10);
+		fPathItems= new ArrayList<String>(10);
 		StringTokenizer st= new StringTokenizer(classPath, separator);
 		while (st.hasMoreTokens()) {
-			fPathItems.addElement(st.nextToken());
+			fPathItems.add(st.nextToken());
 		}
 	}
 	
@@ -80,14 +81,14 @@ public class TestCaseClassLoader extends ClassLoader {
 	
 	public boolean isExcluded(String name) {
 		for (int i= 0; i < fExcluded.size(); i++) {
-			if (name.startsWith((String) fExcluded.elementAt(i))) {
+			if (name.startsWith((String) fExcluded.get(i))) {
 				return true;
 			}
 		}
 		return false;	
 	}
 	
-	public synchronized Class loadClass(String name, boolean resolve)
+	public synchronized Class<?> loadClass(String name, boolean resolve)
 		throws ClassNotFoundException {
 			
 		Class c= findLoadedClass(name);
@@ -119,7 +120,7 @@ public class TestCaseClassLoader extends ClassLoader {
 	private byte[] lookupClassData(String className) throws ClassNotFoundException {
 		byte[] data= null;
 		for (int i= 0; i < fPathItems.size(); i++) {
-			String path= (String) fPathItems.elementAt(i);
+			String path= (String) fPathItems.get(i);
 			String fileName= className.replace('.', '/')+".class";
 			if (isJar(path)) {
 				data= loadJarData(path, fileName);
@@ -206,9 +207,9 @@ public class TestCaseClassLoader extends ClassLoader {
 	}
 	
 	private void readExcludedPackages() {		
-		fExcluded= new Vector(10);
+		fExcluded= new ArrayList<String>(10);
 		for (int i= 0; i < defaultExclusions.length; i++)
-			fExcluded.addElement(defaultExclusions[i]);
+			fExcluded.add(defaultExclusions[i]);
 			
 		InputStream is= getClass().getResourceAsStream(EXCLUDED_FILE);
 		if (is == null) 
@@ -233,7 +234,7 @@ public class TestCaseClassLoader extends ClassLoader {
 				if (path.endsWith("*"))
 					path= path.substring(0, path.length()-1);
 				if (path.length() > 0) 
-					fExcluded.addElement(path);				
+					fExcluded.add(path);				
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 package junit.framework;
 
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A <code>TestResult</code> collects the results of executing
@@ -13,16 +13,16 @@ import java.util.Vector;
  * @see Test
  */
 public class TestResult extends Object {
-	protected Vector fFailures;
-	protected Vector fErrors;
-	protected Vector fListeners;
+	protected List<TestFailure> fFailures;
+	protected List<TestFailure> fErrors;
+	protected List<TestListener> fListeners;
 	protected int fRunTests;
 	private boolean fStop;
 	
 	public TestResult() {
-		fFailures= new Vector();
-		fErrors= new Vector();
-		fListeners= new Vector();
+		fFailures= new ArrayList<TestFailure>();
+		fErrors= new ArrayList<TestFailure>();
+		fListeners= new ArrayList<TestListener>();
 		fRunTests= 0;
 		fStop= false;
 	}
@@ -31,46 +31,44 @@ public class TestResult extends Object {
 	 * caused the error.
 	 */
 	public synchronized void addError(Test test, Throwable t) {
-		fErrors.addElement(new TestFailure(test, t));
-		for (Enumeration e= cloneListeners().elements(); e.hasMoreElements(); ) {
-			((TestListener)e.nextElement()).addError(test, t);
-		}
+		fErrors.add(new TestFailure(test, t));
+		for (TestListener each : cloneListeners())
+			each.addError(test, t);
 	}
 	/**
 	 * Adds a failure to the list of failures. The passed in exception
 	 * caused the failure.
 	 */
 	public synchronized void addFailure(Test test, AssertionFailedError t) {
-		fFailures.addElement(new TestFailure(test, t));
-		for (Enumeration e= cloneListeners().elements(); e.hasMoreElements(); ) {
-			((TestListener)e.nextElement()).addFailure(test, t);
-		}
+		fFailures.add(new TestFailure(test, t));
+		for (TestListener each : cloneListeners())
+			each.addFailure(test, t);
 	}
 	/**
 	 * Registers a TestListener
 	 */
 	public synchronized void addListener(TestListener listener) {
-		fListeners.addElement(listener);
+		fListeners.add(listener);
 	}
 	/**
 	 * Unregisters a TestListener
 	 */
 	public synchronized void removeListener(TestListener listener) {
-		fListeners.removeElement(listener);
+		fListeners.remove(listener);
 	}
 	/**
 	 * Returns a copy of the listeners.
 	 */
-	private synchronized Vector cloneListeners() {
-		return (Vector)fListeners.clone();
+	private synchronized List<TestListener> cloneListeners() {
+//		return (List<TestListener>) fListeners.clone();
+		return fListeners; //TODO: Just for now, until we can get the clone() problem sorted
 	}
 	/**
 	 * Informs the result that a test was completed.
 	 */
 	public void endTest(Test test) {
-		for (Enumeration e= cloneListeners().elements(); e.hasMoreElements(); ) {
-			((TestListener)e.nextElement()).endTest(test);
-		}
+		for (TestListener each : cloneListeners())
+			each.endTest(test);
 	}
 	/**
 	 * Gets the number of detected errors.
@@ -81,8 +79,8 @@ public class TestResult extends Object {
 	/**
 	 * Returns an Enumeration for the errors
 	 */
-	public synchronized Enumeration errors() {
-		return fErrors.elements();
+	public synchronized List<TestFailure> errors() {
+		return fErrors;
 	}
 	/**
 	 * Gets the number of detected failures.
@@ -93,8 +91,8 @@ public class TestResult extends Object {
 	/**
 	 * Returns an Enumeration for the failures
 	 */
-	public synchronized Enumeration failures() {
-		return fFailures.elements();
+	public synchronized List<TestFailure> failures() {
+		return fFailures;
 	}
 	/**
 	 * Runs a TestCase.
@@ -147,9 +145,8 @@ public class TestResult extends Object {
 		synchronized(this) {
 			fRunTests+= count;
 		}
-		for (Enumeration e= cloneListeners().elements(); e.hasMoreElements(); ) {
-			((TestListener)e.nextElement()).startTest(test);
-		}
+		for (TestListener each : cloneListeners())
+			each.startTest(test);
 	}
 	/**
 	 * Marks that the test run should stop.

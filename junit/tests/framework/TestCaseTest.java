@@ -119,7 +119,7 @@ public class TestCaseTest extends TestCase {
 		};
 		TestResult result= new TestResult();
 		t.run(result);
-		TestFailure failure= (TestFailure) result.errors().nextElement();
+		TestFailure failure= result.errors().get(0);
 		assertEquals("running", failure.thrownException().getMessage());
 	}
 	

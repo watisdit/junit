@@ -1,7 +1,7 @@
 package junit.samples.money;
 
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A MoneyBag defers exchange rate conversions. For example adding 
@@ -15,7 +15,7 @@ import java.util.Vector;
  * different constructors to create a MoneyBag. 
  */ 
 class MoneyBag implements IMoney {
-	private Vector fMonies= new Vector(5);
+	private List<Money> fMonies= new ArrayList<Money>(5);
 
 	static IMoney create(IMoney m1, IMoney m2) {
 		MoneyBag result= new MoneyBag();
@@ -33,21 +33,21 @@ class MoneyBag implements IMoney {
 		return MoneyBag.create(s, this);
 	}
 	void appendBag(MoneyBag aBag) {
-		for (Enumeration e= aBag.fMonies.elements(); e.hasMoreElements(); )
-			appendMoney((Money)e.nextElement());
+		for (Money each : aBag.fMonies)
+			appendMoney(each);
 	}
 	void appendMoney(Money aMoney) {
 		if (aMoney.isZero()) return;
 		IMoney old= findMoney(aMoney.currency());
 		if (old == null) {
-			fMonies.addElement(aMoney);
+			fMonies.add(aMoney);
 			return;
 		}
-		fMonies.removeElement(old);
-		IMoney sum= old.add(aMoney);
+		fMonies.remove(old);
+		Money sum= (Money) old.add(aMoney);
 		if (sum.isZero()) 
 			return;
-		fMonies.addElement(sum);
+		fMonies.add(sum);
 	}
 	public boolean equals(Object anObject) {
 		if (isZero())
@@ -59,21 +59,17 @@ class MoneyBag implements IMoney {
 			if (aMoneyBag.fMonies.size() != fMonies.size())
 				return false;
 
-		    for (Enumeration e= fMonies.elements(); e.hasMoreElements(); ) {
-		        Money m= (Money) e.nextElement();
-				if (!aMoneyBag.contains(m))
+		    for (Money each : fMonies)
+		        if (! aMoneyBag.contains(each))
 					return false;
-			}
 			return true;
 		}
 		return false;
 	}
 	private Money findMoney(String currency) {
-		for (Enumeration e= fMonies.elements(); e.hasMoreElements(); ) {
-			Money m= (Money) e.nextElement();
-			if (m.currency().equals(currency))
-				return m;
-		}
+		for (Money each : fMonies)
+			if (each.currency().equals(currency))
+				return each;
 		return null;
 	}
 	private boolean contains(Money m) {
@@ -83,10 +79,8 @@ class MoneyBag implements IMoney {
 	}
 	public int hashCode() {
 		int hash= 0;
-	    for (Enumeration e= fMonies.elements(); e.hasMoreElements(); ) {
-	        Object m= e.nextElement();
-			hash^= m.hashCode();
-		}
+	    for (Money each : fMonies)
+	        hash^= each.hashCode();
 	    return hash;
 	}
 	public boolean isZero() {
@@ -94,25 +88,20 @@ class MoneyBag implements IMoney {
 	}
 	public IMoney multiply(int factor) {
 		MoneyBag result= new MoneyBag();
-		if (factor != 0) {
-			for (Enumeration e= fMonies.elements(); e.hasMoreElements(); ) {
-				Money m= (Money) e.nextElement();
-				result.appendMoney((Money)m.multiply(factor));
-			}
-		}
+		if (factor != 0)
+			for (Money each : fMonies)
+				result.appendMoney((Money) each.multiply(factor));
 		return result;
 	}
 	public IMoney negate() {
 		MoneyBag result= new MoneyBag();
-	    for (Enumeration e= fMonies.elements(); e.hasMoreElements(); ) {
-	        Money m= (Money) e.nextElement();
-	        result.appendMoney((Money)m.negate());
-		}
+	    for (Money each : fMonies)
+	        result.appendMoney((Money) each.negate());
 		return result;
 	}
 	private IMoney simplify() {
 		if (fMonies.size() == 1)
-			return (IMoney)fMonies.elements().nextElement();
+			return fMonies.iterator().next();
 		return this;
 	}
 	public IMoney subtract(IMoney m) {
@@ -121,8 +110,8 @@ class MoneyBag implements IMoney {
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("{");
-		for (Enumeration e= fMonies.elements(); e.hasMoreElements(); )
-		    buffer.append(e.nextElement());
+		for (Money each : fMonies)
+		    buffer.append(each);
 		buffer.append("}");
 		return buffer.toString();
 	}

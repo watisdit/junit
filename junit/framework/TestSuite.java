@@ -6,8 +6,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A <code>TestSuite</code> is a <code>Composite</code> of Tests.
@@ -100,11 +101,11 @@ public class TestSuite implements Test {
 		PrintWriter writer= new PrintWriter(stringWriter);
 		t.printStackTrace(writer);
 		return stringWriter.toString();
-
 	}
+	
 	private String fName;
 
-	private Vector fTests= new Vector(10);
+	private List<Test> fTests= new ArrayList<Test>(10);
 
     /**
 	 * Constructs an empty TestSuite.
@@ -115,7 +116,7 @@ public class TestSuite implements Test {
 	/**
 	 * Constructs a TestSuite from the given class. Adds all the methods
 	 * starting with "test" as test cases to the suite.
-	 * Parts of this method was written at 2337 meters in the Hueffihuette,
+	 * Parts of this method were written at 2337 meters in the Hueffihuette,
 	 * Kanton Uri
 	 */
 	 public TestSuite(final Class theClass) {
@@ -133,12 +134,10 @@ public class TestSuite implements Test {
 		}
 
 		Class superClass= theClass;
-		Vector names= new Vector();
+		List<String> names= new ArrayList<String>();
 		while (Test.class.isAssignableFrom(superClass)) {
-			Method[] methods= superClass.getDeclaredMethods();
-			for (int i= 0; i < methods.length; i++) {
-				addTestMethod(methods[i], names, theClass);
-			}
+			for (Method each : superClass.getDeclaredMethods())
+				addTestMethod(each, names, theClass);
 			superClass= superClass.getSuperclass();
 		}
 		if (fTests.size() == 0)
@@ -166,8 +165,8 @@ public class TestSuite implements Test {
 	 * @param classes
 	 */
 	public TestSuite (Class[] classes) {
-		for (int i= 0; i < classes.length; i++)
-			addTest(new TestSuite(classes[i]));
+		for (Class each : classes)
+			addTest(new TestSuite(each));
 	}
 	
 	/**
@@ -183,7 +182,7 @@ public class TestSuite implements Test {
 	 * Adds a test to the suite.
 	 */
 	public void addTest(Test test) {
-		fTests.addElement(test);
+		fTests.add(test);
 	}
 
 	/**
@@ -198,10 +197,8 @@ public class TestSuite implements Test {
 	 */
 	public int countTestCases() {
 		int count= 0;
-		for (Enumeration e= tests(); e.hasMoreElements(); ) {
-			Test test= (Test)e.nextElement();
-			count= count + test.countTestCases();
-		}
+		for (Test each : fTests)
+			count+=  each.countTestCases();
 		return count;
 	}
 
@@ -218,11 +215,10 @@ public class TestSuite implements Test {
 	 * Runs the tests and collects their result in a TestResult.
 	 */
 	public void run(TestResult result) {
-		for (Enumeration e= tests(); e.hasMoreElements(); ) {
+		for (Test each : fTests) {
 	  		if (result.shouldStop() )
 	  			break;
-			Test test= (Test)e.nextElement();
-			runTest(test, result);
+			runTest(each, result);
 		}
 	}
 
@@ -242,7 +238,7 @@ public class TestSuite implements Test {
 	 * Returns the test at the given index
 	 */
 	public Test testAt(int index) {
-		return (Test)fTests.elementAt(index);
+		return fTests.get(index);
 	}
 	
 	/**
@@ -255,8 +251,8 @@ public class TestSuite implements Test {
 	/**
 	 * Returns the tests as an enumeration
 	 */
-	public Enumeration tests() {
-		return fTests.elements();
+	public Iterator<Test> tests() {
+		return fTests.iterator();
 	}
 	
 	/**
@@ -267,7 +263,7 @@ public class TestSuite implements Test {
 		return super.toString();
 	 }
 
-	private void addTestMethod(Method m, Vector names, Class theClass) {
+	private void addTestMethod(Method m, List<String> names, Class theClass) {
 		String name= m.getName();
 		if (names.contains(name))
 			return;
@@ -276,7 +272,7 @@ public class TestSuite implements Test {
 				addTest(warning("Test method isn't public: "+m.getName()));
 			return;
 		}
-		names.addElement(name);
+		names.add(name);
 		addTest(createTest(theClass, name));
 	}
 

@@ -3,14 +3,14 @@ package junit.tests.framework;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 
-public class DoublePrecisionAssertTest extends TestCase {
+public class FloatAssertTest extends TestCase {
 
 	/**
 		 * Test for the special Double.NaN value.
 		 */
 	public void testAssertEqualsNaNFails() {
 		try {
-			assertEquals(1.234, Double.NaN, 0.0);
+			assertEquals(1.234f, Float.NaN, 0.0);
 			fail();
 		} catch (AssertionFailedError e) {
 		}
@@ -18,19 +18,19 @@ public class DoublePrecisionAssertTest extends TestCase {
 
 	public void testAssertNaNEqualsFails() {
 		try {
-			assertEquals(Double.NaN, 1.234, 0.0);
+			assertEquals(Float.NaN, 1.234f, 0.0);
 			fail();
 		} catch (AssertionFailedError e) {
 		}
 	}
 
 	public void testAssertNaNEqualsNaN() {
-		assertEquals(Double.NaN, Double.NaN, 0.0);
+		assertEquals(Float.NaN, Float.NaN, 0.0);
 	}
 
 	public void testAssertPosInfinityNotEqualsNegInfinity() {
 		try {
-			assertEquals(Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, 0.0);
+			assertEquals(Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY, 0.0);
 			fail();
 		} catch (AssertionFailedError e) {
 		}
@@ -38,18 +38,26 @@ public class DoublePrecisionAssertTest extends TestCase {
 
 	public void testAssertPosInfinityNotEquals() {
 		try {
-			assertEquals(Double.POSITIVE_INFINITY, 1.23, 0.0);
+			assertEquals(Float.POSITIVE_INFINITY, 1.23f, 0.0);
 			fail();
 		} catch (AssertionFailedError e) {
 		}
 	}
 
 	public void testAssertPosInfinityEqualsInfinity() {
-		assertEquals(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, 0.0);
+		assertEquals(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, 0.0);
 	}
 
 	public void testAssertNegInfinityEqualsInfinity() {
-		assertEquals(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 0.0);
+		assertEquals(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, 0.0);
+	}
+	
+	public void testAllInfinities() {
+		try {
+			assertEquals(Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY);
+			fail();
+		} catch (AssertionFailedError e) {
+		}
 	}
 
 }

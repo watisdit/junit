@@ -24,6 +24,7 @@ public class AllTests {
 		suite.addTestSuite(ComparisonCompactorTest.class);
 		suite.addTestSuite(ComparisonFailureTest.class);
 		suite.addTestSuite(DoublePrecisionAssertTest.class);
+		suite.addTestSuite(FloatAssertTest.class);
 		return suite;
 	}
 	

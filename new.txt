@@ -1,0 +1,18 @@
+Changes between 3.8.1 and 3.8.2
+
+The changes between the versions are minimal. The big change is replacing the much-reviled string comparison
+format with something easier to read and use.
+
+* Running single tests.  junit.ui.TestRunner can be invoked with "-m ClassName.testName" to run a single test.
+
+* TestSuite(Class[]).  There is a new TestSuite constructor that takes an array of classes as a parameter and returns a suite of suites,
+  each of which is constructed from a single class:
+
+* ComparisonFailure shows context. For example, 
+		ComparisonFailure failure= new ComparisonFailure("Mary had a little lamb", "Mary had the little lamb");
+		shows: warning expected:<Mary had [a] little lamb> but was:<Mary had [the] little lamb>
+  Longer prefixes and suffixes are truncated to a fixed size (currently 20):
+		warning expected:<...st of the emergency [broadcasting] system> but was:<...st of the emergency [locating] system>
+
+* ComparisonFailure now offers String getExpected() and String getActual() to facilitate test runners
+  presenting expected and actual results in more effective ways than the generic version above.
