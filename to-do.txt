@@ -29,4 +29,10 @@ Items
       that all test objects are instantiated during the test run.
       This might come hand in hand when revisiting the
       test suites
-
+* update documentation
+  * get rid of excluded.properties
+* get rid of failures and errors distinction
+* Use 1.4 assertion exception
+* be able to specify the order of tests (ewwww....)
+* test categorization & filtering
+* bridge to old testcases

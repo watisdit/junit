@@ -7,8 +7,6 @@ import junit.framework.Test;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 import junit.runner.BaseTestRunner;
-import junit.runner.StandardTestSuiteLoader;
-import junit.runner.TestSuiteLoader;
 import junit.runner.Version;
 
 /**
@@ -84,14 +82,6 @@ public class TestRunner extends BaseTestRunner {
 	static public void runAndWait(Test suite) {
 		TestRunner aTestRunner= new TestRunner();
 		aTestRunner.doRun(suite, true);
-	}
-
-	/**
-	 * Always use the StandardTestSuiteLoader. Overridden from
-	 * BaseTestRunner.
-	 */
-	public TestSuiteLoader getLoader() {
-		return new StandardTestSuiteLoader();
 	}
 
 	public void testFailed(int status, Test test, Throwable t) {
@@ -179,7 +169,7 @@ public class TestRunner extends BaseTestRunner {
 			throw new Exception("Usage: TestRunner [-wait] testCaseName, where name is the name of the TestCase class");
 
 		try {
-			if (!method.equals("")) 
+			if (method != null) 
 				return runSingleMethod(testCase, method, wait);
 			Test suite= getTest(testCase);
 			return doRun(suite, wait);

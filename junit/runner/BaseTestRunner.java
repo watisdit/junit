@@ -204,20 +204,13 @@ public abstract class BaseTestRunner implements TestListener {
 	 * Returns the loaded Class for a suite name.
 	 */
 	protected Class loadSuiteClass(String suiteClassName) throws ClassNotFoundException {
-		return getLoader().load(suiteClassName);
+		return Class.forName(suiteClassName);
 	}
 
 	/**
 	 * Clears the status message.
 	 */
 	protected void clearStatus() { // Belongs in the GUI TestRunner class
-	}
-
-	/**
-	 * Returns the loader to be used.
-	 */
-	public TestSuiteLoader getLoader() {
-		return new StandardTestSuiteLoader();
 	}
 
 	protected boolean useReloadingTestSuiteLoader() {
