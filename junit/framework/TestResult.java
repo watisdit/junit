@@ -60,8 +60,9 @@ public class TestResult extends Object {
 	 * Returns a copy of the listeners.
 	 */
 	private synchronized List<TestListener> cloneListeners() {
-//		return (List<TestListener>) fListeners.clone();
-		return fListeners; //TODO: Just for now, until we can get the clone() problem sorted
+		List<TestListener> result= new ArrayList<TestListener>();
+		result.addAll(fListeners);
+		return result;
 	}
 	/**
 	 * Informs the result that a test was completed.

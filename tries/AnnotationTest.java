@@ -3,6 +3,10 @@ package tries;
 import java.util.HashSet;
 import java.util.Set;
 
+import junit.After;
+import junit.Before;
+import junit.Expected;
+import junit.Test;
 import junit.framework.TestCase;
 
 public class AnnotationTest extends TestCase {
@@ -183,6 +187,16 @@ public class AnnotationTest extends TestCase {
 		runner.run(OldTest.class);
 		assertTrue(run);
 	}
+	//TODO: Old failing test
+	
+//TODO:	static public class OldSuiteTest extends TestCase {
+//		static public void...
+//	}
+//	public void testOldSuiteeTest() throws Exception {
+//		Runner runner= new Runner();
+//		runner.run(OldTest.class);
+//		assertTrue(run);
+//	}
 	
 	static public class ExceptionTest {
 		@Test

@@ -10,6 +10,10 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.After;
+import junit.Before;
+import junit.Expected;
+import junit.Test;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 import junit.framework.TestFailure;
@@ -32,7 +36,7 @@ public class Runner {
 			invokeMethod(test, method);
 		}
 	}
-
+	
 	private void runCompatibleTest(Class testClass) {
 		List<junit.framework.Test> compatibleTests= getCompatibleTests(testClass);
 		TestResult result= new TestResult();
@@ -40,7 +44,7 @@ public class Runner {
 			test.run(result);
 		}
 		fCount+= result.runCount();
-		//TODO: About time to introduce TestFailure...
+		//TODO: About time to introduce TestFailure... maybe...
 		for (TestFailure failure : result.failures()) {
 			fFailures.add(failure.thrownException());
 		}
@@ -164,7 +168,7 @@ public class Runner {
 		try {
 			method.invoke(test, new Object[0]);
 			if (expectedException(method)) {
-				fFailures.add(new AssertionFailedError()); //TODO: Special exception for expected exceptions not thrown?
+				fFailures.add(new AssertionFailedError()); //TODO: Error string specifying exception that should have been thrown
 				failed= true;
 			}
 		} catch (InvocationTargetException e) {
