@@ -4,7 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import junit.After;
+import junit.AfterClass;
 import junit.Before;
+import junit.BeforeClass;
 import junit.Expected;
 import junit.Test;
 import junit.framework.TestCase;
@@ -224,9 +226,70 @@ public class AnnotationTest extends TestCase {
 		runner.run(NoExceptionTest.class);
 		assertEquals(1, runner.getFailureCount());
 	}
+	
+	static public class OneTimeSetup {
+		@BeforeClass public static void once() {
+			count++;
+		}
+		@Test public void one() {};
+		@Test public void two() {};
+	}
+	
+	public void testOneTimeSetup() throws Exception {
+		count= 0;
+		Runner runner= new Runner();
+		runner.run(OneTimeSetup.class);
+		assertEquals(1, count);
+	}
+	
+	static public class OneTimeTeardown {
+		@AfterClass public static void once() {
+			count++;
+		}
+		@Test public void one() {};
+		@Test public void two() {};
+	}
+	
+	public void testOneTimeTeardown() throws Exception {
+		count= 0;
+		Runner runner= new Runner();
+		runner.run(OneTimeTeardown.class);
+		assertEquals(1, count);
+	}
+	
+	static String log;
+	
+	public static class OrderTest {
+		@BeforeClass public static void onceBefore() { log+= "beforeClass "; }
+		@Before public void before() { log += "before "; }
+		@Test public void test() { log += "test "; }
+		@After public void after() { log += "after "; }
+		@AfterClass public static void onceAfter() { log += "afterClass "; }
+	}
+	
+	public void testOrder() throws Exception {
+		log= "";
+		Runner runner= new Runner();
+		runner.run(OrderTest.class);
+		assertEquals("beforeClass before test after afterClass ", log);
+	}
+	
+	static public class NonStaticOneTimeSetup {
+		@BeforeClass public void once() {
+		}
+	}
+	
+	public void testNonStaticOneTimeSetup() throws Exception {
+		Runner runner= new Runner();
+		runner.run(NonStaticOneTimeSetup.class);
+		assertEquals(1, runner.getFailureCount());
+	}
 
-	//TODO: Non-public void
+	//TODO: Test for non-static BeforeClass
+	//TODO: Errors in BeforeClass and AfterClass
+
+	//TODO: Non-public void @Test, @Before, @After
 	//TODO: Inherited test methods
 	//TODO: Inherited before methods (make sure overriding works correctly)
-	//TODO: Run more than one test class (figure out the design for this)
+	//TODO: Run more than one test class (figure out the design for this -- varargs?)
 }

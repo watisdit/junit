@@ -2,15 +2,8 @@ Vision: lower the barriers to entry and enable more sophisticated testing
 
 Items
 *	(separate VM for the runners)
-*   annotation support
-		no need to inherit from test case
-			annotating test
-			annotating setup/teardown
-			annotating expected exceptions
 *  use 1.5 features
-		generify
-		no longer use Vector
-		use Enums, varargs, static imports, enhanced for
+		use varargs
 		compatibility with the assert keyword
 *   support testing  run once initialization code
 *	deprecate test suites
@@ -21,7 +14,6 @@ Items
 *	enable tighther and more flexible IDE integration
 		enable test reordering/prioritization
 			run failures first
-*	dump the graphical runners
 *  get 100% coverage
 * 	logging support
 * 	test listening (test run listener)
@@ -31,8 +23,22 @@ Items
       test suites
 * update documentation
   * get rid of excluded.properties
-* get rid of failures and errors distinction
 * Use 1.4 assertion exception
 * be able to specify the order of tests (ewwww....)
 * test categorization & filtering
 * bridge to old testcases
+* inherited befores and afters
+
+Done
+* annotation support
+		no need to inherit from test case
+			annotating test
+			annotating setup/teardown
+			annotating expected exceptions
+* use 1.5 features
+		use enhanced for
+* dump the graphical runners
+* get rid of failures and errors distinction
+
+
+

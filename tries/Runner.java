@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import junit.After;
+import junit.AfterClass;
 import junit.Before;
+import junit.BeforeClass;
 import junit.Expected;
 import junit.Test;
 import junit.framework.AssertionFailedError;
@@ -29,12 +31,29 @@ public class Runner {
 			runCompatibleTest(testClass);
 			return;
 		}
+		List<Method> beforeMethods= getAnnotatedMethods(testClass, BeforeClass.class);
+		for (Method method : beforeMethods) {
+			if (validateOneTimeMethod(method)) {
+				fFailures.add(new Exception("@beforeClass methods have to be public static")); 
+				return;
+			}
+			method.invoke(null, new Object[0]);
+		}
 		List<Method> methods= getAnnotatedMethods(testClass, Test.class);
 		for (Method method : methods) {
 			Constructor constructor= testClass.getConstructor(new Class[0]);
 			Object test= constructor.newInstance(new Object[0]);
 			invokeMethod(test, method);
 		}
+		List<Method> afterMethods= getAnnotatedMethods(testClass, AfterClass.class);
+		for (Method method : afterMethods) {
+			method.invoke(null, new Object[0]);
+		}
+	}
+
+	//TODO: Have this throw an exception if the method is invalid
+	public static boolean validateOneTimeMethod(Method method) {
+		return !Modifier.isStatic(method.getModifiers());
 	}
 	
 	private void runCompatibleTest(Class testClass) {
