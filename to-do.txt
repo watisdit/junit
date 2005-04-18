@@ -19,14 +19,12 @@ Items
 * 	test listening (test run listener)
 *     we should look into a test execution model which doesn't recquire
       that all test objects are instantiated during the test run.
-      This might come hand in hand when revisiting the
+      This might come hand in handy when revisiting the
       test suites
 * update documentation
   * get rid of excluded.properties
-* Use 1.4 assertion exception
 * be able to specify the order of tests (ewwww....)
 * test categorization & filtering
-* bridge to old testcases
 * inherited befores and afters
 
 Done
@@ -39,8 +37,12 @@ Done
 		use enhanced for
 * dump the graphical runners
 * get rid of failures and errors distinction
+
 *** NEW ***
 * replace old decorators with annotations
   - run count
   - active
   - timeout
+
+
+

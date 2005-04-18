@@ -73,7 +73,7 @@ public class AnnotationTest extends TestCase {
 	public void testRunFailure() throws Exception {
 		Runner runner= new Runner();
 		runner.run(FailureTest.class);
-		assertEquals(1, runner.getTestsRun());
+		assertEquals(1, runner.getRunCount());
 		assertEquals(1, runner.getFailureCount());
 		assertEquals(Exception.class, runner.getFailures().get(0).getClass());
 	}
@@ -96,7 +96,7 @@ public class AnnotationTest extends TestCase {
 	public void testSetupFailure() throws Exception {
 		Runner runner= new Runner();
 		runner.run(SetupFailureTest.class);
-		assertEquals(1, runner.getTestsRun());
+		assertEquals(1, runner.getRunCount());
 		assertEquals(1, runner.getFailureCount());
 		assertEquals(Error.class, runner.getFailures().get(0).getClass());
 		assertFalse(run);
@@ -115,7 +115,7 @@ public class AnnotationTest extends TestCase {
 	public void testTeardownFailure() throws Exception {
 		Runner runner= new Runner();
 		runner.run(TeardownFailureTest.class);
-		assertEquals(1, runner.getTestsRun());
+		assertEquals(1, runner.getRunCount());
 		assertEquals(1, runner.getFailureCount());
 		assertEquals(Error.class, runner.getFailures().get(0).getClass());
 	}
@@ -134,7 +134,7 @@ public class AnnotationTest extends TestCase {
 	public void testTestAndTeardownFailure() throws Exception {
 		Runner runner= new Runner();
 		runner.run(TestAndTeardownFailureTest.class);
-		assertEquals(1, runner.getTestsRun());
+		assertEquals(1, runner.getRunCount());
 		assertEquals(1, runner.getFailureCount());
 		assertEquals(Exception.class, runner.getFailures().get(0).getClass());
 		//TODO: Could also specify that (one way or the other) the run exception wraps the teardown exception

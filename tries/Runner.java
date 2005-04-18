@@ -15,6 +15,7 @@ import junit.AfterClass;
 import junit.Before;
 import junit.BeforeClass;
 import junit.Expected;
+import junit.ITestListener;
 import junit.Test;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
@@ -25,8 +26,9 @@ public class Runner {
 
 	private int fCount= 0;
 	private List<Throwable> fFailures= new ArrayList<Throwable>();
+	private List<ITestListener> fListeners= new ArrayList<ITestListener>();
 
-	public void run(Class testClass) throws Exception {
+	public void run(Class testClass) throws Exception { //TODO: This shouldn't throw, just report any problems
 		if (junit.framework.TestCase.class.isAssignableFrom(testClass)) {
 			runCompatibleTest(testClass);
 			return;
@@ -34,7 +36,7 @@ public class Runner {
 		List<Method> beforeMethods= getAnnotatedMethods(testClass, BeforeClass.class);
 		for (Method method : beforeMethods) {
 			if (validateOneTimeMethod(method)) {
-				fFailures.add(new Exception("@beforeClass methods have to be public static")); 
+				addFailure(new Exception("@beforeClass methods have to be public static")); 
 				return;
 			}
 			method.invoke(null, new Object[0]);
@@ -49,6 +51,15 @@ public class Runner {
 		for (Method method : afterMethods) {
 			method.invoke(null, new Object[0]);
 		}
+		for (ITestListener each : fListeners)
+			each.testRunFinished(this);
+
+	}
+
+	private void addFailure(Throwable exception) {
+		fFailures.add(exception); //TODO Add a TestFailure that includes the test that failed, or perhaps have a family of failures--setup, test, mechanics (e.g. non-void test method)
+		for (ITestListener each : fListeners)
+			each.failure(exception);
 	}
 
 	//TODO: Have this throw an exception if the method is invalid
@@ -56,6 +67,8 @@ public class Runner {
 		return !Modifier.isStatic(method.getModifiers());
 	}
 	
+	//TODO: Think about how to move the compatibility stuff to another class--it's gunking up this one
+	//TODO: This implementation will also not inform test fListeners correctly
 	private void runCompatibleTest(Class testClass) {
 		List<junit.framework.Test> compatibleTests= getCompatibleTests(testClass);
 		TestResult result= new TestResult();
@@ -65,10 +78,10 @@ public class Runner {
 		fCount+= result.runCount();
 		//TODO: About time to introduce TestFailure... maybe...
 		for (TestFailure failure : result.failures()) {
-			fFailures.add(failure.thrownException());
+			addFailure(failure.thrownException());
 		}
 		for (TestFailure failure : result.errors()) {
-			fFailures.add(failure.thrownException());
+			addFailure(failure.thrownException());
 		}
 	}
 
@@ -175,37 +188,39 @@ public class Runner {
 	
 	private void invokeMethod(Object test, Method method) {
 		fCount++;
+		for (ITestListener each : fListeners)
+			each.testStarted(test, method.getName());
 		try {
 			setUp(test);
 		} catch (InvocationTargetException e) {
-			fFailures.add(e.getTargetException());
+			addFailure(e.getTargetException());
 			return;
 		} catch (Throwable e) {
-			fFailures.add(e); // TODO: Write test for this
+			addFailure(e); // TODO: Write test for this
 		}
 		boolean failed= false;
 		try {
 			method.invoke(test, new Object[0]);
 			if (expectedException(method)) {
-				fFailures.add(new AssertionFailedError()); //TODO: Error string specifying exception that should have been thrown
+				addFailure(new AssertionFailedError()); //TODO: Error string specifying exception that should have been thrown
 				failed= true;
 			}
 		} catch (InvocationTargetException e) {
 			if (isUnexpected(e.getTargetException(), method)) {
-				fFailures.add(e.getTargetException());
+				addFailure(e.getTargetException());
 				failed= true;
 			}
 		} catch (Throwable e) {
 			// TODO: Make sure this can't happen
-			fFailures.add(e);
+			addFailure(e);
 		} finally {
 			try {
 				tearDown(test);
 			} catch (InvocationTargetException e) {
 				if (! failed)
-					fFailures.add(e.getTargetException());
+					addFailure(e.getTargetException());
 			} catch (Throwable e) {
-				fFailures.add(e); // TODO: Write test for this
+				addFailure(e); // TODO: Write test for this
 			}
 		}
 	}
@@ -244,7 +259,7 @@ public class Runner {
 		return results;
 	}
 
-	public int getTestsRun() {
+	public int getRunCount() {
 		return fCount;
 	}
 
@@ -254,6 +269,10 @@ public class Runner {
 
 	public List<Throwable> getFailures() {
 		return fFailures;
+	}
+
+	public void addListener(ITestListener listener) {
+		fListeners.add(listener);
 	}
 
 }
