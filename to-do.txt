@@ -5,7 +5,7 @@ Items
 *  use 1.5 features
 		use varargs
 		compatibility with the assert keyword
-*   support testing  run once initialization code
+*   support testing run once initialization code e.g. class Foo {{...}}
 *	deprecate test suites
 		need a way to describe collections of tests
 *	compatbility with 3.8
@@ -13,10 +13,9 @@ Items
 		add an ant compatbility
 *	enable tighther and more flexible IDE integration
 		enable test reordering/prioritization
-			run failures first
+			run failures first (<- this seems like it is up to the runner)
 *  get 100% coverage
-* 	logging support
-* 	test listening (test run listener)
+* 	logging support (runner listeners should handle this?)
 *     we should look into a test execution model which doesn't recquire
       that all test objects are instantiated during the test run.
       This might come hand in handy when revisiting the
@@ -24,10 +23,18 @@ Items
 * update documentation
   * get rid of excluded.properties
 * be able to specify the order of tests (ewwww....)
-* test categorization & filtering
+* test categorization & filtering (<- seems like a runner issue)
 * inherited befores and afters
+* Change the package name to org.junit?
+* forward compatibility test case (subclass of TestCase that runs new-style tests, for use with old runners?)
+* TestFailure and all its cousins (mis-classified @Test method, unexpected exception, ...)
+* replace old decorators with annotations
+  - run count
+  - active
+  - timeout
 
 Done
+* test listening (test run listener)
 * annotation support
 		no need to inherit from test case
 			annotating test
@@ -37,12 +44,6 @@ Done
 		use enhanced for
 * dump the graphical runners
 * get rid of failures and errors distinction
-
-*** NEW ***
-* replace old decorators with annotations
-  - run count
-  - active
-  - timeout
 
 
 

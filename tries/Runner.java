@@ -29,6 +29,7 @@ public class Runner {
 	private List<ITestListener> fListeners= new ArrayList<ITestListener>();
 
 	public void run(Class testClass) throws Exception { //TODO: This shouldn't throw, just report any problems
+		long startTime= System.currentTimeMillis();
 		if (junit.framework.TestCase.class.isAssignableFrom(testClass)) {
 			runCompatibleTest(testClass);
 			return;
@@ -51,9 +52,9 @@ public class Runner {
 		for (Method method : afterMethods) {
 			method.invoke(null, new Object[0]);
 		}
+		long endTime= System.currentTimeMillis();
 		for (ITestListener each : fListeners)
-			each.testRunFinished(this);
-
+			each.testRunFinished(this, endTime - startTime);
 	}
 
 	private void addFailure(Throwable exception) {
@@ -273,6 +274,10 @@ public class Runner {
 
 	public void addListener(ITestListener listener) {
 		fListeners.add(listener);
+	}
+
+	public boolean wasSuccessful() {
+		return getFailureCount() == 0;
 	}
 
 }
