@@ -45,5 +45,13 @@ Done
 * dump the graphical runners
 * get rid of failures and errors distinction
 
-
-
+*** NEW ***
+* replace old decorators with annotations
+  - run count
+  - active
+  - timeout
+* assertEquals for collections (show at which elements the collections differ)
+* replace if check with polymorphism in test runner (use JUNit or annotation style strategy)
+* junit test file converter: convert testFoo() to @Test foo()
+     Suites?
+     Decorators?
