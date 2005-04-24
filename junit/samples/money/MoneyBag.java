@@ -14,10 +14,10 @@ import java.util.List;
  * A MoneyBag is represented as a list of Monies and provides 
  * different constructors to create a MoneyBag. 
  */ 
-class MoneyBag implements IMoney {
+public class MoneyBag implements IMoney {
 	private List<Money> fMonies= new ArrayList<Money>(5);
 
-	static IMoney create(IMoney m1, IMoney m2) {
+	public static IMoney create(IMoney m1, IMoney m2) {
 		MoneyBag result= new MoneyBag();
 		m1.appendTo(result);
 		m2.appendTo(result);
