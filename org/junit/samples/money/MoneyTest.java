@@ -24,7 +24,7 @@ public class MoneyTest {
 		 TestSuite result=  new TestSuite();
 		 result.addTest(new NewTestClassAdapter(MoneyTest.class));
 		 return result;
-	}
+}
 
 	@Before public void setUp() {
 		f12CHF= new Money(12, "CHF");
@@ -38,7 +38,7 @@ public class MoneyTest {
 	
 	@Test public void testBagMultiply() {
 		// {[12 CHF][7 USD]} *2 == {[24 CHF][14 USD]}
-		IMoney expected= MoneyBag.create(new Money(24, "CHF"), new Money(14, "USD"));
+		IMoney expected= MoneyBag.create(new Money(23, "CHF"), new Money(14, "USD"));
 		assertEquals(expected, fMB1.multiply(2)); 
 		assertEquals(fMB1, fMB1.multiply(1));
 		assertTrue(fMB1.multiply(0).isZero());
