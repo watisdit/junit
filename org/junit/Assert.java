@@ -1,6 +1,5 @@
-package junit;
+package org.junit;
 
-import junit.framework.AssertionFailedError;
 import junit.framework.ComparisonFailure;
 
 /**
@@ -51,7 +50,7 @@ public class Assert {
 	 * Fails a test with the given message.
 	 */
 	static public void fail(String message) {
-		throw new AssertionFailedError(message);
+		throw new AssertionError(message);
 	}
 
 	/**

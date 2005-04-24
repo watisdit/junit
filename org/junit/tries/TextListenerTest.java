@@ -1,11 +1,12 @@
-package tries;
+package org.junit.tries;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-import junit.Test;
 import junit.framework.TestCase;
+
+import org.junit.Test;
 
 public class TextListenerTest extends TestCase {
 	
@@ -27,7 +28,7 @@ public class TextListenerTest extends TestCase {
 	
 	public void testSuccess() throws Exception {
 		runner.run(OneTest.class);
-		assertEquals(convert(".\n1 run, 0 failed\n"), results.toString());
+		assertEquals(convert(".\nTime: 0\n\nOK (1 test)\n\n"), results.toString());
 	}
 	
 	public static class ErrorTest {
@@ -36,7 +37,7 @@ public class TextListenerTest extends TestCase {
 	
 	public void testError() throws Exception {
 		runner.run(ErrorTest.class);
-		assertEquals(convert(".E\n1 run, 1 failed\n"), results.toString());
+		assertTrue(results.toString().startsWith(convert(".E\nTime: 0\nThere was 1 failure:\n1)")));
 	}
 	
 	private String convert(String string) {

@@ -1,8 +1,8 @@
-package junit;
+package org.junit;
 
-import tries.Runner;
+import org.junit.tries.Runner;
 
-public interface ITestListener {
+public interface TestListener {
 
 	void testStarted(Object test, String name);
 

@@ -1,15 +1,16 @@
-package tries;
+package org.junit.tries;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.NumberFormat;
 
-import junit.ITestListener;
-import junit.Test;
 import junit.runner.BaseTestRunner;
 
-public class TextListener implements ITestListener {
+import org.junit.Test;
+import org.junit.TestListener;
+
+public class TextListener implements TestListener {
 
 	private final PrintStream fWriter;
 
@@ -25,14 +26,14 @@ public class TextListener implements ITestListener {
 	}
 
 	public TextListener() {
-		this(System.out); // TODO: Should this be error?
+		this(System.out);
 	}
 
 	public TextListener(PrintStream writer) {
 		this.fWriter= writer;
 	}
 
-	// ITestListener implementation
+	// TestListener implementation
 	public void testStarted(Object test, String name) {
 		fWriter.append('.');
 	}
@@ -127,9 +128,7 @@ public class TextListener implements ITestListener {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		Runner runner= new Runner();
-		runner.addListener(new TextListener());
-		runner.run(TwoTests.class);
+		run(TwoTests.class);
 	}
 
 }

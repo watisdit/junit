@@ -1,15 +1,16 @@
-package tries;
+package org.junit.tries;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.After;
-import junit.AfterClass;
-import junit.Before;
-import junit.BeforeClass;
-import junit.Expected;
-import junit.Test;
 import junit.framework.TestCase;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Expected;
+import org.junit.Test;
 
 public class AnnotationTest extends TestCase {
 	static boolean run;
@@ -66,7 +67,7 @@ public class AnnotationTest extends TestCase {
 	static public class FailureTest {
 		@Test
 		public void error() throws Exception {
-			throw new Exception();
+			fail();
 		}
 	}
 	
@@ -75,7 +76,7 @@ public class AnnotationTest extends TestCase {
 		runner.run(FailureTest.class);
 		assertEquals(1, runner.getRunCount());
 		assertEquals(1, runner.getFailureCount());
-		assertEquals(Exception.class, runner.getFailures().get(0).getClass());
+		assertEquals(AssertionError.class, runner.getFailures().get(0).getClass());
 	}
 	
 	static public class SetupFailureTest {
@@ -194,7 +195,7 @@ public class AnnotationTest extends TestCase {
 //TODO:	static public class OldSuiteTest extends TestCase {
 //		static public void...
 //	}
-//	public void testOldSuiteeTest() throws Exception {
+//	public void testOldSuiteTest() throws Exception {
 //		Runner runner= new Runner();
 //		runner.run(OldTest.class);
 //		assertTrue(run);
@@ -286,7 +287,8 @@ public class AnnotationTest extends TestCase {
 	}
 
 	//TODO: Test for non-static BeforeClass
-	//TODO: Errors in BeforeClass and AfterClass
+	//TODO: Errors in BeforeClass-- only one failure, don't run tests
+	//TODO: Errors in AfterClass-- one failure (tests have already run)
 
 	//TODO: Non-public void @Test, @Before, @After
 	//TODO: Inherited test methods

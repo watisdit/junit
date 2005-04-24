@@ -1,4 +1,4 @@
-package tries;
+package org.junit.tries;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -10,23 +10,24 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.After;
-import junit.AfterClass;
-import junit.Before;
-import junit.BeforeClass;
-import junit.Expected;
-import junit.ITestListener;
-import junit.Test;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 import junit.framework.TestFailure;
 import junit.framework.TestResult;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Expected;
+import org.junit.Test;
+import org.junit.TestListener;
+
 public class Runner {
 
 	private int fCount= 0;
 	private List<Throwable> fFailures= new ArrayList<Throwable>();
-	private List<ITestListener> fListeners= new ArrayList<ITestListener>();
+	private List<TestListener> fListeners= new ArrayList<TestListener>();
 
 	public void run(Class testClass) throws Exception { //TODO: This shouldn't throw, just report any problems
 		long startTime= System.currentTimeMillis();
@@ -53,13 +54,13 @@ public class Runner {
 			method.invoke(null, new Object[0]);
 		}
 		long endTime= System.currentTimeMillis();
-		for (ITestListener each : fListeners)
+		for (TestListener each : fListeners)
 			each.testRunFinished(this, endTime - startTime);
 	}
 
 	private void addFailure(Throwable exception) {
-		fFailures.add(exception); //TODO Add a TestFailure that includes the test that failed, or perhaps have a family of failures--setup, test, mechanics (e.g. non-void test method)
-		for (ITestListener each : fListeners)
+		fFailures.add(exception); //TODO Add a TestFailure that includes the test that failed
+		for (TestListener each : fListeners)
 			each.failure(exception);
 	}
 
@@ -189,7 +190,7 @@ public class Runner {
 	
 	private void invokeMethod(Object test, Method method) {
 		fCount++;
-		for (ITestListener each : fListeners)
+		for (TestListener each : fListeners)
 			each.testStarted(test, method.getName());
 		try {
 			setUp(test);
@@ -237,19 +238,19 @@ public class Runner {
 		return ! annotation.value().equals(exception.getClass());
 	}
 
-	private void tearDown(Object test) throws Exception {
+	static public void tearDown(Object test) throws Exception {
 		List<Method> afters= getAnnotatedMethods(test.getClass(), After.class);
 		for (Method after : afters)
 			after.invoke(test, new Object[0]);
 	}
 
-	private void setUp(Object test) throws Exception {
+	static public void setUp(Object test) throws Exception {
 		List<Method> befores= getAnnotatedMethods(test.getClass(), Before.class);
 		for (Method before : befores)
 			before.invoke(test, new Object[0]);
 	}
 
-	public List<Method> getAnnotatedMethods(Class klass, Class annotationClass) {
+	static public List<Method> getAnnotatedMethods(Class klass, Class annotationClass) {
 		List<Method> results= new ArrayList<Method>();
 		Method[] methods= klass.getMethods();
 		for (Method each : methods) {
@@ -272,7 +273,7 @@ public class Runner {
 		return fFailures;
 	}
 
-	public void addListener(ITestListener listener) {
+	public void addListener(TestListener listener) {
 		fListeners.add(listener);
 	}
 
