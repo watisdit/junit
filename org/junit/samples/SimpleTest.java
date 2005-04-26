@@ -20,7 +20,7 @@ public class SimpleTest  {
 	}
 	
 	public static junit.framework.Test suite() {
-		 return new NewTestClassAdapter(SimpleTest.class);
+		 return new NewTestClassAdapter<SimpleTest>(SimpleTest.class);
 	}
 
 	@Test public void testDivideByZero() {

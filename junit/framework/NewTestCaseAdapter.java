@@ -1,4 +1,4 @@
-package junit.framework;
+package junit.framework; 
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -35,4 +35,8 @@ public class NewTestCaseAdapter extends TestCase {
 		JUnit4TestRunner.tearDown(fTest);
 	}
 
+	@Override
+	public String getName() {
+		return fMethod.getName();
+	}
 }

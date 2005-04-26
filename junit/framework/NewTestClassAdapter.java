@@ -1,4 +1,4 @@
-package junit.framework;
+package junit.framework; 
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -10,12 +10,12 @@ import org.junit.BeforeClass;
 import org.junit.Expected;
 import org.junit.tries.JUnit4TestRunner;
 
-public class NewTestClassAdapter implements Test {
+public class NewTestClassAdapter<T> implements Test {
 
 	private List<Method> fMethods;
-	private final Class fNewTestClass;
+	private final Class<T> fNewTestClass;
 
-	public NewTestClassAdapter(Class newTestClass) {
+	public NewTestClassAdapter(Class<T> newTestClass) {
 		fNewTestClass= newTestClass;
 		fMethods= getTestMethods(newTestClass);
 	}
