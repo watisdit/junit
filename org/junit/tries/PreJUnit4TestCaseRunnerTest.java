@@ -36,7 +36,7 @@ public class PreJUnit4TestCaseRunnerTest {
 		count= 0;
 		runner.run(OneTest.class);
 		assertEquals(1, count);
-		assertEquals(2, runner.getRunCount());
+		assertEquals(1, runner.getRunCount());
 	}
 	
 	public static junit.framework.Test suite() {

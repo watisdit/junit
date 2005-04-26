@@ -32,7 +32,6 @@ public class PreJUnit4TestCaseRunner implements TestListener {
 		for (junit.framework.Test test : compatibleTests) {
 			test.run(result);
 		}
-		fRunner.incrementCount(result.runCount());
 	}
 
 	private List<junit.framework.Test> getCompatibleTests() {

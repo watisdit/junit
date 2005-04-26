@@ -50,16 +50,12 @@ public class Runner {
 		return getFailureCount() == 0;
 	}
 
-	public void incrementCount(int i) {
-		fCount+= i;
-	}
-
 	List<TestListener> getListeners() {
 		return fListeners;
 	}
 
 	void startTestCase(Object test, String name) {
-		incrementCount(1);
+		fCount++;
 		for (TestListener each : getListeners())
 			each.testStarted(test, name);
 	}
