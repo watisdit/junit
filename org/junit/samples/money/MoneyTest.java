@@ -21,10 +21,8 @@ public class MoneyTest {
 	private IMoney fMB2;
 
 	public static junit.framework.Test suite() {
-		 TestSuite result=  new TestSuite();
-		 result.addTest(new NewTestClassAdapter(MoneyTest.class));
-		 return result;
-}
+		 return new NewTestClassAdapter(MoneyTest.class);
+	}
 
 	@Before public void setUp() {
 		f12CHF= new Money(12, "CHF");
