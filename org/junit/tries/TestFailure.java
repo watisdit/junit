@@ -3,6 +3,8 @@ package org.junit.tries;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import junit.framework.TestResult;
+
 
 /**
  * A <code>TestFailure</code> collects a failed test together with

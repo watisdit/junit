@@ -4,10 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import junit.framework.NewTestClassAdapter;
-import junit.framework.TestSuite;
 import junit.samples.money.IMoney;
 import junit.samples.money.Money;
 import junit.samples.money.MoneyBag;
+
 import org.junit.Before;
 import org.junit.Test;
 

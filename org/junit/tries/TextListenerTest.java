@@ -27,6 +27,7 @@ public class TextListenerTest extends TestCase {
 	}
 	
 	public void testSuccess() throws Exception {
+		// TODO: Make this run time independent. It fails sometimes now because the tests take 1/100th of a second
 		runner.run(OneTest.class);
 		assertEquals(convert(".\nTime: 0\n\nOK (1 test)\n\n"), results.toString());
 	}

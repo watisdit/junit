@@ -67,7 +67,7 @@ public class AnnotationTest extends TestCase {
 	static public class FailureTest {
 		@Test
 		public void error() throws Exception {
-			fail();
+			org.junit.Assert.fail();
 		}
 	}
 	

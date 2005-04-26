@@ -5,14 +5,19 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Expected;
+import org.junit.tries.JUnit4TestRunner;
+
 public class NewTestClassAdapter implements Test {
 
-	private List<Method> methods;
+	private List<Method> fMethods;
 	private final Class fNewTestClass;
 
 	public NewTestClassAdapter(Class newTestClass) {
 		fNewTestClass= newTestClass;
-		methods= getTestMethods(newTestClass);
+		fMethods= getTestMethods(newTestClass);
 	}
 
 	private List<Method> getTestMethods(Class newTestClass) {
@@ -27,19 +32,42 @@ public class NewTestClassAdapter implements Test {
 	}
 
 	public int countTestCases() {
-		return methods.size();
+		return fMethods.size();
 	}
 
 	public void run(TestResult result) {
-		for (Method method : methods) {
-			Object test= null;
+		try {
+			oneTimeSetUp();
 			try {
-				test= fNewTestClass.newInstance();
-			} catch (Exception e) {
-				result.addError(this, e);
+				runTests(result);
+			} finally {
+				oneTimeTearDown();
 			}
-			TestCase wrapper= new NewTestCaseAdapter(test, method);
+		} catch (Exception e) {
+			result.addError(this, e);
+		}
+	}
+
+	private void oneTimeSetUp() throws Exception {
+		List<Method> beforeMethods= JUnit4TestRunner.getAnnotatedMethods(fNewTestClass, BeforeClass.class);
+		for (Method method : beforeMethods) {
+			method.invoke(null, new Object[0]);
+		}
+	}
+	
+	private void runTests(TestResult result) throws Exception {
+		for (Method method : fMethods) {
+			Object test= fNewTestClass.newInstance();
+			Expected annotation= method.getAnnotation(Expected.class); // Can safely be null
+			TestCase wrapper= new NewTestCaseAdapter(test, method, annotation);
 			result.run(wrapper);
+		}
+	}
+	
+	private void oneTimeTearDown() throws Exception {
+		List<Method> beforeMethods= JUnit4TestRunner.getAnnotatedMethods(fNewTestClass, AfterClass.class);
+		for (Method method : beforeMethods) {
+			method.invoke(null, new Object[0]);
 		}
 	}
 

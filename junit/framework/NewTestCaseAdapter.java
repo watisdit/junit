@@ -3,32 +3,36 @@ package junit.framework;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.junit.tries.Runner;
+import org.junit.Expected;
+import org.junit.tries.JUnit4TestRunner;
 
 public class NewTestCaseAdapter extends TestCase {
 
 	private final Object fTest;
 	private final Method fMethod;
+	private final Expected fExpected;
 
-	public NewTestCaseAdapter(Object test, Method method) {
+	public NewTestCaseAdapter(Object test, Method method, Expected annotation) {
 		fTest= test;
 		fMethod= method;
+		fExpected= annotation;
 	}
 
 	protected void runTest() throws Throwable {
 		try {
 			fMethod.invoke(fTest, new Object[0]);
 		} catch (InvocationTargetException e) {
-			throw e.getCause();
+			if (fExpected == null || JUnit4TestRunner.isUnexpected(e.getCause(), fMethod))
+				throw e.getCause();
 		}
 	}
 
 	protected void setUp() throws Exception {
-		Runner.setUp(fTest);
+		JUnit4TestRunner.setUp(fTest);
 	}
 
 	protected void tearDown() throws Exception {
-		Runner.tearDown(fTest);
+		JUnit4TestRunner.tearDown(fTest);
 	}
 
 }
