@@ -21,7 +21,7 @@ public class MoneyTest {
 	private IMoney fMB2;
 
 	public static junit.framework.Test suite() {
-		 return new NewTestClassAdapter<MoneyTest>(MoneyTest.class);
+		 return new NewTestClassAdapter(MoneyTest.class);
 	}
 
 	@Before public void setUp() {

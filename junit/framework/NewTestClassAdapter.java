@@ -10,12 +10,12 @@ import org.junit.BeforeClass;
 import org.junit.Expected;
 import org.junit.tries.JUnit4TestRunner;
 
-public class NewTestClassAdapter<T> implements Test {
+public class NewTestClassAdapter implements Test {
 
 	private List<Method> fMethods;
-	private final Class<T> fNewTestClass;
+	private final Class<Object> fNewTestClass;
 
-	public NewTestClassAdapter(Class<T> newTestClass) {
+	public NewTestClassAdapter(Class newTestClass) {
 		fNewTestClass= newTestClass;
 		fMethods= getTestMethods(newTestClass);
 	}
