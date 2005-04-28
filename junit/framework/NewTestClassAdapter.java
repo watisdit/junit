@@ -13,9 +13,9 @@ import org.junit.tries.JUnit4TestRunner;
 public class NewTestClassAdapter implements Test {
 
 	private List<Method> fMethods;
-	private final Class<Object> fNewTestClass;
+	private final Class<? extends Object> fNewTestClass;
 
-	public NewTestClassAdapter(Class newTestClass) {
+	public NewTestClassAdapter(Class<? extends Object> newTestClass) {
 		fNewTestClass= newTestClass;
 		fMethods= getTestMethods(newTestClass);
 	}
