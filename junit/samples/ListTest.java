@@ -44,12 +44,12 @@ public class ListTest extends TestCase {
 		assertTrue(!fEmpty.contains(new Integer(1)));
 	}
 	public void testElementAt() {
-		Integer i= (Integer)fFull.get(0);
+		Integer i= fFull.get(0);
 		assertTrue(i.intValue() == 1);
 
 		try { 
 			fFull.get(fFull.size());
-		} catch (ArrayIndexOutOfBoundsException e) {
+		} catch (IndexOutOfBoundsException e) {
 			return;
 		}
 		fail("Should raise an ArrayIndexOutOfBoundsException");
