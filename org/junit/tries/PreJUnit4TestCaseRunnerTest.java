@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.junit.TestListener;
 import static org.junit.Assert.*;
 
-import junit.framework.NewTestClassAdapter;
+import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 
 public class PreJUnit4TestCaseRunnerTest {
@@ -40,6 +40,6 @@ public class PreJUnit4TestCaseRunnerTest {
 	}
 	
 	public static junit.framework.Test suite() {
-		return (new NewTestClassAdapter(PreJUnit4TestCaseRunnerTest.class));
+		return (new JUnit4TestAdapter(PreJUnit4TestCaseRunnerTest.class));
 	}
 }

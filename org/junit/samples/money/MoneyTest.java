@@ -3,7 +3,7 @@ package org.junit.samples.money;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import junit.framework.NewTestClassAdapter;
+import junit.framework.JUnit4TestAdapter;
 import junit.samples.money.IMoney;
 import junit.samples.money.Money;
 import junit.samples.money.MoneyBag;
@@ -21,7 +21,7 @@ public class MoneyTest {
 	private IMoney fMB2;
 
 	public static junit.framework.Test suite() {
-		 return new NewTestClassAdapter(MoneyTest.class);
+		 return new JUnit4TestAdapter(MoneyTest.class);
 	}
 
 	@Before public void setUp() {

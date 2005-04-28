@@ -27,9 +27,9 @@ public class TextListenerTest extends TestCase {
 	}
 	
 	public void testSuccess() throws Exception {
-		// TODO: Make this run time independent. It fails sometimes now because the tests take 1/100th of a second
 		runner.run(OneTest.class);
-		assertEquals(convert(".\nTime: 0\n\nOK (1 test)\n\n"), results.toString());
+		assertTrue(results.toString().startsWith(convert(".\nTime: ")));
+		assertTrue(results.toString().endsWith(convert("\n\nOK (1 test)\n\n")));
 	}
 	
 	public static class ErrorTest {
@@ -38,7 +38,8 @@ public class TextListenerTest extends TestCase {
 	
 	public void testError() throws Exception {
 		runner.run(ErrorTest.class);
-		assertTrue(results.toString().startsWith(convert(".E\nTime: 0\nThere was 1 failure:\n1)")));
+		assertTrue(results.toString().startsWith(convert(".E\nTime: ")));
+		assertTrue(results.toString().indexOf(convert("\nThere was 1 failure:\n1)")) != -1); //TODO: Append the test case name to force implementation of TestFailure
 	}
 	
 	private String convert(String string) {

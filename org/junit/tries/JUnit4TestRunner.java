@@ -8,8 +8,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.AssertionFailedError;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,7 +15,7 @@ import org.junit.BeforeClass;
 import org.junit.Expected;
 import org.junit.Test;
 
-public class JUnit4TestRunner {
+public class JUnit4TestRunner implements RunnerStrategy {
 	private Runner fRunner;
 	private final Class fTestClass;
 
@@ -26,24 +24,28 @@ public class JUnit4TestRunner {
 		fTestClass= testClass;
 	}
 
-	void run() throws Exception {
-		List<Method> beforeMethods= getAnnotatedMethods(fTestClass, BeforeClass.class);
-		for (Method method : beforeMethods) {
-			if (validateOneTimeMethod(method)) {
-				addFailure(new Exception("@beforeClass methods have to be public static"));
-				return;
+	public void run() {
+//TODO:		List<Throwable> errors= validateTestMethods();
+//		if (! errors.isEmpty()) {
+//			for (Throwable each : errors) 
+//				addFailure(each);
+//			return;
+//		}
+		try {
+			List<Method> beforeMethods= getStaticTestMethods(fTestClass, BeforeClass.class);
+			for (Method method : beforeMethods)
+				method.invoke(null, new Object[0]);
+			List<Method> methods= getTestMethods(fTestClass, Test.class);
+			for (Method method : methods) {
+				Constructor constructor= fTestClass.getConstructor(new Class[0]);
+				Object test= constructor.newInstance(new Object[0]);
+				invokeMethod(test, method);
 			}
-			method.invoke(null, new Object[0]);
-		}
-		List<Method> methods= getAnnotatedMethods(fTestClass, Test.class);
-		for (Method method : methods) {
-			Constructor constructor= fTestClass.getConstructor(new Class[0]);
-			Object test= constructor.newInstance(new Object[0]);
-			invokeMethod(test, method);
-		}
-		List<Method> afterMethods= getAnnotatedMethods(fTestClass, AfterClass.class);
-		for (Method method : afterMethods) {
-			method.invoke(null, new Object[0]);
+			List<Method> afterMethods= getStaticTestMethods(fTestClass, AfterClass.class);
+			for (Method method : afterMethods)
+				method.invoke(null, new Object[0]);
+		} catch (Exception e) {
+			addFailure(e);
 		}
 	}
 
@@ -51,12 +53,18 @@ public class JUnit4TestRunner {
 		fRunner.addFailure(exception); // TODO Add a TestFailure that includes the test that failed
 	}
 
-	// TODO: Have this throw an exception if the method is invalid
-	public static boolean validateOneTimeMethod(Method method) {
-		return !Modifier.isStatic(method.getModifiers());
+	public static void validateTestMethod(Method method, boolean isStatic) throws Exception {
+		if (Modifier.isStatic(method.getModifiers()) != isStatic) {
+			String state= isStatic ? "should" : "should not";
+			throw new Exception("Method " + method.getName() + "() " + state + " be static");
+		}
+		if (!Modifier.isPublic(method.getModifiers()))
+			throw new Exception("Method " + method.getName() + " should be public");
+		if (method.getReturnType() != Void.TYPE)
+			throw new Exception("Method " + method.getName() + " should be void");
+		if (method.getParameterTypes().length != 0)
+			throw new Exception("Method " + method.getName() + " should have no parameters");
 	}
-
-	// TODO: public void run(TestSuite suite) ...
 
 	private void invokeMethod(Object test, Method method) {
 		fRunner.startTestCase(test, method.getName());
@@ -68,18 +76,15 @@ public class JUnit4TestRunner {
 		} catch (Throwable e) {
 			addFailure(e); // TODO: Write test for this
 		}
-		boolean failed= false;
 		try {
 			method.invoke(test, new Object[0]);
-			if (expectedException(method)) {
-				addFailure(new AssertionFailedError()); // TODO: Error string specifying exception that should have been thrown
-				failed= true;
+			Expected expected= expectedException(method);
+			if (expected != null) {
+				addFailure(new AssertionError("Expected exception: "  + expected.value().getName()));
 			}
 		} catch (InvocationTargetException e) {
-			if (isUnexpected(e.getTargetException(), method)) {
+			if (isUnexpected(e.getTargetException(), method))
 				addFailure(e.getTargetException());
-				failed= true;
-			}
 		} catch (Throwable e) {
 			// TODO: Make sure this can't happen
 			addFailure(e);
@@ -87,16 +92,15 @@ public class JUnit4TestRunner {
 			try {
 				tearDown(test);
 			} catch (InvocationTargetException e) {
-				if (!failed)
-					addFailure(e.getTargetException());
+				addFailure(e.getTargetException());
 			} catch (Throwable e) {
 				addFailure(e); // TODO: Write test for this
 			}
 		}
 	}
 
-	private boolean expectedException(Method method) {
-		return method.getAnnotation(Expected.class) != null;
+	private Expected expectedException(Method method) {
+		return method.getAnnotation(Expected.class);
 	}
 
 	public static boolean isUnexpected(Throwable exception, Method method) {
@@ -107,24 +111,34 @@ public class JUnit4TestRunner {
 	}
 
 	static public void tearDown(Object test) throws Exception {
-		List<Method> afters= getAnnotatedMethods(test.getClass(), After.class);
+		List<Method> afters= getTestMethods(test.getClass(), After.class);
 		for (Method after : afters)
 			after.invoke(test, new Object[0]);
 	}
 
 	static public void setUp(Object test) throws Exception {
-		List<Method> befores= getAnnotatedMethods(test.getClass(), Before.class);
+		List<Method> befores= getTestMethods(test.getClass(), Before.class);
 		for (Method before : befores)
 			before.invoke(test, new Object[0]);
 	}
 
-	static public List<Method> getAnnotatedMethods(Class klass, Class annotationClass) {
+	static public List<Method> getTestMethods(Class klass, Class annotationClass) throws Exception {
+		return getTestMethods(klass, annotationClass, false);
+	}
+
+	static public List<Method> getStaticTestMethods(Class klass, Class annotationClass) throws Exception {
+		return getTestMethods(klass, annotationClass, true);
+	}
+	
+	private static List<Method> getTestMethods(Class klass, Class annotationClass, boolean isStatic) throws Exception {
 		List<Method> results= new ArrayList<Method>();
 		Method[] methods= klass.getMethods();
 		for (Method each : methods) {
 			Annotation annotation= each.getAnnotation(annotationClass);
-			if (annotation != null)
+			if (annotation != null) {
+				validateTestMethod(each, isStatic);
 				results.add(each);
+			}
 		}
 		return results;
 	}

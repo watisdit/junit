@@ -136,9 +136,9 @@ public class AnnotationTest extends TestCase {
 		Runner runner= new Runner();
 		runner.run(TestAndTeardownFailureTest.class);
 		assertEquals(1, runner.getRunCount());
-		assertEquals(1, runner.getFailureCount());
+		assertEquals(2, runner.getFailureCount());
 		assertEquals(Exception.class, runner.getFailures().get(0).getClass());
-		//TODO: Could also specify that (one way or the other) the run exception wraps the teardown exception
+		assertEquals(Error.class, runner.getFailures().get(1).getClass());
 	}
 	
 	static public class TeardownAfterFailureTest {
@@ -190,14 +190,14 @@ public class AnnotationTest extends TestCase {
 		runner.run(OldTest.class);
 		assertTrue(run);
 	}
-	//TODO: Old failing test
 	
 //TODO:	static public class OldSuiteTest extends TestCase {
 //		static public void...
 //	}
 //	public void testOldSuiteTest() throws Exception {
+//		TestSuite suite= new TestSuite(OldSuiteTest.class);
 //		Runner runner= new Runner();
-//		runner.run(OldTest.class);
+//		runner.run(suite);
 //		assertTrue(run);
 //	}
 	
@@ -226,6 +226,7 @@ public class AnnotationTest extends TestCase {
 		Runner runner= new Runner();
 		runner.run(NoExceptionTest.class);
 		assertEquals(1, runner.getFailureCount());
+		assertEquals("Expected exception: java.lang.Error", runner.getFailures().get(0).getMessage());
 	}
 	
 	static public class OneTimeSetup {
@@ -285,8 +286,23 @@ public class AnnotationTest extends TestCase {
 		runner.run(NonStaticOneTimeSetup.class);
 		assertEquals(1, runner.getFailureCount());
 	}
+	
+	static public class NonStaticBeforeClass {
+		@BeforeClass public void wrong() {
+		}
+		@Before public static void alsoWrong() {
+		}
+		//TODO: Enumerate all the possible wrong declarations for all the annotations
+	}
+	
+	public void testNonStaticBeforeClass() throws Exception {
+		try {
+			JUnit4TestRunner.getStaticTestMethods(NonStaticBeforeClass.class, BeforeClass.class);
+		} catch (Exception e) {
+			assertEquals("Method wrong() should be static", e.getMessage());
+		}
+	}
 
-	//TODO: Test for non-static BeforeClass
 	//TODO: Errors in BeforeClass-- only one failure, don't run tests
 	//TODO: Errors in AfterClass-- one failure (tests have already run)
 

@@ -10,12 +10,12 @@ import org.junit.BeforeClass;
 import org.junit.Expected;
 import org.junit.tries.JUnit4TestRunner;
 
-public class NewTestClassAdapter implements Test {
+public class JUnit4TestAdapter implements Test {
 
 	private List<Method> fMethods;
 	private final Class<? extends Object> fNewTestClass;
 
-	public NewTestClassAdapter(Class<? extends Object> newTestClass) {
+	public JUnit4TestAdapter(Class<? extends Object> newTestClass) {
 		fNewTestClass= newTestClass;
 		fMethods= getTestMethods(newTestClass);
 	}
@@ -49,26 +49,24 @@ public class NewTestClassAdapter implements Test {
 	}
 
 	private void oneTimeSetUp() throws Exception {
-		List<Method> beforeMethods= JUnit4TestRunner.getAnnotatedMethods(fNewTestClass, BeforeClass.class);
-		for (Method method : beforeMethods) {
+		List<Method> beforeMethods= JUnit4TestRunner.getStaticTestMethods(fNewTestClass, BeforeClass.class);
+		for (Method method : beforeMethods)
 			method.invoke(null, new Object[0]);
-		}
 	}
 	
 	private void runTests(TestResult result) throws Exception {
 		for (Method method : fMethods) {
 			Object test= fNewTestClass.newInstance();
 			Expected annotation= method.getAnnotation(Expected.class); // Can safely be null
-			TestCase wrapper= new NewTestCaseAdapter(test, method, annotation);
+			TestCase wrapper= new JUnit4TestCaseAdapter(test, method, annotation);
 			result.run(wrapper);
 		}
 	}
 	
 	private void oneTimeTearDown() throws Exception {
-		List<Method> beforeMethods= JUnit4TestRunner.getAnnotatedMethods(fNewTestClass, AfterClass.class);
-		for (Method method : beforeMethods) {
+		List<Method> beforeMethods= JUnit4TestRunner.getStaticTestMethods(fNewTestClass, AfterClass.class);
+		for (Method method : beforeMethods)
 			method.invoke(null, new Object[0]);
-		}
 	}
 
 	@Override

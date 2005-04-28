@@ -1,9 +1,15 @@
-Vision: lower the barriers to entry and enable more sophisticated testing
+Theme: lower the barriers to entry and enable more sophisticated testing
 
-Items
-*  use 1.5 features
-		use varargs
-		compatibility with the assert keyword
+Before first public candidate release:
+!*  warn when an annotated test method isn't public (check for Before, After, BeforeClass, AfterClass and Test)
+!* update documentation
+  * get rid of excluded.properties
+!* inherited befores and afters and tests (be careful to not run overridden methods)
+!* TestFailure
+!* subpackages for org.junit
+!* can we make the JUnit4TestCaseAdapter transparent to old runners so that they show the real class
+
+Before final JUnit 4 release:
 *   support testing run once initialization code e.g. class Foo {{...}}
 *	deprecate test suites
 		need a way to describe collections of tests
@@ -12,49 +18,20 @@ Items
 		migration tool TestCase subclass in, JUnit 4 format out
 		add an ant compatbility
 		
-		JUnitFourTestCase extends TestCase {
-			Object test;
-			setUp() {
-			  invoke before methods on test
-			}
-			runTest() {
-			  invoke name on test
-			}
-			tearDown() {
-			  invoke after methods
-			}
-		}
-
 *	enable tighther and more flexible IDE integration
 	* be able to specify the order of tests (ewwww....)
 		enable test reordering/prioritization
 			run failures first (<- this seems like it is up to the runner)
 		make sure TestListener is symmetric and meets needs of all runner developers
 *  	get 100% coverage
-* 	logging support (runner listeners should handle this?) (Log4JListener ???)
-*     we should look into a test execution model which doesn't recquire
-      that all test objects are instantiated during the test run.
-      This might come hand in handy when revisiting the
-      test suites e.g. Runner.run(Object)?
-* update documentation
-  * get rid of excluded.properties
+* 	logging support (runner listeners should handle this?) (Log4JListener , 1.4 logging support (java.util.Logging)))
+*   Runner.run(Object)
 * test categorization & filtering (<- seems like a runner issue) @Category(short, integration)  @Test(category=windowsOnly)
-* inherited befores and afters
-* TestFailure
-* replace old decorators with annotations
-  - run count
-  - active
-  - timeout
+* timeout annotation
 * command line interface
 * TestRunEvent
-* subpackages for org.junit
 * think about compatibility with old runners--no clashing class names
-* replace old decorators with annotations
-  - run count
-  - active
-  - timeout
 * assertEquals for collections (show at which elements the collections differ)
-* replace if check with polymorphism in test runner (use JUNit or annotation style strategy)
 * junit test file converter: convert testFoo() to @Test foo()
      Suites?
      Decorators?
@@ -69,6 +46,7 @@ Done
 			annotating setup/teardown
 			annotating expected exceptions
 * use 1.5 features
+		compatibility with the assert keyword
 		use enhanced for
 * dump the graphical runners
 * get rid of failures and errors distinction

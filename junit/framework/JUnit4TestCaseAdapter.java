@@ -6,13 +6,13 @@ import java.lang.reflect.Method;
 import org.junit.Expected;
 import org.junit.tries.JUnit4TestRunner;
 
-public class NewTestCaseAdapter extends TestCase {
+public class JUnit4TestCaseAdapter extends TestCase {
 
 	private final Object fTest;
 	private final Method fMethod;
 	private final Expected fExpected;
 
-	public NewTestCaseAdapter(Object test, Method method, Expected annotation) {
+	public JUnit4TestCaseAdapter(Object test, Method method, Expected annotation) {
 		fTest= test;
 		fMethod= method;
 		fExpected= annotation;
@@ -24,7 +24,11 @@ public class NewTestCaseAdapter extends TestCase {
 		} catch (InvocationTargetException e) {
 			if (fExpected == null || JUnit4TestRunner.isUnexpected(e.getCause(), fMethod))
 				throw e.getCause();
+			else
+				return;
 		}
+		if (fExpected != null)
+			throw new Exception("Expected exception: " + fExpected.value());
 	}
 
 	protected void setUp() throws Exception {

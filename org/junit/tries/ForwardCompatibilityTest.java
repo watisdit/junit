@@ -1,6 +1,6 @@
 package org.junit.tries;
 
-import junit.framework.NewTestClassAdapter;
+import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
 
@@ -29,7 +29,7 @@ public class ForwardCompatibilityTest extends TestCase {
 	public void testCompatibility() {
 		fLog= "";
 		TestResult result= new TestResult();
-		junit.framework.Test adapter= new NewTestClassAdapter(NewTest.class);
+		junit.framework.Test adapter= new JUnit4TestAdapter(NewTest.class);
 		adapter.run(result);
 		assertEquals("before test after ", fLog);
 	}
@@ -43,9 +43,21 @@ public class ForwardCompatibilityTest extends TestCase {
 	}
 	public void testException() {
 		TestResult result= new TestResult();
-		junit.framework.Test adapter= new NewTestClassAdapter(ErrorTest.class);
+		junit.framework.Test adapter= new JUnit4TestAdapter(ErrorTest.class);
 		adapter.run(result);
 		assertEquals(exception, result.errors().get(0).thrownException());
+	}
+	
+	public static class NoExceptionTest {
+		@Expected(Exception.class)
+		@Test public void succeed() throws Exception {
+		}
+	}
+	public void testNoException() {
+		TestResult result= new TestResult();
+		junit.framework.Test adapter= new JUnit4TestAdapter(NoExceptionTest.class);
+		adapter.run(result);
+		assertFalse(result.wasSuccessful());
 	}
 	
 	public static class ExpectedTest {
@@ -56,7 +68,7 @@ public class ForwardCompatibilityTest extends TestCase {
 	}
 	public void testExpected() {
 		TestResult result= new TestResult();
-		junit.framework.Test adapter= new NewTestClassAdapter(ExpectedTest.class);
+		junit.framework.Test adapter= new JUnit4TestAdapter(ExpectedTest.class);
 		adapter.run(result);
 		assertTrue(result.wasSuccessful());
 	}
@@ -86,7 +98,7 @@ public class ForwardCompatibilityTest extends TestCase {
 	public void testBeforeAndAfterClass() {
 		log= "";
 		TestResult result= new TestResult();
-		junit.framework.Test adapter= new NewTestClassAdapter(BeforeClassTest.class);
+		junit.framework.Test adapter= new JUnit4TestAdapter(BeforeClassTest.class);
 		adapter.run(result);
 		assertEquals("before class before test after before test after after class ", log);
 	}

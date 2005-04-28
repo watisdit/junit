@@ -15,7 +15,7 @@ import junit.framework.TestCase;
 import junit.framework.TestListener;
 import junit.framework.TestResult;
 
-public class PreJUnit4TestCaseRunner implements TestListener {
+public class PreJUnit4TestCaseRunner implements TestListener,  RunnerStrategy {
 	
 	private Runner fRunner;
 	private final Class fTestClass;
@@ -25,7 +25,7 @@ public class PreJUnit4TestCaseRunner implements TestListener {
 		fTestClass= testClass;
 	}
 	
-	void runCompatibleTest() {
+	public void run() {
 		List<junit.framework.Test> compatibleTests= getCompatibleTests();
 		TestResult result= new TestResult();
 		result.addListener(this);

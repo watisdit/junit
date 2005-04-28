@@ -13,16 +13,19 @@ public class Runner {
 
 	public void run(Class testClass) throws Exception {
 		long startTime= System.currentTimeMillis();
-		if (junit.framework.TestCase.class.isAssignableFrom(testClass)) {
-			new PreJUnit4TestCaseRunner(this, testClass).runCompatibleTest();
-		} else {
-	//TODO: public void run(TestSuite suite) ...
-			new JUnit4TestRunner(this, testClass).run();
-		}
+		getStrategy(testClass).run();
 		long endTime= System.currentTimeMillis();
 		for (TestListener each : fListeners)
 			each.testRunFinished(this, endTime - startTime);
 	}
+	
+	private RunnerStrategy getStrategy(Class testClass) {
+		if (junit.framework.TestCase.class.isAssignableFrom(testClass))
+			return new PreJUnit4TestCaseRunner(this, testClass);
+		return new JUnit4TestRunner(this, testClass);
+	}
+
+	//TODO: public void run(Object test)...
 
 	void addFailure(Throwable exception) {
 		fFailures.add(exception); //TODO Add a TestFailure that includes the test that failed

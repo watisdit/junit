@@ -1,7 +1,7 @@
 package org.junit.samples;
 
 import static org.junit.Assert.assertEquals;
-import junit.framework.NewTestClassAdapter;
+import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +20,7 @@ public class SimpleTest  {
 	}
 	
 	public static junit.framework.Test suite() {
-		 return new NewTestClassAdapter(SimpleTest.class);
+		 return new JUnit4TestAdapter(SimpleTest.class);
 	}
 
 	@Test public void testDivideByZero() {
