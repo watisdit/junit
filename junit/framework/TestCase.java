@@ -161,7 +161,7 @@ public abstract class TestCase extends Assert implements Test {
 		}
 
 		try {
-			runMethod.invoke(this, (Object[])new Class[0]);
+			runMethod.invoke(this);
 		}
 		catch (InvocationTargetException e) {
 			e.fillInStackTrace();
