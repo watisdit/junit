@@ -1,12 +1,9 @@
 Theme: lower the barriers to entry and enable more sophisticated testing
 
 Before first public candidate release:
-!*  warn when an annotated test method isn't public (check for Before, After, BeforeClass, AfterClass and Test)
 !* update documentation
   * get rid of excluded.properties
 !* inherited befores and afters and tests (be careful to not run overridden methods)
-!* TestFailure
-!* subpackages for org.junit
 !* can we make the JUnit4TestCaseAdapter transparent to old runners so that they show the real class
 
 Before final JUnit 4 release:
@@ -24,7 +21,7 @@ Before final JUnit 4 release:
 			run failures first (<- this seems like it is up to the runner)
 		make sure TestListener is symmetric and meets needs of all runner developers
 *  	get 100% coverage
-* 	logging support (runner listeners should handle this?) (Log4JListener , 1.4 logging support (java.util.Logging)))
+* 	logging support (runner listeners should handle this?) (Log4JListener , 1.4 logging support (java.util.logging)))
 *   Runner.run(Object)
 * test categorization & filtering (<- seems like a runner issue) @Category(short, integration)  @Test(category=windowsOnly)
 * timeout annotation
@@ -35,9 +32,15 @@ Before final JUnit 4 release:
 * junit test file converter: convert testFoo() to @Test foo()
      Suites?
      Decorators?
+     
+Cool ideas:
+* Listener that informs a global JUnit test case server
 
 
 Done
+!* subpackages for org.junit
+!* TestFailure
+!* warn when an annotated test method isn't public (check for Before, After, BeforeClass, AfterClass and Test)
 * Change the package name to org.junit?
 * test listening (test run listener)
 * annotation support

@@ -1,17 +1,20 @@
-package org.junit.tries;
+package org.junit.runner;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Failure;
 import org.junit.TestListener;
 
 public class Runner {
 
 	private int fCount= 0;
-	private List<Throwable> fFailures= new ArrayList<Throwable>();
+	private List<Failure> fFailures= new ArrayList<Failure>();
 	private List<TestListener> fListeners= new ArrayList<TestListener>();
 
 	public void run(Class testClass) throws Exception {
+		for (TestListener each : fListeners)
+			each.testRunStarted();
 		long startTime= System.currentTimeMillis();
 		getStrategy(testClass).run();
 		long endTime= System.currentTimeMillis();
@@ -27,10 +30,10 @@ public class Runner {
 
 	//TODO: public void run(Object test)...
 
-	void addFailure(Throwable exception) {
-		fFailures.add(exception); //TODO Add a TestFailure that includes the test that failed
+	void addFailure(Failure failure) {
+		fFailures.add(failure); //TODO Add a TestFailure that includes the test that failed
 		for (TestListener each : fListeners)
-			each.failure(exception);
+			each.testFailure(failure);
 	}
 
 	public int getRunCount() {
@@ -41,7 +44,7 @@ public class Runner {
 		return fFailures.size();
 	}
 
-	public List<Throwable> getFailures() {
+	public List<Failure> getFailures() {
 		return fFailures;
 	}
 

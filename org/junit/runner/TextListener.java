@@ -1,12 +1,11 @@
-package org.junit.tries;
+package org.junit.runner;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.NumberFormat;
 
-import junit.runner.BaseTestRunner;
-
+import org.junit.Failure;
 import org.junit.Test;
 import org.junit.TestListener;
 
@@ -34,8 +33,7 @@ public class TextListener implements TestListener {
 	}
 
 	// TestListener implementation
-	public void testStarted(Object test, String name) {
-		fWriter.append('.');
+	public void testRunStarted() {
 	}
 
 	public void testRunFinished(Runner result, long runTime) {
@@ -44,6 +42,14 @@ public class TextListener implements TestListener {
 		printFooter(result);
 	}
 
+	public void testStarted(Object test, String name) {
+		fWriter.append('.');
+	}
+
+	public void testFailure(Failure failure) {
+		fWriter.append('E');
+	}
+	
 	/*
 	 * Internal methods
 	 */
@@ -65,24 +71,21 @@ public class TextListener implements TestListener {
 		else
 			getWriter().println("There were " + result.getFailureCount() + " failures:");
 		int i= 1;
-		for (Throwable each : result.getFailures())
-			printDefect(each, i++);
+		for (Failure each : result.getFailures())
+			printFailure(each, i++);
 	}
 
-	protected void printDefect(Throwable booBoo, int count) {
-		printDefectHeader(booBoo, count);
-		printDefectTrace(booBoo);
+	protected void printFailure(Failure failure, int count) {
+		printFailureHeader(failure, count);
+		printFailureTrace(failure);
 	}
 
-	protected void printDefectHeader(Throwable booBoo, int count) {
-		// I feel like making this a println, then adding a line giving the
-		// throwable a chance to print something
-		// before we get to the stack trace.
-		getWriter().print(count + ") " + "???"); // TODO: We need real failures
+	protected void printFailureHeader(Failure failure, int count) {
+		getWriter().println(count + ") " + failure.getTestHeader());
 	}
 
-	protected void printDefectTrace(Throwable booBoo) {
-		getWriter().print(BaseTestRunner.getFilteredTrace(trace(booBoo)));
+	protected void printFailureTrace(Failure failure) {
+		getWriter().print(failure.getTrace());
 	}
 
 	protected void printFooter(Runner result) {
@@ -115,10 +118,6 @@ public class TextListener implements TestListener {
 		return buffer.toString();
 	}
 
-	public void failure(Throwable exception) {
-		fWriter.append('E');
-	}
-	
 	// Temporary usage example
 	static public class TwoTests {
 		@Test public void succeed() {}

@@ -1,4 +1,4 @@
-package org.junit.tries;
+package org.junit.tests;
 
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;

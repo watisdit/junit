@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.junit.Expected;
-import org.junit.tries.JUnit4TestRunner;
+import org.junit.runner.JUnit4TestRunner;
 
 public class JUnit4TestCaseAdapter extends TestCase {
 
@@ -41,6 +41,6 @@ public class JUnit4TestCaseAdapter extends TestCase {
 
 	@Override
 	public String getName() {
-		return fMethod.getName();
+		return fTest.getClass().getName() + "(" + fMethod.getName() + ")";
 	}
 }

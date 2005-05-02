@@ -1,4 +1,4 @@
-package org.junit.tries;
+package org.junit.runner;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -8,6 +8,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Failure;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
@@ -135,11 +137,11 @@ public class PreJUnit4TestCaseRunner implements TestListener,  RunnerStrategy {
 
 	// Implement junit.framework.TestListener
 	public void addError(Test test, Throwable t) {
-		fRunner.addFailure(t);
+		fRunner.addFailure(new Failure(test, ((TestCase) test).getName(), t)); //TODO: Either the case or dynamically invoke getName() or add getName() to junit.framework.Test
 	}
 
 	public void addFailure(Test test, AssertionFailedError t) {
-		fRunner.addFailure(t);
+		fRunner.addFailure(new Failure(test, ((TestCase) test).getName(), t));
 	}
 
 	public void endTest(Test test) {

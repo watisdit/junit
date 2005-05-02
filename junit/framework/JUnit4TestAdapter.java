@@ -8,7 +8,7 @@ import java.util.List;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Expected;
-import org.junit.tries.JUnit4TestRunner;
+import org.junit.runner.JUnit4TestRunner;
 
 public class JUnit4TestAdapter implements Test {
 

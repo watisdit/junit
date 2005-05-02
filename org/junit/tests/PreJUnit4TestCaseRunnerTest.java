@@ -1,7 +1,10 @@
-package org.junit.tries;
+package org.junit.tests;
 
+import org.junit.Failure;
 import org.junit.Test;
 import org.junit.TestListener;
+import org.junit.runner.Runner;
+
 import static org.junit.Assert.*;
 
 import junit.framework.JUnit4TestAdapter;
@@ -28,7 +31,10 @@ public class PreJUnit4TestCaseRunnerTest {
 			public void testRunFinished(Runner runner, long runTime) {
 			}
 
-			public void failure(Throwable exception) {
+			public void testFailure(Failure failure) {
+			}
+
+			public void testRunStarted() {
 			}
 		};
 		

@@ -1,4 +1,4 @@
-package org.junit.tries;
+package org.junit.tests;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -7,6 +7,8 @@ import java.io.PrintStream;
 import junit.framework.TestCase;
 
 import org.junit.Test;
+import org.junit.runner.Runner;
+import org.junit.runner.TextListener;
 
 public class TextListenerTest extends TestCase {
 	
@@ -39,7 +41,7 @@ public class TextListenerTest extends TestCase {
 	public void testError() throws Exception {
 		runner.run(ErrorTest.class);
 		assertTrue(results.toString().startsWith(convert(".E\nTime: ")));
-		assertTrue(results.toString().indexOf(convert("\nThere was 1 failure:\n1)")) != -1); //TODO: Append the test case name to force implementation of TestFailure
+		assertTrue(results.toString().indexOf(convert("\nThere was 1 failure:\n1) org.junit.tests.TextListenerTest$ErrorTest.error()\njava.lang.Exception")) != -1);
 	}
 	
 	private String convert(String string) {

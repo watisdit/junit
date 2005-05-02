@@ -1,4 +1,4 @@
-package org.junit.tries;
+package org.junit.runner;
 
 
 

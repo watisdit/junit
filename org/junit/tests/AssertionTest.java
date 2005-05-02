@@ -1,4 +1,4 @@
-package org.junit.tries;
+package org.junit.tests;
 
 import static org.junit.Assert.fail;
 

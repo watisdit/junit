@@ -1,4 +1,4 @@
-package org.junit.tries;
+package org.junit.tests;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Expected;
 import org.junit.Test;
+import org.junit.runner.Runner;
 
 public class AnnotationTest extends TestCase {
 	static boolean run;
@@ -76,7 +77,7 @@ public class AnnotationTest extends TestCase {
 		runner.run(FailureTest.class);
 		assertEquals(1, runner.getRunCount());
 		assertEquals(1, runner.getFailureCount());
-		assertEquals(AssertionError.class, runner.getFailures().get(0).getClass());
+		assertEquals(AssertionError.class, runner.getFailures().get(0).getException().getClass());
 	}
 	
 	static public class SetupFailureTest {
@@ -99,7 +100,7 @@ public class AnnotationTest extends TestCase {
 		runner.run(SetupFailureTest.class);
 		assertEquals(1, runner.getRunCount());
 		assertEquals(1, runner.getFailureCount());
-		assertEquals(Error.class, runner.getFailures().get(0).getClass());
+		assertEquals(Error.class, runner.getFailures().get(0).getException().getClass());
 		assertFalse(run);
 	}
 
@@ -118,7 +119,7 @@ public class AnnotationTest extends TestCase {
 		runner.run(TeardownFailureTest.class);
 		assertEquals(1, runner.getRunCount());
 		assertEquals(1, runner.getFailureCount());
-		assertEquals(Error.class, runner.getFailures().get(0).getClass());
+		assertEquals(Error.class, runner.getFailures().get(0).getException().getClass());
 	}
 	
 	static public class TestAndTeardownFailureTest {
@@ -137,8 +138,8 @@ public class AnnotationTest extends TestCase {
 		runner.run(TestAndTeardownFailureTest.class);
 		assertEquals(1, runner.getRunCount());
 		assertEquals(2, runner.getFailureCount());
-		assertEquals(Exception.class, runner.getFailures().get(0).getClass());
-		assertEquals(Error.class, runner.getFailures().get(1).getClass());
+		assertEquals(Exception.class, runner.getFailures().get(0).getException().getClass());
+		assertEquals(Error.class, runner.getFailures().get(1).getException().getClass());
 	}
 	
 	static public class TeardownAfterFailureTest {
@@ -286,27 +287,10 @@ public class AnnotationTest extends TestCase {
 		runner.run(NonStaticOneTimeSetup.class);
 		assertEquals(1, runner.getFailureCount());
 	}
-	
-	static public class NonStaticBeforeClass {
-		@BeforeClass public void wrong() {
-		}
-		@Before public static void alsoWrong() {
-		}
-		//TODO: Enumerate all the possible wrong declarations for all the annotations
-	}
-	
-	public void testNonStaticBeforeClass() throws Exception {
-		try {
-			JUnit4TestRunner.getStaticTestMethods(NonStaticBeforeClass.class, BeforeClass.class);
-		} catch (Exception e) {
-			assertEquals("Method wrong() should be static", e.getMessage());
-		}
-	}
 
 	//TODO: Errors in BeforeClass-- only one failure, don't run tests
 	//TODO: Errors in AfterClass-- one failure (tests have already run)
 
-	//TODO: Non-public void @Test, @Before, @After
 	//TODO: Inherited test methods
 	//TODO: Inherited before methods (make sure overriding works correctly)
 	//TODO: Run more than one test class (figure out the design for this -- varargs?)
