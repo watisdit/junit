@@ -1,9 +1,9 @@
 package org.junit.tests;
 
-import org.junit.Failure;
 import org.junit.Test;
-import org.junit.TestListener;
+import org.junit.runner.Failure;
 import org.junit.runner.Runner;
+import org.junit.runner.TestListener;
 
 import static org.junit.Assert.*;
 

@@ -5,9 +5,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.NumberFormat;
 
-import org.junit.Failure;
 import org.junit.Test;
-import org.junit.TestListener;
 
 public class TextListener implements TestListener {
 

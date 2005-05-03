@@ -13,7 +13,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Expected;
-import org.junit.Failure;
 import org.junit.Test;
 
 public class JUnit4TestRunner implements RunnerStrategy {

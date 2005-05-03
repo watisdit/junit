@@ -1,4 +1,4 @@
-package org.junit;
+package org.junit.runner;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

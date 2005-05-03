@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -192,15 +193,18 @@ public class AnnotationTest extends TestCase {
 		assertTrue(run);
 	}
 	
-//TODO:	static public class OldSuiteTest extends TestCase {
-//		static public void...
-//	}
-//	public void testOldSuiteTest() throws Exception {
-//		TestSuite suite= new TestSuite(OldSuiteTest.class);
-//		Runner runner= new Runner();
-//		runner.run(suite);
-//		assertTrue(run);
-//	}
+	static public class OldSuiteTest extends TestCase {
+		public void testOne() {
+			run= true;
+		}
+	}
+	
+	public void testOldSuiteTest() throws Exception {
+		TestSuite suite= new TestSuite(OldSuiteTest.class);
+		Runner runner= new Runner();
+		runner.run(suite);
+		assertTrue(run);
+	}
 	
 	static public class ExceptionTest {
 		@Test
@@ -287,11 +291,43 @@ public class AnnotationTest extends TestCase {
 		runner.run(NonStaticOneTimeSetup.class);
 		assertEquals(1, runner.getFailureCount());
 	}
+	
+	static public class ErrorInBeforeClass {
+		@BeforeClass public static void before() throws Exception {
+			throw new Exception();
+		}
+		@Test public void test() {
+			run= true;
+		}
+		@AfterClass public static void after() {
+			run= true;
+		}
+	}
+	
+	public void testErrorInBeforeClass() throws Exception {
+		run= false;
+		Runner runner= new Runner();
+		runner.run(ErrorInBeforeClass.class);
+		assertFalse(run);
+		assertEquals(1, runner.getFailureCount());
+	}
 
-	//TODO: Errors in BeforeClass-- only one failure, don't run tests
-	//TODO: Errors in AfterClass-- one failure (tests have already run)
+	static public class ErrorInAfterClass {
+		@Test public void test() {
+			run= true;
+		}
+		@AfterClass public static void after() throws Exception {
+			throw new Exception();
+		}
+	}
+	
+	public void testErrorInAfterClass() throws Exception {
+		run= false;
+		Runner runner= new Runner();
+		runner.run(ErrorInAfterClass.class);
+		assertTrue(run);
+		assertEquals(1, runner.getFailureCount());
+	}
 
-	//TODO: Inherited test methods
-	//TODO: Inherited before methods (make sure overriding works correctly)
-	//TODO: Run more than one test class (figure out the design for this -- varargs?)
+	//TODO: Inherited test methods, before class, before, test, after, after class
 }

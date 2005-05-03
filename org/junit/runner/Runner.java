@@ -3,8 +3,6 @@ package org.junit.runner;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Failure;
-import org.junit.TestListener;
 
 public class Runner {
 
@@ -12,11 +10,12 @@ public class Runner {
 	private List<Failure> fFailures= new ArrayList<Failure>();
 	private List<TestListener> fListeners= new ArrayList<TestListener>();
 
-	public void run(Class testClass) throws Exception {
+	public void run(Class... testClasses) throws Exception {
 		for (TestListener each : fListeners)
 			each.testRunStarted();
 		long startTime= System.currentTimeMillis();
-		getStrategy(testClass).run();
+		for (Class each : testClasses)
+			getStrategy(each).run();
 		long endTime= System.currentTimeMillis();
 		for (TestListener each : fListeners)
 			each.testRunFinished(this, endTime - startTime);
@@ -28,10 +27,18 @@ public class Runner {
 		return new JUnit4TestRunner(this, testClass);
 	}
 
-	//TODO: public void run(Object test)...
+	public void run(junit.framework.Test test) {
+		for (TestListener each : fListeners)
+			each.testRunStarted();
+		long startTime= System.currentTimeMillis();
+		new PreJUnit4TestCaseRunner(this, test).run();
+		long endTime= System.currentTimeMillis();
+		for (TestListener each : fListeners)
+			each.testRunFinished(this, endTime - startTime);
+	}
 
 	void addFailure(Failure failure) {
-		fFailures.add(failure); //TODO Add a TestFailure that includes the test that failed
+		fFailures.add(failure);
 		for (TestListener each : fListeners)
 			each.testFailure(failure);
 	}
@@ -56,7 +63,7 @@ public class Runner {
 		return getFailureCount() == 0;
 	}
 
-	List<TestListener> getListeners() {
+	private List<TestListener> getListeners() {
 		return fListeners;
 	}
 

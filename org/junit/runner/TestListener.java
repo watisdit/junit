@@ -1,6 +1,5 @@
-package org.junit;
+package org.junit.runner;
 
-import org.junit.runner.Runner;
 
 public interface TestListener {
 
