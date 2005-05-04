@@ -23,7 +23,7 @@ public class SimpleTest  {
 		 return new JUnit4TestAdapter(SimpleTest.class);
 	}
 
-	@Test public void testDivideByZero() {
+	@Test public void divideByZero() {
 		int zero= 0;
 		int result= 8/zero;
 		result++; // avoid warning for not using result
