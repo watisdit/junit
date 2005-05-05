@@ -34,16 +34,16 @@ public class JUnit4TestRunner implements RunnerStrategy {
 		try {
 			List<Method> beforeMethods= getStaticTestMethods(fTestClass, BeforeClass.class);
 			for (Method method : beforeMethods)
-				method.invoke(null, new Object[0]);
+				method.invoke(null);
 			List<Method> methods= getTestMethods(fTestClass, Test.class);
 			for (Method method : methods) {
-				Constructor<? extends Object> constructor= fTestClass.getConstructor(new Class[0]);
-				Object test= constructor.newInstance(new Object[0]);
+				Constructor<? extends Object> constructor= fTestClass.getConstructor();
+				Object test= constructor.newInstance();
 				invokeMethod(test, method);
-			}
+			} 
 			List<Method> afterMethods= getStaticTestMethods(fTestClass, AfterClass.class);
 			for (Method method : afterMethods)
-				method.invoke(null, new Object[0]);
+				method.invoke(null);
 		} catch (Exception e) {
 			addFailure(new Failure(e));
 		}
@@ -64,7 +64,7 @@ public class JUnit4TestRunner implements RunnerStrategy {
 			addFailure(new Failure(test, method.getName(), e)); // TODO: Write test for this
 		}
 		try {
-			method.invoke(test, new Object[0]);
+			method.invoke(test);
 			Expected expected= expectedException(method);
 			if (expected != null) {
 				addFailure(new Failure(test, method.getName(), new AssertionError("Expected exception: "  + expected.value().getName())));
@@ -100,13 +100,13 @@ public class JUnit4TestRunner implements RunnerStrategy {
 	static public void tearDown(Object test) throws Exception {
 		List<Method> afters= getTestMethods(test.getClass(), After.class);
 		for (Method after : afters)
-			after.invoke(test, new Object[0]);
+			after.invoke(test);
 	}
 
 	static public void setUp(Object test) throws Exception {
 		List<Method> befores= getTestMethods(test.getClass(), Before.class);
 		for (Method before : befores)
-			before.invoke(test, new Object[0]);
+			before.invoke(test);
 	}
 
 	static public List<Method> getTestMethods(Class<? extends Object> klass, Class<? extends Annotation> annotationClass) throws Exception {
@@ -134,7 +134,7 @@ public class JUnit4TestRunner implements RunnerStrategy {
 	public static List<Exception> validateTestMethods(Class<? extends Object> testClass) {
 		List<Exception> results= new ArrayList<Exception>();
 		try {
-			testClass.getConstructor(new Class[0]);
+			testClass.getConstructor();
 		} catch (Exception e) {
 			results.add(new Exception("Test class should have public zero-argument constructor", e));
 		}
