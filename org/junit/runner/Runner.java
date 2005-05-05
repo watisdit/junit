@@ -27,7 +27,7 @@ public class Runner {
 		return new JUnit4TestRunner(this, testClass);
 	}
 
-	public void run(junit.framework.Test test) {
+	public void run(junit.framework.Test test) { //QUESTION why is this method here?
 		for (TestListener each : fListeners)
 			each.testRunStarted();
 		long startTime= System.currentTimeMillis();
