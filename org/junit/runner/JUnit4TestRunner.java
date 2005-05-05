@@ -17,9 +17,9 @@ import org.junit.Test;
 
 public class JUnit4TestRunner implements RunnerStrategy {
 	private Runner fRunner;
-	private final Class fTestClass;
+	private final Class<? extends Object> fTestClass;
 
-	JUnit4TestRunner(Runner runner, Class testClass) {
+	JUnit4TestRunner(Runner runner, Class<? extends Object> testClass) {
 		fRunner= runner; //TODO: I would like to get rid of fRunner so this object can be used as an engine elsewhere and we can get rid of those stupid static methods and their extra testClass parameter
 		fTestClass= testClass;
 	}
@@ -37,7 +37,7 @@ public class JUnit4TestRunner implements RunnerStrategy {
 				method.invoke(null, new Object[0]);
 			List<Method> methods= getTestMethods(fTestClass, Test.class);
 			for (Method method : methods) {
-				Constructor constructor= fTestClass.getConstructor(new Class[0]);
+				Constructor<? extends Object> constructor= fTestClass.getConstructor(new Class[0]);
 				Object test= constructor.newInstance(new Object[0]);
 				invokeMethod(test, method);
 			}
@@ -109,20 +109,21 @@ public class JUnit4TestRunner implements RunnerStrategy {
 			before.invoke(test, new Object[0]);
 	}
 
-	static public List<Method> getTestMethods(Class klass, Class annotationClass) throws Exception {
+	static public List<Method> getTestMethods(Class<? extends Object> klass, Class<? extends Annotation> annotationClass) throws Exception {
 		return getTestMethods(klass, annotationClass, false);
 	}
 
-	static public List<Method> getStaticTestMethods(Class klass, Class annotationClass) throws Exception {
+	static public List<Method> getStaticTestMethods(Class<? extends Object> klass, Class<? extends Annotation> annotationClass) throws Exception {
 		return getTestMethods(klass, annotationClass, true);
 	}
 	
-	private static List<Method> getTestMethods(Class klass, Class annotationClass, boolean isStatic) throws Exception {
+	private static List<Method> getTestMethods(Class<? extends Object> klass, Class<? extends Annotation> annotationClass, boolean isStatic) throws Exception {
 		List<Method> results= new ArrayList<Method>();
 		Method[] methods= klass.getDeclaredMethods();
 		for (Method each : methods) {
 			Annotation annotation= each.getAnnotation(annotationClass);
 			if (annotation != null) {
+				//TODO why is this commented out?
 				//validateTestMethod(each, isStatic);
 				results.add(each);
 			}
@@ -130,7 +131,7 @@ public class JUnit4TestRunner implements RunnerStrategy {
 		return results;
 	}
 
-	public static List<Exception> validateTestMethods(Class testClass) {
+	public static List<Exception> validateTestMethods(Class<? extends Object> testClass) {
 		List<Exception> results= new ArrayList<Exception>();
 		try {
 			testClass.getConstructor(new Class[0]);
@@ -149,7 +150,7 @@ public class JUnit4TestRunner implements RunnerStrategy {
 		return results;
 	}
 
-	private static void validateTestMethods(Class testClass, Class annotation, boolean isStatic, List<Exception> results) throws Exception {
+	private static void validateTestMethods(Class<? extends Object> testClass, Class<? extends Annotation> annotation, boolean isStatic, List<Exception> results) throws Exception {
 		List<Method> methods= getTestMethods(testClass, annotation, isStatic);
 		for (Method each : methods) {
 			if (Modifier.isStatic(each.getModifiers()) != isStatic) {
