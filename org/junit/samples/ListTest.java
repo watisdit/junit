@@ -1,12 +1,9 @@
 package org.junit.samples;
 
 import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import junit.framework.JUnit4TestAdapter;
-
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Expected;
@@ -47,11 +44,14 @@ public class ListTest {
 			fFull.add(new Integer(i));
 		assertTrue(fFull.size() == 100+size);
 	}
-//TODO: fix this	public void testClone() {
-//		List<Integer> clone= (List<Integer>)fFull.clone(); 
-//		assertTrue(clone.size() == fFull.size());
-//		assertTrue(clone.contains(new Integer(1)));
-//	}
+	
+	@Test public void testCopy() {
+		List<Integer> copy= new ArrayList<Integer>(fFull.size());
+		copy.addAll(fFull);
+		assertTrue(copy.size() == fFull.size());
+		assertTrue(copy.contains(new Integer(1)));
+	}
+	
 	@Test public void contains() {
 		assertTrue(fFull.contains(new Integer(1)));  
 		assertTrue(!fEmpty.contains(new Integer(1)));
