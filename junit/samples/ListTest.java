@@ -34,11 +34,6 @@ public class ListTest extends TestCase {
 			fFull.add(new Integer(i));
 		assertTrue(fFull.size() == 100+size);
 	}
-//TODO: fix this	public void testClone() {
-//		List<Integer> clone= (List<Integer>)fFull.clone(); 
-//		assertTrue(clone.size() == fFull.size());
-//		assertTrue(clone.contains(new Integer(1)));
-//	}
 	public void testContains() {
 		assertTrue(fFull.contains(new Integer(1)));  
 		assertTrue(!fEmpty.contains(new Integer(1)));

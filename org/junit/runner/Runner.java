@@ -3,6 +3,10 @@ package org.junit.runner;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.internal.runner.JUnit4Strategy;
+import org.junit.internal.runner.PreJUnit4Strategy;
+import org.junit.internal.runner.RunnerStrategy;
+
 
 public class Runner {
 
@@ -23,21 +27,21 @@ public class Runner {
 	
 	private RunnerStrategy getStrategy(Class<? extends Object> testClass) {
 		if (junit.framework.TestCase.class.isAssignableFrom(testClass))
-			return new PreJUnit4TestCaseRunner(this, testClass); 
-		return new JUnit4TestRunner(this, testClass);
+			return new PreJUnit4Strategy(this, testClass); 
+		return new JUnit4Strategy(this, testClass);
 	}
 
 	public void run(junit.framework.Test test) { 
 		for (TestListener each : fListeners)
 			each.testRunStarted();
 		long startTime= System.currentTimeMillis();
-		new PreJUnit4TestCaseRunner(this, test).run();
+		new PreJUnit4Strategy(this, test).run();
 		long endTime= System.currentTimeMillis();
 		for (TestListener each : fListeners)
 			each.testRunFinished(this, endTime - startTime);
 	}
 
-	void addFailure(Failure failure) {
+	public void addFailure(Failure failure) {
 		fFailures.add(failure);
 		for (TestListener each : fListeners)
 			each.testFailure(failure);
@@ -67,7 +71,7 @@ public class Runner {
 		return fListeners;
 	}
 
-	void startTestCase(Object test, String name) {
+	public void startTestCase(Object test, String name) {
 		fCount++;
 		for (TestListener each : getListeners())
 			each.testStarted(test, name);

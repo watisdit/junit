@@ -23,8 +23,7 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	static public class SimpleTest {
-		@Test
-		public void success() {
+		@Test public void success() {
 			run= true;
 		}
 	}
@@ -36,12 +35,10 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	static public class SetupTest {
-		@Before
-		public void before() {
+		@Before public void before() {
 			run= true;
 		}
-		@Test
-		public void success() {
+		@Test public void success() {
 		}
 	}
 	
@@ -52,12 +49,10 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	static public class TeardownTest {
-		@After
-		public void after() {
+		@After public void after() {
 			run= true;
 		}
-		@Test
-		public void success() {
+		@Test public void success() {
 		}
 	}
 
@@ -68,8 +63,7 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	static public class FailureTest {
-		@Test
-		public void error() throws Exception {
+		@Test public void error() throws Exception {
 			org.junit.Assert.fail();
 		}
 	}
@@ -83,16 +77,13 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	static public class SetupFailureTest {
-		@Before
-		public void before() {
+		@Before public void before() {
 			throw new Error();
 		}
-		@Test
-		public void test() {
+		@Test public void test() {
 			run= true;
 		}
-		@After
-		public void after() {
+		@After public void after() {
 			run= true;
 		}
 	}
@@ -107,12 +98,10 @@ public class AnnotationTest extends TestCase {
 	}
 
 	static public class TeardownFailureTest {
-		@After
-		public void after() {
+		@After public void after() {
 			throw new Error();
 		}
-		@Test
-		public void test() {
+		@Test public void test() {
 		}
 	}
 	
@@ -125,12 +114,10 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	static public class TestAndTeardownFailureTest {
-		@After
-		public void after() {
+		@After public void after() {
 			throw new Error();
 		}
-		@Test
-		public void test() throws Exception {
+		@Test public void test() throws Exception {
 			throw new Exception();
 		}
 	}
@@ -145,12 +132,10 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	static public class TeardownAfterFailureTest {
-		@After
-		public void after() {
+		@After public void after() {
 			run= true;
 		}
-		@Test
-		public void test() throws Exception {
+		@Test public void test() throws Exception {
 			throw new Exception();
 		}
 	}
@@ -164,13 +149,11 @@ public class AnnotationTest extends TestCase {
 	static int count= 0;
 	static Set<Object> tests= new HashSet<Object>();
 	static public class TwoTests {
-		@Test
-		public void one() {
+		@Test public void one() {
 			count++;
 			tests.add(this);
 		}
-		@Test
-		public void two() {
+		@Test public void two() {
 			count++;
 			tests.add(this);
 		}
@@ -207,10 +190,8 @@ public class AnnotationTest extends TestCase {
 		assertTrue(run);
 	}
 	
-	static public class ExceptionTest {
-		@Test
-		@Expected( Error.class)
-		public void expectedException() {
+	static public class ExceptionTest {	
+		@Test @Expected(Error.class) public void expectedException() {
 			throw new Error();
 		}
 	}
@@ -222,8 +203,7 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	static public class NoExceptionTest {
-		@Test
-		@Expected( Error.class)
+		@Test @Expected( Error.class)
 		public void expectedException() {
 		}
 	}

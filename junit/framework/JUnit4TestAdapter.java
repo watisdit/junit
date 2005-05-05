@@ -7,28 +7,18 @@ import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Expected;
-import org.junit.runner.JUnit4TestRunner;
+import org.junit.internal.runner.TestIntrospector;
 
 public class JUnit4TestAdapter implements Test {
 
 	private List<Method> fMethods;
 	private final Class<? extends Object> fNewTestClass;
+	private TestIntrospector testIntrospector;
 
 	public JUnit4TestAdapter(Class<? extends Object> newTestClass) {
 		fNewTestClass= newTestClass;
-		fMethods= getTestMethods(newTestClass);
-	}
-
-	private List<Method> getTestMethods(Class newTestClass) {
-		List<Method> results= new ArrayList<Method>();
-		Method[] methods= newTestClass.getMethods();
-		for (Method each : methods) {
-			Annotation annotation= each.getAnnotation(org.junit.Test.class);
-			if (annotation != null)
-				results.add(each);
-		}
-		return results;
+		testIntrospector= new TestIntrospector(fNewTestClass);
+		fMethods= testIntrospector.getTestMethods(org.junit.Test.class);
 	}
 
 	public int countTestCases() {
@@ -49,7 +39,7 @@ public class JUnit4TestAdapter implements Test {
 	}
 
 	private void oneTimeSetUp() throws Exception {
-		List<Method> beforeMethods= JUnit4TestRunner.getStaticTestMethods(fNewTestClass, BeforeClass.class);
+		List<Method> beforeMethods= testIntrospector.getStaticTestMethods(BeforeClass.class);
 		for (Method method : beforeMethods)
 			method.invoke(null, new Object[0]);
 	}
@@ -57,14 +47,13 @@ public class JUnit4TestAdapter implements Test {
 	private void runTests(TestResult result) throws Exception {
 		for (Method method : fMethods) {
 			Object test= fNewTestClass.newInstance();
-			Expected annotation= method.getAnnotation(Expected.class); // Can safely be null
-			TestCase wrapper= new JUnit4TestCaseAdapter(test, method, annotation);
+			TestCase wrapper= new JUnit4TestCaseAdapter(test, method);
 			result.run(wrapper);
 		}
 	}
 	
 	private void oneTimeTearDown() throws Exception {
-		List<Method> beforeMethods= JUnit4TestRunner.getStaticTestMethods(fNewTestClass, AfterClass.class);
+		List<Method> beforeMethods= testIntrospector.getStaticTestMethods(AfterClass.class);
 		for (Method method : beforeMethods)
 			method.invoke(null, new Object[0]);
 	}

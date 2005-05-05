@@ -9,7 +9,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.JUnit4TestRunner;
+import org.junit.internal.runner.TestIntrospector;
 
 import static org.junit.Assert.*;
 
@@ -43,7 +43,7 @@ public class TestMethodTest {
 		@Test public void fineT() {}
 	}
 	@Test public void testFailures() throws Exception {
-		List<Exception> problems= JUnit4TestRunner.validateTestMethods(EverythingWrong.class);
+		List<Exception> problems= new TestIntrospector(EverythingWrong.class).validateTestMethods();
 		int errorCount= 1 + 4 * 5; // missing constructor plus four invalid methods for each annotation */
 		assertEquals(errorCount, problems.size());
 	}

@@ -1,4 +1,4 @@
-package org.junit.runner;
+package org.junit.internal.runner;
 
 
 

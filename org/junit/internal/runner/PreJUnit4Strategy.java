@@ -1,4 +1,7 @@
-package org.junit.runner;
+package org.junit.internal.runner;
+
+import org.junit.runner.Failure;
+import org.junit.runner.Runner;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
@@ -7,17 +10,17 @@ import junit.framework.TestListener;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
-public class PreJUnit4TestCaseRunner implements TestListener,  RunnerStrategy {
+public class PreJUnit4Strategy implements TestListener,  RunnerStrategy {
 	
 	private Runner fRunner;
 	private Test fTest;
 
-	PreJUnit4TestCaseRunner(Runner runner, Class testClass) {
+	public PreJUnit4Strategy(Runner runner, Class testClass) {
 		fRunner= runner;
 		fTest= new TestSuite(testClass);
 	}
 	
-	PreJUnit4TestCaseRunner(Runner runner, Test test) {
+	public PreJUnit4Strategy(Runner runner, Test test) {
 		fRunner= runner;
 		fTest= test;
 	}
@@ -30,11 +33,16 @@ public class PreJUnit4TestCaseRunner implements TestListener,  RunnerStrategy {
 
 	// Implement junit.framework.TestListener
 	public void addError(Test test, Throwable t) {
-		fRunner.addFailure(new Failure(test, ((TestCase) test).getName(), t)); //TODO: Either cast to TestCase or dynamically invoke getName() or add getName() to junit.framework.Test
+		String name;
+		if (test instanceof TestCase)
+			name= ((TestCase) test).getName();
+		else
+			name= test.toString();
+		fRunner.addFailure(new Failure(test, name, t));
 	}
 
 	public void addFailure(Test test, AssertionFailedError t) {
-		fRunner.addFailure(new Failure(test, ((TestCase) test).getName(), t));
+		addError(test, t);
 	}
 
 	public void endTest(Test test) {
