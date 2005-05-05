@@ -6,6 +6,7 @@ Before first public candidate release:
 !* inherited befores and afters and tests (be careful to not run overridden methods)
 !* can we make the JUnit4TestCaseAdapter transparent to old runners so that they show the real class
 !* use consistent formatting for annotation (separate line, prefix on same line)
+!* some javadoc to API interfaces
 
 Before final JUnit 4 release:
 *   support testing run once initialization code e.g. class Foo {{...}}
