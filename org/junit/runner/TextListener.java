@@ -108,7 +108,7 @@ public class TextListener implements TestListener {
 		return NumberFormat.getInstance().format((double) runTime / 1000);
 	}
 
-	private String trace(Throwable exception) {
+	private String trace(Throwable exception) { //QUESTION test runner never shows the stacktrace?
 		StringWriter stringWriter= new StringWriter();
 		PrintWriter writer= new PrintWriter(stringWriter);
 		exception.printStackTrace(writer);
