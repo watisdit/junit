@@ -40,6 +40,7 @@ public class Failure extends Object {
 	/**
 	 * Returns a short description of the failure.
 	 */
+	@Override
 	public String toString() {
 	    StringBuffer buffer= new StringBuffer();
 	    buffer.append(getTestHeader() + ": "+fThrownException.getMessage());

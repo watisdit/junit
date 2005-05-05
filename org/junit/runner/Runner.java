@@ -14,16 +14,16 @@ public class Runner {
 		for (TestListener each : fListeners)
 			each.testRunStarted();
 		long startTime= System.currentTimeMillis();
-		for (Class each : testClasses)
+		for (Class<? extends Object> each : testClasses)
 			getStrategy(each).run();
 		long endTime= System.currentTimeMillis();
 		for (TestListener each : fListeners)
 			each.testRunFinished(this, endTime - startTime);
 	}
 	
-	private RunnerStrategy getStrategy(Class testClass) {
+	private RunnerStrategy getStrategy(Class<? extends Object> testClass) {
 		if (junit.framework.TestCase.class.isAssignableFrom(testClass))
-			return new PreJUnit4TestCaseRunner(this, testClass);
+			return new PreJUnit4TestCaseRunner(this, testClass); 
 		return new JUnit4TestRunner(this, testClass);
 	}
 
