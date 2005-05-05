@@ -8,6 +8,7 @@ import java.util.List;
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Expected;
 import org.junit.Test;
 
@@ -18,10 +19,18 @@ import org.junit.Test;
 public class ListTest {
 	protected List<Integer> fEmpty;
 	protected List<Integer> fFull;
+	protected static List<Integer> fgHeavy;
 
 	public static void main (String... args) {
 		junit.textui.TestRunner.run (suite());
 	}
+	
+	@BeforeClass public static void setUpOnce() {
+		fgHeavy= new ArrayList<Integer>();
+		for(int i= 0; i < 1000; i++)
+			fgHeavy.add(new Integer(i));
+	}
+	
 	@Before public void setUp() {
 		fEmpty= new ArrayList<Integer>();
 		fFull= new ArrayList<Integer>();
