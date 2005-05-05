@@ -1,11 +1,7 @@
 package org.junit.runner;
 
 import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.text.NumberFormat;
-
-import org.junit.Test;
 
 public class TextListener implements TestListener {
 
@@ -106,26 +102,6 @@ public class TextListener implements TestListener {
 	 */
 	protected String elapsedTimeAsString(long runTime) {
 		return NumberFormat.getInstance().format((double) runTime / 1000);
-	}
-
-	private String trace(Throwable exception) { //QUESTION test runner never shows the stacktrace?
-		StringWriter stringWriter= new StringWriter();
-		PrintWriter writer= new PrintWriter(stringWriter);
-		exception.printStackTrace(writer);
-		StringBuffer buffer= stringWriter.getBuffer();
-		return buffer.toString();
-	}
-
-	// Temporary usage example
-	static public class TwoTests {
-		@Test public void succeed() {}
-		@Test public void not() throws Exception {
-			throw new Exception("If at first you don't...");
-		}
-	}
-	
-	public static void main(String[] args) throws Exception {
-		run(TwoTests.class);
 	}
 
 }

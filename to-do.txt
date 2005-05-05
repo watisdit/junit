@@ -5,6 +5,7 @@ Before first public candidate release:
   * get rid of excluded.properties
 !* inherited befores and afters and tests (be careful to not run overridden methods)
 !* can we make the JUnit4TestCaseAdapter transparent to old runners so that they show the real class
+* Split Failure
 !* use consistent formatting for annotation (separate line, prefix on same line)
 !* add  javadoc to API interfaces and Annotations
 

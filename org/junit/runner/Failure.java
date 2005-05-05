@@ -59,7 +59,7 @@ public class Failure extends Object {
 	public String getTestHeader() {
 		return (isTestFailure())
 			? fFailedTest.getClass().getName() + "." + fMethodName + "()"
-			: "Test mechanism failure"; //QUESTION 
+			: "Test mechanism failure";
 	}
 
 	private boolean isTestFailure() {
