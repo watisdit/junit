@@ -28,7 +28,7 @@ public class PreJUnit4TestCaseRunnerTest {
 				count++;
 			}
 
-			public void testRunFinished(Runner runner, long runTime) {
+			public void testRunFinished(Runner r, long runTime) {
 			}
 
 			public void testFailure(Failure failure) {

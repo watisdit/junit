@@ -16,6 +16,7 @@ public class TextListenerTest extends TestCase {
 	private OutputStream results;
 	private TextListener listener;
 
+	@Override
 	public void setUp() {
 		runner= new Runner();
 		results= new ByteArrayOutputStream();
@@ -45,10 +46,10 @@ public class TextListenerTest extends TestCase {
 	}
 	
 	private String convert(String string) {
-		OutputStream results= new ByteArrayOutputStream();
-		PrintStream writer= new PrintStream(results);
+		OutputStream resultsStream= new ByteArrayOutputStream();
+		PrintStream writer= new PrintStream(resultsStream);
 		writer.println();
-		return string.replace("\n", results.toString());
+		return string.replace("\n", resultsStream.toString());
 	}
 	
 }

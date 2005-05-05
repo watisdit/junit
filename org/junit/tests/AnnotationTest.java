@@ -17,6 +17,7 @@ import org.junit.runner.Runner;
 public class AnnotationTest extends TestCase {
 	static boolean run;
 
+	@Override
 	public void setUp() {
 		run= false;
 	}
