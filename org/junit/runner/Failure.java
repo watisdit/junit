@@ -3,13 +3,10 @@ package org.junit.runner;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import junit.framework.TestResult;
-
 
 /**
- * A <code>TestFailure</code> collects a failed test together with
+ * A <code>Failure</code> collects a failed test together with
  * the caught exception.
- * @see TestResult
  */
 public class Failure extends Object {
 	protected Object fFailedTest;
@@ -62,7 +59,7 @@ public class Failure extends Object {
 	public String getTestHeader() {
 		return (isTestFailure())
 			? fFailedTest.getClass().getName() + "." + fMethodName + "()"
-			: "Test mechanism failure";
+			: "Test mechanism failure"; //QUESTION 
 	}
 
 	private boolean isTestFailure() {

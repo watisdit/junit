@@ -123,7 +123,7 @@ public class JUnit4TestRunner implements RunnerStrategy {
 		for (Method each : methods) {
 			Annotation annotation= each.getAnnotation(annotationClass);
 			if (annotation != null) {
-				//TODO why is this commented out?
+				//QUESTION why is this commented out?
 				//validateTestMethod(each, isStatic);
 				results.add(each);
 			}
