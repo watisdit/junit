@@ -28,14 +28,6 @@ public class TestIntrospector {
 		return !annotation.value().equals(exception.getClass());
 	}
 
-	public List<Method> getTestMethods(Class<? extends Annotation> annotationClass) {
-		return getTestMethods(annotationClass, false);
-	}
-
-	public List<Method> getStaticTestMethods(Class<? extends Annotation> annotationClass) {
-		return getTestMethods(annotationClass, true);
-	}
-
 	public List<Exception> validateTestMethods() {
 		List<Exception> results= new ArrayList<Exception>();
 		try {
@@ -55,7 +47,7 @@ public class TestIntrospector {
 		return results;
 	}
 
-	private List<Method> getTestMethods(Class<? extends Annotation> annotationClass, boolean isStatic) {
+	public List<Method> getTestMethods(Class<? extends Annotation> annotationClass) {
 		List<Method> results= new ArrayList<Method>();
 		Method[] methods= fTestClass.getDeclaredMethods();
 		for (Method each : methods) {
@@ -67,7 +59,7 @@ public class TestIntrospector {
 	}
 	
 	private void validateTestMethods(Class<? extends Annotation> annotation, boolean isStatic, List<Exception> results) throws Exception {
-		List<Method> methods= getTestMethods(annotation, isStatic);
+		List<Method> methods= getTestMethods(annotation);
 		for (Method each : methods) {
 			if (Modifier.isStatic(each.getModifiers()) != isStatic) {
 				String state= isStatic ? "should" : "should not";

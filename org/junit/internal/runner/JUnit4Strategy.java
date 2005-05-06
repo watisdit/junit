@@ -33,7 +33,7 @@ public class JUnit4Strategy implements RunnerStrategy {
 			return;
 		}
 		try {
-			List<Method> beforeMethods= fTestIntrospector.getStaticTestMethods(BeforeClass.class);
+			List<Method> beforeMethods= fTestIntrospector.getTestMethods(BeforeClass.class);
 			for (Method method : beforeMethods)
 				method.invoke(null);
 			List<Method> methods= fTestIntrospector.getTestMethods(Test.class);
@@ -42,7 +42,7 @@ public class JUnit4Strategy implements RunnerStrategy {
 				Object test= constructor.newInstance();
 				invokeMethod(test, method);
 			} 
-			List<Method> afterMethods= fTestIntrospector.getStaticTestMethods(AfterClass.class);
+			List<Method> afterMethods= fTestIntrospector.getTestMethods(AfterClass.class);
 			for (Method method : afterMethods)
 				method.invoke(null);
 		} catch (Exception e) {
