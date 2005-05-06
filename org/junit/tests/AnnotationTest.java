@@ -219,8 +219,8 @@ public class AnnotationTest extends TestCase {
 		@BeforeClass public static void once() {
 			count++;
 		}
-		@Test public void one() {};
-		@Test public void two() {};
+		@Test public void one() {}
+		@Test public void two() {}
 	}
 	
 	public void testOneTimeSetup() throws Exception {
@@ -234,8 +234,8 @@ public class AnnotationTest extends TestCase {
 		@AfterClass public static void once() {
 			count++;
 		}
-		@Test public void one() {};
-		@Test public void two() {};
+		@Test public void one() {}
+		@Test public void two() {}
 	}
 	
 	public void testOneTimeTeardown() throws Exception {

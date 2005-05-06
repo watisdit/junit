@@ -26,7 +26,7 @@ public class TextListenerTest extends TestCase {
 	}
 	
 	public static class OneTest {
-		@Test public void one() {};
+		@Test public void one() {}
 	}
 	
 	public void testSuccess() throws Exception {
