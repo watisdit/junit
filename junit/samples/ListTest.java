@@ -21,9 +21,9 @@ public class ListTest extends TestCase {
 	protected void setUp() {
 		fEmpty= new ArrayList<Integer>();
 		fFull= new ArrayList<Integer>();
-		fFull.add(new Integer(1));
-		fFull.add(new Integer(2));
-		fFull.add(new Integer(3));
+		fFull.add(1);
+		fFull.add(2);
+		fFull.add(3);
 	}
 	public static Test suite() {
 		return new TestSuite(ListTest.class);
@@ -35,12 +35,12 @@ public class ListTest extends TestCase {
 		assertTrue(fFull.size() == 100+size);
 	}
 	public void testContains() {
-		assertTrue(fFull.contains(new Integer(1)));  
-		assertTrue(!fEmpty.contains(new Integer(1)));
+		assertTrue(fFull.contains(1));  
+		assertTrue(!fEmpty.contains(1));
 	}
 	public void testElementAt() {
-		Integer i= fFull.get(0);
-		assertTrue(i.intValue() == 1);
+		int i= fFull.get(0);
+		assertTrue(i == 1);
 
 		try { 
 			fFull.get(fFull.size());
@@ -57,6 +57,6 @@ public class ListTest extends TestCase {
 	}
 	public void testRemoveElement() {
 		fFull.remove(new Integer(3));
-		assertTrue(!fFull.contains(new Integer(3)) ); 
+		assertTrue(!fFull.contains(3) ); 
 	}
 }
