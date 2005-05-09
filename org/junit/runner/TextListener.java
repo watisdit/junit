@@ -7,12 +7,12 @@ public class TextListener implements TestListener {
 
 	private final PrintStream fWriter;
 
-	static public void run(Class testClass) {
+	static public void run(Class... testClasses) {
 		TextListener listener= new TextListener();
 		Runner runner= new Runner();
 		runner.addListener(listener);
 		try {
-			runner.run(testClass);
+			runner.run(testClasses);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

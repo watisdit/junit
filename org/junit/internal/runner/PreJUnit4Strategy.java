@@ -1,14 +1,14 @@
 package org.junit.internal.runner;
 
-import org.junit.runner.Failure;
-import org.junit.runner.Runner;
-
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestListener;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
+
+import org.junit.runner.Runner;
+import org.junit.runner.TestFailure;
 
 public class PreJUnit4Strategy implements TestListener,  RunnerStrategy {
 	
@@ -38,7 +38,7 @@ public class PreJUnit4Strategy implements TestListener,  RunnerStrategy {
 			name= ((TestCase) test).getName();
 		else
 			name= test.toString();
-		fRunner.addFailure(new Failure(test, name, t));
+		fRunner.addFailure(new TestFailure(test, name, t));
 	}
 
 	public void addFailure(Test test, AssertionFailedError t) {

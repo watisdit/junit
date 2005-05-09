@@ -2,45 +2,42 @@ Theme: lower the barriers to entry and enable more sophisticated testing
 
 Before first public candidate release:
 !* update documentation
-  * get rid of excluded.properties
 !* can we make the JUnit4TestCaseAdapter transparent to old runners so that they show the real class
-!* split Failure
 !* make expected an attribute of @Test
 !* add  javadoc to API interfaces and Annotations
 !* make old code 1.5 compliant
 
 Before final JUnit 4 release:
+*   contact all test runner authors-- JBuilder, JDeveloper, NetBeans (?), IntelliJ, Ant
+		make sure TestListener is symmetric and meets needs of all runner developers
 *   support testing run once initialization code e.g. class Foo {{...}}
 *	deprecate test suites
 		need a way to describe collections of tests
 *	compatibility with 3.8
-		need a compatibility test suite
-		migration tool TestCase subclass in, JUnit 4 format out
-		add an ant compatbility
-		
+		* junit test file converter: convert testFoo() to @Test foo()
+		     Suites?
+		     Decorators?
+		add an ant task
 *	enable tighther and more flexible IDE integration
 	* be able to specify the order of tests (ewwww....)
 		enable test reordering/prioritization
 			run failures first (<- this seems like it is up to the runner)
-		make sure TestListener is symmetric and meets needs of all runner developers
+	* test categorization & filtering (<- seems like a runner issue) @Category(short, integration)  @Test(category=windowsOnly)
 *  	get 100% coverage
 * 	logging support (runner listeners should handle this?) (Log4JListener , 1.4 logging support (java.util.logging)))
 *   Runner.run(Object)
-* test categorization & filtering (<- seems like a runner issue) @Category(short, integration)  @Test(category=windowsOnly)
 * timeout annotation
 * command line interface
 * TestRunEvent
 * think about compatibility with old runners--no clashing class names
 * assertEquals for collections (show at which elements the collections differ)
-* junit test file converter: convert testFoo() to @Test foo()
-     Suites?
-     Decorators?
      
 Cool ideas:
 * Listener that informs a global JUnit test case server (URLConnection)
 
 
 Done
+!* split Failure
 !* use consistent formatting for annotation (separate line, prefix on same line)
 !* subpackages for org.junit
 !* TestFailure

@@ -9,18 +9,7 @@ import java.io.StringWriter;
  * the caught exception.
  */
 public class Failure extends Object {
-	protected Object fFailedTest;
-	protected String fMethodName;
 	protected Throwable fThrownException;
-
-	/**
-	 * Constructs a TestFailure with the given test, method name, and exception.
-	 */
-	public Failure(Object failedTest, String methodName, Throwable thrownException) {
-		fFailedTest= failedTest;
-		fMethodName= methodName;
-		fThrownException= thrownException;
-	}
 	
 	/**
 	 * Constructs a TestFailure with only the given exception.
@@ -57,12 +46,6 @@ public class Failure extends Object {
 	}
 	
 	public String getTestHeader() {
-		return (isTestFailure())
-			? fFailedTest.getClass().getName() + "." + fMethodName + "()"
-			: "Test mechanism failure";
-	}
-
-	private boolean isTestFailure() {
-		return fFailedTest != null;
+		return "Test mechanism failure";
 	}
 }

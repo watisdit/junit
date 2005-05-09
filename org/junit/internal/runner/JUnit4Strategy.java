@@ -13,6 +13,7 @@ import org.junit.Expected;
 import org.junit.Test;
 import org.junit.runner.Failure;
 import org.junit.runner.Runner;
+import org.junit.runner.TestFailure;
 
 public class JUnit4Strategy implements RunnerStrategy {
 	private Runner fRunner; //TODO: Find a way to decouple the strategy from a concrete Runner class
@@ -59,30 +60,30 @@ public class JUnit4Strategy implements RunnerStrategy {
 		try {
 			setUp(test);
 		} catch (InvocationTargetException e) {
-			addFailure(new Failure(test, method.getName(), e.getTargetException()));
+			addFailure(new TestFailure(test, method.getName(), e.getTargetException()));
 			return;
 		} catch (Throwable e) {
-			addFailure(new Failure(test, method.getName(), e)); // TODO: Write test for this
+			addFailure(new TestFailure(test, method.getName(), e)); // TODO: Write test for this
 			return;
 		}
 		try {
 			method.invoke(test);
 			Expected expected= expectedException(method);
 			if (expected != null) {
-				addFailure(new Failure(test, method.getName(), new AssertionError("Expected exception: "  + expected.value().getName())));
+				addFailure(new TestFailure(test, method.getName(), new AssertionError("Expected exception: "  + expected.value().getName())));
 			}
 		} catch (InvocationTargetException e) {
 			if (fTestIntrospector.isUnexpected(e.getTargetException(), method))
-				addFailure(new Failure(test, method.getName(), e.getTargetException()));
+				addFailure(new TestFailure(test, method.getName(), e.getTargetException()));
 		} catch (Throwable e) {
-			addFailure(new Failure(test, method.getName(), e)); // TODO: Write test for this
+			addFailure(new TestFailure(test, method.getName(), e)); // TODO: Write test for this
 		} finally {
 			try {
 				tearDown(test);
 			} catch (InvocationTargetException e) {
-				addFailure(new Failure(test, method.getName(), e.getTargetException()));
+				addFailure(new TestFailure(test, method.getName(), e.getTargetException()));
 			} catch (Throwable e) {
-				addFailure(new Failure(test, method.getName(), e)); // TODO: Write test for this
+				addFailure(new TestFailure(test, method.getName(), e)); // TODO: Write test for this
 			}
 		}
 	}

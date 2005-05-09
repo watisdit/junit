@@ -14,7 +14,7 @@ public class Runner {
 	private List<Failure> fFailures= new ArrayList<Failure>();
 	private List<TestListener> fListeners= new ArrayList<TestListener>();
 
-	public void run(Class... testClasses) throws Exception {
+	public void run(Class... testClasses) {
 		for (TestListener each : fListeners)
 			each.testRunStarted();
 		long startTime= System.currentTimeMillis();

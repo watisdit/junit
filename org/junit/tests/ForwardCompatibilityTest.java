@@ -62,7 +62,8 @@ public class ForwardCompatibilityTest extends TestCase {
 	
 	public static class ExpectedTest {
 		@Expected(Exception.class)
-		@Test public void expected() throws Exception {
+		//TODO @Test(expected = Exception.class) public void expected() throws Exception {
+		@Test() public void expected() throws Exception {
 			throw new Exception();
 		}
 	}
