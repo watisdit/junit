@@ -10,7 +10,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Expected;
 import org.junit.Test;
 import org.junit.runner.Runner;
 
@@ -191,7 +190,7 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	static public class ExceptionTest {	
-		@Test @Expected(Error.class) public void expectedException() {
+		@Test(expected= Error.class) public void expectedException() {
 			throw new Error();
 		}
 	}
@@ -203,7 +202,7 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	static public class NoExceptionTest {
-		@Test @Expected( Error.class)
+		@Test(expected= Error.class)
 		public void expectedException() {
 		}
 	}
