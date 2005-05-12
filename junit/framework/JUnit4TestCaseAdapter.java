@@ -6,20 +6,17 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Expected;
 import org.junit.internal.runner.TestIntrospector;
 
 public class JUnit4TestCaseAdapter extends TestCase {
 
 	private final Object fTest;
 	private final Method fMethod;
-	private final Expected fExpected;
 	private final TestIntrospector fTestIntrospector;
 
 	public JUnit4TestCaseAdapter(Object test, Method method) {
 		fTest= test;
 		fMethod= method;
-		fExpected= fMethod.getAnnotation(Expected.class);
 		fTestIntrospector= new TestIntrospector(fTest.getClass());
 	}
 
@@ -27,13 +24,12 @@ public class JUnit4TestCaseAdapter extends TestCase {
 		try {
 			fMethod.invoke(fTest, new Object[0]);
 		} catch (InvocationTargetException e) {
-			if (fExpected == null || fTestIntrospector.isUnexpected(e.getCause(), fMethod))
+			if (fTestIntrospector.isUnexpected(e.getCause(), fMethod))
 				throw e.getCause();
-			else
-				return;
+			return;
 		}
-		if (fExpected != null)
-			throw new Exception("Expected exception: " + fExpected.value());
+		if (fTestIntrospector.expectsException(fMethod))
+			throw new Exception("Expected exception: " + fTestIntrospector.expectedException(fMethod));
 	}
 
 	protected void setUp() throws Exception {

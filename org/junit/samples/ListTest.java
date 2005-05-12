@@ -1,12 +1,14 @@
 package org.junit.samples;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.List;
+
 import junit.framework.JUnit4TestAdapter;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Expected;
 import org.junit.Test;
 
 /**
@@ -56,10 +58,10 @@ public class ListTest {
 		assertTrue(fFull.contains(1));  
 		assertTrue(!fEmpty.contains(1));
 	}
-	@Test @Expected(IndexOutOfBoundsException.class) public void elementAt() {
+	@Test (expected=IndexOutOfBoundsException.class) public void elementAt() {
 		int i= fFull.get(0);
 		assertTrue(i == 1);
-		fFull.get(fFull.size());
+		fFull.get(fFull.size()); // Should throw IndexOutOfBoundsException
 	}
 	
 	@Test public void removeAll() {

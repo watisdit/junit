@@ -30,10 +30,10 @@ public class TextListener implements TestListener {
 	public void testRunStarted() {
 	}
 
-	public void testRunFinished(Runner result, long runTime) {
-		printHeader(runTime);
-		printFailures(result);
-		printFooter(result);
+	public void testRunFinished(Runner runner) {
+		printHeader(runner.getRunTime());
+		printFailures(runner);
+		printFooter(runner);
 	}
 
 	public void testStarted(Object test, String name) {

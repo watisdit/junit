@@ -1,6 +1,7 @@
 package org.junit.global;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
@@ -25,11 +26,11 @@ public class RecordingListener implements org.junit.runner.TestListener {
 	public void testRunStarted() {
 	}
 
-	public void testRunFinished(Runner runner, long runTime) {
+	public void testRunFinished(Runner runner) {
 		try {
-			writeRecord(runner);
+			processRun(runner);
 		} catch (Exception e) {
-			fWriter.println("Could not connect to server:\n" + e);
+			fWriter.println("Error processing test run:\n" + e);
 		}
 	}
 
@@ -46,22 +47,32 @@ public class RecordingListener implements org.junit.runner.TestListener {
 //		reader.close();
 //	}
 
-	private void writeRecord(Runner runner) throws Exception {
+	private void processRun(Runner runner) throws Exception {
 		Socket socket= new Socket("localhost", 80);
+		try {
+			writeRecord(runner, socket);
+			processResponse(runner, socket);
+		} finally {
+			socket.close();
+		}
+	}
+
+	private void writeRecord(Runner runner, Socket socket) throws IOException {
 		PrintWriter writer= new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
-		writer.println("email=" + fEmail + ":run count=" + runner.getRunCount() + ":fail count=" + runner.getFailureCount() + ":"); //TODO: add run time
+		//TODO: Fetch the real version number
+		writer.println("email=" + fEmail + ":run count=" + runner.getRunCount() + ":fail count=" + runner.getFailureCount() + ":" + "run time=" + runner.getRunTime() + ":" + "version=" + "4.0" + ":");
 		writer.flush();
-		BufferedReader reader= new BufferedReader(new InputStreamReader(socket.getInputStream()));				    
+	}
+	
+	private void processResponse(Runner runner, Socket socket) throws IOException {
+		BufferedReader reader= new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		Map<String, String> values= parse(reader.readLine());
 		fWriter.println("JUnit User #" + values.get("user") + ", " + values.get("email"));
 		fWriter.println("This run: " + runner.getRunCount() + " test run, " + runner.getFailureCount() + " failed");
 		fWriter.println("Today: " + values.get("run today") + " test run, " + values.get("failed today") + " failed");
 		fWriter.println("Total: " + values.get("run total") + " test run, " + values.get("failed total") + " failed");
-		writer.close();
-		reader.close();
-		socket.close();
 	}
-	
+
 	private Map<String, String> parse(String string) {
 		Map<String, String> results= new HashMap<String, String>();
 		int i= 0;

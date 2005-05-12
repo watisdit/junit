@@ -13,42 +13,48 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Recorder {  //TODO: Need to add a persistence strategy
+public class Recorder {
 
 	private class Run {
+		final long fTimestamp;
 		final String fEmail;
 		final int fRunCount;
 		final int fFailedCount;
+		private final int fRunTime;
+		private final String fVersion;
 
-		private Run(String email, int runCount, int failedCount) {
+		private Run(long timestamp, String email, int runCount, int failedCount, int runTime, String version) {
+			fTimestamp= timestamp;
 			fEmail= email;
 			fRunCount= runCount;
 			fFailedCount= failedCount;
+			fRunTime= runTime;
+			fVersion= version;
 		}
 	}
 	
 	private final List<Run> runs= new ArrayList<Run>();
 	private final List<String> users= new ArrayList<String>();
-	protected boolean running;
+	protected boolean running= false;
 	private Thread serverThread;
 	private ServerSocket server;
 	
 	public void start() {
-		running= true;
 		try {
 			server= new ServerSocket(80);
+			running= true;
+			serverThread= new Thread() {
+				@Override
+				public void run() {
+					while (running) {
+						processRecord();
+					}
+				}
+			};
+			serverThread.start();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		serverThread= new Thread() {
-			@Override
-			public void run() {
-				while (running) {
-					processRecord();
-				}
-			}
-		};
-		serverThread.start();
 	}
 
 	private void processRecord() {
@@ -56,34 +62,46 @@ public class Recorder {  //TODO: Need to add a persistence strategy
 			Socket socket= null;
 			try {
 				socket= server.accept();	
+				try {
+					Run run= readRecord(socket);
+					writeResponse(socket, run);
+				} finally {
+					socket.close();
+				}
 			} catch (SocketException e) { // It is normal to be waiting on an accept and have the server shut down
 				return;
 			}
-			BufferedReader reader= new BufferedReader(new InputStreamReader(socket.getInputStream()));				    
-			Run run= processRecord(reader.readLine());
-			PrintWriter writer= new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
-			writeResponse(run, writer);
-			writer.flush();
-			writer.close();
-			reader.close();
 		} catch (IOException e) {
-			System.out.println("Throwing");
 			e.printStackTrace();
 		}
 	}
-	
-	protected Run processRecord(String string) {
-		Map<String, String> values= parse(string);
+
+	private Run readRecord(Socket socket) throws IOException {
+		BufferedReader reader= new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		Map<String,String> values= parse(reader.readLine());
 		String email= values.get("email");
-		String runCount= values.get("run count");
-		String failCount= values.get("fail count");
+		int runCount= Integer.parseInt(values.get("run count"));
+		int failCount= Integer.parseInt(values.get("fail count")); //TODO: Add JUnit version
+		int runTime= Integer.parseInt(values.get("run time"));
+		String version= values.get("version");
 		if (! users.contains(email))
 			users.add(users.size(), email);
-		Run result= new Run(email, Integer.parseInt(runCount), Integer.parseInt(failCount)); //TODO: Add timestamp
-		runs.add(result);
+		Run result= new Run(System.currentTimeMillis(), email, runCount, failCount, runTime, version);
+		addRun(result);
 		return result;
 	}
+
+	private void addRun(Run result) {
+		//TODO: Write to a log here
+		runs.add(result);
+	}
 	
+	private void writeResponse(Socket socket, Run run) throws IOException {
+		PrintWriter writer= new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+		writer.println("user=" + userNumber(run.fEmail) + ":email=" + run.fEmail + ":run today=" + runToday() + ":failed today=" + failedToday() + ":run total=" + runToday() + ":failed total=" + failedToday() + ":");
+		writer.flush();
+	}
+
 	private Map<String, String> parse(String string) {
 		Map<String, String> results= new HashMap<String, String>();
 		int i= 0;
@@ -109,10 +127,6 @@ public class Recorder {  //TODO: Need to add a persistence strategy
 		}
 	}
 
-	private void writeResponse(Run run, PrintWriter writer) {
-		writer.println("user=" + userNumber(run.fEmail) + ":email=" + run.fEmail + ":run today=" + runToday() + ":failed today=" + failedToday() + ":run total=" + runToday() + ":failed total=" + failedToday() + ":");
-	}
-
 	private int runToday() {
 		int result= 0;
 		for (Run each : runs) {
@@ -132,6 +146,5 @@ public class Recorder {  //TODO: Need to add a persistence strategy
 	private int userNumber(String email) {
 		return users.indexOf(email);
 	}
-
 
 }

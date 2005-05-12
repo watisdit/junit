@@ -9,7 +9,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Expected;
 import org.junit.Test;
 import org.junit.runner.Failure;
 import org.junit.runner.Runner;
@@ -68,9 +67,9 @@ public class JUnit4Strategy implements RunnerStrategy {
 		}
 		try {
 			method.invoke(test);
-			Expected expected= expectedException(method);
-			if (expected != null) {
-				addFailure(new TestFailure(test, method.getName(), new AssertionError("Expected exception: "  + expected.value().getName())));
+			Class< ? extends Throwable> expected= fTestIntrospector.expectedException(method);
+			if (fTestIntrospector.expectsException(method)) {
+				addFailure(new TestFailure(test, method.getName(), new AssertionError("Expected exception: "  + expected.getName())));
 			}
 		} catch (InvocationTargetException e) {
 			if (fTestIntrospector.isUnexpected(e.getTargetException(), method))
@@ -86,10 +85,6 @@ public class JUnit4Strategy implements RunnerStrategy {
 				addFailure(new TestFailure(test, method.getName(), e)); // TODO: Write test for this
 			}
 		}
-	}
-
-	private Expected expectedException(Method method) {
-		return method.getAnnotation(Expected.class);
 	}
 
 	public void tearDown(Object test) throws Exception {

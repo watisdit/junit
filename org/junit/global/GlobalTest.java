@@ -62,3 +62,13 @@ public class GlobalTest {
 	}
 	
 }
+
+//TODO: HTTP instead of plain sockets
+//TODO: Report page
+//TODO: Registering email addresses
+//TODO: Report page for registered users
+//TODO: Eclipse plug-in
+//TODO: Add JUnit version number to records
+//TODO: Logging
+//TODO: Recover log on startup
+//TODO: Switch-over when starting a new version of the server

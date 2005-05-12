@@ -13,6 +13,7 @@ public class Runner {
 	private int fCount= 0;
 	private List<Failure> fFailures= new ArrayList<Failure>();
 	private List<TestListener> fListeners= new ArrayList<TestListener>();
+	private long fRunTime;
 
 	public void run(Class... testClasses) {
 		for (TestListener each : fListeners)
@@ -21,8 +22,9 @@ public class Runner {
 		for (Class<? extends Object> each : testClasses)
 			getStrategy(each).run();
 		long endTime= System.currentTimeMillis();
+		fRunTime+= endTime - startTime;
 		for (TestListener each : fListeners)
-			each.testRunFinished(this, endTime - startTime);
+			each.testRunFinished(this);
 	}
 	
 	private RunnerStrategy getStrategy(Class<? extends Object> testClass) {
@@ -37,8 +39,9 @@ public class Runner {
 		long startTime= System.currentTimeMillis();
 		new PreJUnit4Strategy(this, test).run();
 		long endTime= System.currentTimeMillis();
+		fRunTime+= endTime - startTime;
 		for (TestListener each : fListeners)
-			each.testRunFinished(this, endTime - startTime);
+			each.testRunFinished(this);
 	}
 
 	public void addFailure(Failure failure) {
@@ -53,6 +56,10 @@ public class Runner {
 
 	public int getFailureCount() {
 		return fFailures.size();
+	}
+
+	public long getRunTime() {
+		return fRunTime;
 	}
 
 	public List<Failure> getFailures() {

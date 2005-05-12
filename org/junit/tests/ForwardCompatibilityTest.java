@@ -8,7 +8,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Expected;
 import org.junit.Test;
 
 public class ForwardCompatibilityTest extends TestCase {
@@ -49,8 +48,7 @@ public class ForwardCompatibilityTest extends TestCase {
 	}
 	
 	public static class NoExceptionTest {
-		@Expected(Exception.class)
-		@Test public void succeed() throws Exception {
+		@Test(expected=Exception.class) public void succeed() throws Exception {
 		}
 	}
 	public void testNoException() {
@@ -61,9 +59,7 @@ public class ForwardCompatibilityTest extends TestCase {
 	}
 	
 	public static class ExpectedTest {
-		@Expected(Exception.class)
-		//TODO @Test(expected = Exception.class) public void expected() throws Exception {
-		@Test() public void expected() throws Exception {
+		@Test(expected = Exception.class) public void expected() throws Exception {
 			throw new Exception();
 		}
 	}

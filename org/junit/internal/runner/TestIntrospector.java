@@ -6,12 +6,14 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Expected;
 import org.junit.Test;
+import org.junit.Test.None;
+
 
 public class TestIntrospector {
 	
@@ -22,10 +24,20 @@ public class TestIntrospector {
 	}
 
 	public boolean isUnexpected(Throwable exception, Method method) {
-		Expected annotation= method.getAnnotation(Expected.class);
-		if (annotation == null)
-			return true;
-		return !annotation.value().equals(exception.getClass());
+		Class< ? extends Throwable> expected= expectedException(method);
+		return !exception.getClass().equals(expected);
+	}
+
+	public boolean expectsException(Method method) {
+		return expectedException(method) != null;
+	}
+
+	public Class< ? extends Throwable> expectedException(Method method) {
+		Test annotation= method.getAnnotation(Test.class);
+		if (annotation.expected() == None.class)
+			return null;
+		else
+			return annotation.expected();
 	}
 
 	public List<Exception> validateTestMethods() {
