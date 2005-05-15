@@ -1,10 +1,7 @@
 package junit.framework; 
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.internal.runner.TestIntrospector;
