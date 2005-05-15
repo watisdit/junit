@@ -14,6 +14,7 @@ import org.junit.internal.runner.TestIntrospector;
 import static org.junit.Assert.*;
 
 public class TestMethodTest {
+	@SuppressWarnings("all")  
 	public static class EverythingWrong {
 		private EverythingWrong() {}
 		@BeforeClass public void notStaticBC() {}
