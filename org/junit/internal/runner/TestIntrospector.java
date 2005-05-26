@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -61,15 +62,41 @@ public class TestIntrospector {
 
 	public List<Method> getTestMethods(Class<? extends Annotation> annotationClass) {
 		List<Method> results= new ArrayList<Method>();
-		Method[] methods= fTestClass.getDeclaredMethods();
-		for (Method each : methods) {
-			Annotation annotation= each.getAnnotation(annotationClass);
-			if (annotation != null) 
-				results.add(each);
+		for (Class eachClass : getSuperClasses(fTestClass)) {
+			Method[] methods= eachClass.getDeclaredMethods();
+			for (Method eachMethod : methods) {
+				Annotation annotation= eachMethod.getAnnotation(annotationClass);
+				if (annotation != null && ! isShadowed(eachMethod, results)) 
+					results.add(eachMethod);
+			}
+		}
+		if (runsTopToBottom(annotationClass))
+			Collections.reverse(results);
+		return results;
+	}
+
+	private boolean runsTopToBottom(Class< ? extends Annotation> annotation) {
+		return annotation.equals(Before.class) || annotation.equals(BeforeClass.class);
+	}
+	
+	private boolean isShadowed(Method method, List<Method> results) {
+		for (Method each : results) {
+			if (each.getName().equals(method.getName()))
+				return true;
+		}
+		return false;
+	}
+
+	private List<Class> getSuperClasses(Class< ? extends Object> testClass) {
+		ArrayList<Class> results= new ArrayList<Class>();
+		Class<? extends Object> current= testClass;
+		while (current != null) {
+			results.add(current);
+			current= current.getSuperclass();
 		}
 		return results;
 	}
-	
+
 	private void validateTestMethods(Class<? extends Annotation> annotation, boolean isStatic, List<Exception> results) throws Exception {
 		List<Method> methods= getTestMethods(annotation);
 		for (Method each : methods) {

@@ -14,6 +14,7 @@ import org.junit.internal.runner.TestIntrospector;
 import static org.junit.Assert.*;
 
 public class TestMethodTest {
+	
 	@SuppressWarnings("all")  
 	public static class EverythingWrong {
 		private EverythingWrong() {}
@@ -48,6 +49,34 @@ public class TestMethodTest {
 		int errorCount= 1 + 4 * 5; // missing constructor plus four invalid methods for each annotation */
 		assertEquals(errorCount, problems.size());
 	}
+	
+	static public class SuperWrong {
+		@Test void notPublic() {
+		}
+	}
+	
+	static public class SubWrong extends SuperWrong {
+		@Test public void justFine() {
+		}
+	}
+	
+	@Test public void validateInheritedMethods() throws Exception {
+		List<Exception> problems= new TestIntrospector(SubWrong.class).validateTestMethods();
+		assertEquals(1, problems.size());
+	}
+	
+	static public class SubShadows extends SuperWrong {
+		@Override
+		@Test public void notPublic() {
+		}
+	}
+
+	@Test public void dontValidateShadowedMethods() throws Exception {
+		List<Exception> problems= new TestIntrospector(SubShadows.class).validateTestMethods();
+		assertTrue(problems.isEmpty());
+	}
+
+	
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(TestMethodTest.class);
 	}

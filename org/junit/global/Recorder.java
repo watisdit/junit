@@ -85,10 +85,15 @@ public class Recorder {
 		int runTime= Integer.parseInt(values.get("run time"));
 		String version= values.get("version");
 		if (! users.contains(email))
-			users.add(users.size(), email);
+			addUser(email);
 		Run result= new Run(System.currentTimeMillis(), email, runCount, failCount, runTime, version);
 		addRun(result);
 		return result;
+	}
+
+	private void addUser(String email) {
+		//TODO: Write to a log here
+		users.add(users.size(), email);
 	}
 
 	private void addRun(Run result) {

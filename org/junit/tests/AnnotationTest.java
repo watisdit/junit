@@ -309,5 +309,101 @@ public class AnnotationTest extends TestCase {
 		assertEquals(1, runner.getFailureCount());
 	}
 
-	//TODO: Inherited test methods, before class, before, test, after, after class
+	static public class SuperInheritance {
+		@BeforeClass static public void beforeClassSuper() {
+			log+= "Before class super ";
+		}
+		@AfterClass static public void afterClassSuper() {
+			log+= "After class super ";
+		}
+		@Before public void beforeSuper() {
+			log+= "Before super ";
+		}
+		@After public void afterSuper() {
+			log+= "After super ";
+		}
+	}
+	
+	static public class SubInheritance extends SuperInheritance {
+		@BeforeClass static public void beforeClassSub() {
+			log+= "Before class sub ";
+		}
+		@AfterClass static public void afterClassSub() {
+			log+= "After class sub ";
+		}
+		@Before public void beforeSub() {
+			log+= "Before sub ";
+		}
+		@After public void afterSub() {
+			log+= "After sub ";
+		}
+		@Test public void test() {
+			log+= "Test ";
+		}
+	}
+	
+	public void testOrderingOfInheritance() throws Exception {
+		log= "";
+		Runner runner= new Runner();
+		runner.run(SubInheritance.class);
+		assertEquals("Before class super Before class sub Before super Before sub Test After sub After super After class sub After class super ", log);
+	}
+	
+	static public class SuperShadowing {
+		@Before public void before() {
+			log+= "Before super ";
+		}
+		@After public void after() {
+			log+= "After super ";
+		}
+	}
+	
+	static public class SubShadowing extends SuperShadowing {
+		@Override
+		@Before public void before() {
+			log+= "Before sub ";
+		}
+		@Override
+		@After public void after() {
+			log+= "After sub ";
+		}
+		@Test public void test() {
+			log+= "Test ";
+		}
+	}
+	
+	public void testShadowing() throws Exception {
+		log= "";
+		Runner runner= new Runner();
+		runner.run(SubShadowing.class);
+		assertEquals("Before sub Test After sub ", log);
+	}
+	
+	static public class SuperTest {
+		@Test public void one() {
+			log+= "Super";
+		}
+		
+		@Test public void two() {
+			log+= "Two";
+		}
+	}
+	
+	static public class SubTest extends SuperTest {
+		@Override
+		@Test public void one() {
+			log+= "Sub";
+		}
+	}
+	
+	public void testTestInheritance() throws Exception {
+		log= "";
+		Runner runner= new Runner();
+		runner.run(SubTest.class);
+		// The order in which the test methods are called is unspecified
+		assertTrue(log.contains("Sub"));
+		assertTrue(log.contains("Two"));
+		assertFalse(log.contains("Super"));
+	}
+	
 }

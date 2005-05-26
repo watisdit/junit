@@ -9,6 +9,8 @@ Before first public candidate release:
 !* command line interface
 
 Before final JUnit 4 release:
+* assertEquals(Object[], Object[])
+* @Ignore
 *   contact all test runner authors-- JBuilder, JDeveloper, NetBeans (?), IntelliJ, Ant
 		make sure TestListener is symmetric and meets needs of all runner developers
 *  Ant
