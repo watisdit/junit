@@ -9,7 +9,6 @@ Before first public candidate release:
 !* command line interface
 
 Before final JUnit 4 release:
-* assertEquals(Object[], Object[])
 * @Ignore
 *   contact all test runner authors-- JBuilder, JDeveloper, NetBeans (?), IntelliJ, Ant
 		make sure TestListener is symmetric and meets needs of all runner developers
@@ -38,9 +37,11 @@ Before final JUnit 4 release:
      
 Cool ideas:
 * Listener that informs a global JUnit test case server (URLConnection)
+* TestProvider (useful when we have a command line?)
 
 
 Done
+* assertEquals(Object[], Object[])  Arrays.equals(
 !* make expected an attribute of @Test
 *   Runner.run(Object)
 !* split Failure

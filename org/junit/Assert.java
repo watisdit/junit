@@ -81,6 +81,36 @@ public class Assert {
 	}
 
 	/**
+	 * Asserts that two object arrays are equal. If they are not an
+	 * AssertionFailedError is thrown with the given message.
+	 */
+	public static void assertEquals(String message, Object[] expected, Object[] actual) {
+		if (expected == actual)
+			return;
+		if (expected == null)
+			fail(message + ": expected array was null");
+		if (actual == null)
+			fail(message + ": actual array was null");
+		if (actual.length != expected.length)
+			fail(message + ": array lengths differed, expected.length=" + expected.length + " actual.length=" + actual.length);
+
+		for (int i= 0; i < expected.length; i++) {
+			Object o1= expected[i];
+			Object o2= actual[i];
+			if (!(o1 == null ? o2 == null : o1.equals(o2)))
+				fail(message + ":" + " arrays first differed at element " + i);
+		}
+	}
+
+	/**
+	 * Asserts that two object arrays are equal. If they are not an
+	 * AssertionFailedError is thrown.
+	 */
+	public static void assertEquals(Object[] objects1, Object[] objects2) {
+		assertEquals(null, objects1, objects2);
+	}
+
+	/**
 	 * Asserts that two Strings are equal.
 	 */
 	static public void assertEquals(String message, String expected, String actual) {
@@ -312,10 +342,11 @@ public class Assert {
 		fail(format(message, expected, actual));
 	}
 
-	public static String format(String message, Object expected, Object actual) {
+	static public String format(String message, Object expected, Object actual) {
 		String formatted= "";
 		if (message != null)
 			formatted= message + " ";
 		return formatted + "expected:<" + expected + "> but was:<" + actual + ">";
 	}
+
 }

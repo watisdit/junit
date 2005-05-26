@@ -19,7 +19,7 @@ import org.junit.Test.None;
 public class TestIntrospector {
 	
 	private final Class< ? extends Object> fTestClass;
-
+	
 	public TestIntrospector(Class<? extends Object> testClass) {
 		fTestClass= testClass;
 	}

@@ -38,7 +38,7 @@ public class AssertTest extends TestCase {
 	}
 
 	public void testAssertEqualsNull() {
-		assertEquals(null, null);
+		assertEquals((Object) null, (Object) null);
 	}
 
 	public void testAssertStringEquals() {
