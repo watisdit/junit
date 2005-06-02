@@ -15,6 +15,7 @@ public class RepeatedTestTest extends TestCase {
 
 	public static class SuccessTest extends TestCase {
 
+		@Override
 		public void runTest() {
 		}
 	}

@@ -36,6 +36,7 @@ public class Money implements IMoney {
 	public String currency() {
 		return fCurrency;
 	}
+	@Override
 	public boolean equals(Object anObject) {
 		if (isZero()) 
 			if (anObject instanceof IMoney)
@@ -47,6 +48,7 @@ public class Money implements IMoney {
 		}
 		return false;
 	}
+	@Override
 	public int hashCode() {
 		return fCurrency.hashCode()+fAmount;
 	}
@@ -62,6 +64,7 @@ public class Money implements IMoney {
 	public IMoney subtract(IMoney m) {
 		return add(m.negate());
 	}
+	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("["+amount()+" "+currency()+"]");

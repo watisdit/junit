@@ -15,7 +15,7 @@ public class PreJUnit4Strategy implements TestListener,  RunnerStrategy {
 	private Runner fRunner;
 	private Test fTest;
 
-	public PreJUnit4Strategy(Runner runner, Class testClass) {
+	public PreJUnit4Strategy(Runner runner, Class<? extends TestCase> testClass) {
 		fRunner= runner;
 		fTest= new TestSuite(testClass);
 	}

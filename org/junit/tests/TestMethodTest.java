@@ -1,5 +1,6 @@
 package org.junit.tests;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 import junit.framework.JUnit4TestAdapter;
@@ -8,13 +9,14 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.internal.runner.TestIntrospector;
 
 import static org.junit.Assert.*;
 
 public class TestMethodTest {
-	
+
 	@SuppressWarnings("all")  
 	public static class EverythingWrong {
 		private EverythingWrong() {}
@@ -49,22 +51,22 @@ public class TestMethodTest {
 		int errorCount= 1 + 4 * 5; // missing constructor plus four invalid methods for each annotation */
 		assertEquals(errorCount, problems.size());
 	}
-	
+
 	static public class SuperWrong {
 		@Test void notPublic() {
 		}
 	}
-	
+
 	static public class SubWrong extends SuperWrong {
 		@Test public void justFine() {
 		}
 	}
-	
+
 	@Test public void validateInheritedMethods() throws Exception {
 		List<Exception> problems= new TestIntrospector(SubWrong.class).validateTestMethods();
 		assertEquals(1, problems.size());
 	}
-	
+
 	static public class SubShadows extends SuperWrong {
 		@Override
 		@Test public void notPublic() {
@@ -76,7 +78,18 @@ public class TestMethodTest {
 		assertTrue(problems.isEmpty());
 	}
 
-	
+	static public class IgnoredTest {
+		@Test public void valid() {}
+		@Ignore @Test public void ignored() {}
+		@Ignore(reason= "For testing purposes") @Test public void withReason() {}
+	}
+
+	@Test public void ignoredTest() throws Exception {
+		List<Method> methods= new TestIntrospector(IgnoredTest.class).getTestMethods(Test.class);
+		assertEquals(1, methods.size());
+		assertTrue(methods.contains(IgnoredTest.class.getMethod("valid", new Class[0])));
+	}
+
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(TestMethodTest.class);
 	}

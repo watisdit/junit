@@ -17,9 +17,11 @@ public class TestCaseTest extends TestCase {
 	static class TornDown extends TestCase {
 		boolean fTornDown= false;
 		
+		@Override
 		protected void tearDown() {
 			fTornDown= true;
 		}
+		@Override
 		protected void runTest() {
 			throw new Error("running");
 		}
@@ -33,6 +35,7 @@ public class TestCaseTest extends TestCase {
 	}
 	public void testError() {
 		TestCase error= new TestCase("error") {
+			@Override
 			protected void runTest() {
 				throw new Error();
 			}
@@ -41,10 +44,12 @@ public class TestCaseTest extends TestCase {
 	}
 	public void testRunAndTearDownFails() {
 		TornDown fails= new TornDown() {
+			@Override
 			protected void tearDown() {
 				super.tearDown();
 				throw new Error();
 			}
+			@Override
 			protected void runTest() {
 				throw new Error();
 			}
@@ -54,9 +59,11 @@ public class TestCaseTest extends TestCase {
 	}
 	public void testSetupFails() {
 		TestCase fails= new TestCase("success") {
+			@Override
 			protected void setUp() {
 				throw new Error();
 			}
+			@Override
 			protected void runTest() {
 			}
 		};
@@ -64,6 +71,7 @@ public class TestCaseTest extends TestCase {
 	}
 	public void testSuccess() {
 		TestCase success= new TestCase("success") {
+			@Override
 			protected void runTest() {
 			}
 		};
@@ -71,6 +79,7 @@ public class TestCaseTest extends TestCase {
 	}
 	public void testFailure() {
 		TestCase failure= new TestCase("failure") {
+			@Override
 			protected void runTest() {
 				fail();
 			}
@@ -86,9 +95,11 @@ public class TestCaseTest extends TestCase {
 	
 	public void testTearDownFails() {
 		TestCase fails= new TestCase("success") {
+			@Override
 			protected void tearDown() {
 				throw new Error();
 			}
+			@Override
 			protected void runTest() {
 			}
 		};
@@ -96,6 +107,7 @@ public class TestCaseTest extends TestCase {
 	}
 	public void testTearDownSetupFails() {
 		TornDown fails= new TornDown() {
+			@Override
 			protected void setUp() {
 				throw new Error();
 			}
@@ -113,6 +125,7 @@ public class TestCaseTest extends TestCase {
 		// wrap the exception thrown while running with the exception thrown
 		// while tearing down
 		Test t= new TornDown() {
+			@Override
 			public void tearDown() {
 				throw new Error("tearingDown");
 			}
@@ -126,9 +139,11 @@ public class TestCaseTest extends TestCase {
 	public void testErrorTearingDownDoesntMaskErrorRunning() {
 		final Exception running= new Exception("Running");
 		TestCase t= new TestCase() {
+			@Override
 			protected void runTest() throws Throwable {
 				throw running;
 			}
+			@Override
 			protected void tearDown() throws Exception {
 				throw new Error("Tearing down");
 			}

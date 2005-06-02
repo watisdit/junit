@@ -49,6 +49,7 @@ public class MoneyBag implements IMoney {
 			return;
 		fMonies.add(sum);
 	}
+	@Override
 	public boolean equals(Object anObject) {
 		if (isZero())
 			if (anObject instanceof IMoney)
@@ -77,6 +78,7 @@ public class MoneyBag implements IMoney {
 		if (found == null) return false;
 		return found.amount() == m.amount();
 	}
+	@Override
 	public int hashCode() {
 		int hash= 0;
 	    for (Money each : fMonies)
@@ -107,6 +109,7 @@ public class MoneyBag implements IMoney {
 	public IMoney subtract(IMoney m) {
 		return add(m.negate());
 	}
+	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("{");

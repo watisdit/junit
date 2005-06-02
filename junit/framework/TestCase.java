@@ -187,6 +187,7 @@ public abstract class TestCase extends Assert implements Test {
 	/**
 	 * Returns a string representation of the test case
 	 */
+	@Override
 	public String toString() {
 	    return getName() + "(" + getClass().getName() + ")";
 	}

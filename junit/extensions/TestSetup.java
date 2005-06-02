@@ -15,6 +15,7 @@ public class TestSetup extends TestDecorator {
 		super(test);
 	}
 
+	@Override
 	public void run(final TestResult result) {
 		Protectable p= new Protectable() {
 			public void protect() throws Exception {

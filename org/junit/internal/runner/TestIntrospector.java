@@ -12,6 +12,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.Test.None;
 
@@ -65,6 +66,8 @@ public class TestIntrospector {
 		for (Class eachClass : getSuperClasses(fTestClass)) {
 			Method[] methods= eachClass.getDeclaredMethods();
 			for (Method eachMethod : methods) {
+				if (eachMethod.getAnnotation(Ignore.class) != null)
+					continue;
 				Annotation annotation= eachMethod.getAnnotation(annotationClass);
 				if (annotation != null && ! isShadowed(eachMethod, results)) 
 					results.add(eachMethod);

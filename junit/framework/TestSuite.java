@@ -42,8 +42,8 @@ public class TestSuite implements Test {
 	 * ...as the moon sets over the early morning Merlin, Oregon
 	 * mountains, our intrepid adventurers type...
 	 */
-	static public Test createTest(Class theClass, String name) {
-		Constructor constructor;
+	static public Test createTest(Class<? extends TestCase> theClass, String name) {
+		Constructor<? extends TestCase> constructor;
 		try {
 			constructor= getTestConstructor(theClass);
 		} catch (NoSuchMethodException e) {
@@ -72,7 +72,7 @@ public class TestSuite implements Test {
 	 * Gets a constructor which takes a single String as
 	 * its argument or a no arg constructor.
 	 */
-	public static Constructor getTestConstructor(Class theClass) throws NoSuchMethodException {
+	public static Constructor<? extends TestCase> getTestConstructor(Class<? extends TestCase> theClass) throws NoSuchMethodException {
 		Class[] args= { String.class };
 		try {
 			return theClass.getConstructor(args);	
@@ -87,6 +87,7 @@ public class TestSuite implements Test {
 	 */
 	public static Test warning(final String message) {
 		return new TestCase("warning") {
+			@Override
 			protected void runTest() {
 				fail(message);
 			}
@@ -119,7 +120,7 @@ public class TestSuite implements Test {
 	 * Parts of this method were written at 2337 meters in the Hueffihuette,
 	 * Kanton Uri
 	 */
-	 public TestSuite(final Class theClass) {
+	 public TestSuite(final Class<? extends TestCase> theClass) {
 		fName= theClass.getName();
 		try {
 			getTestConstructor(theClass); // Avoid generating multiple error messages
@@ -137,7 +138,7 @@ public class TestSuite implements Test {
 		List<String> names= new ArrayList<String>();
 		while (Test.class.isAssignableFrom(superClass)) {
 			for (Method each : superClass.getDeclaredMethods())
-				addTestMethod(each, names, theClass);
+				addTestMethod(each, names, (Class< ? extends TestCase>) theClass);
 			superClass= superClass.getSuperclass();
 		}
 		if (fTests.size() == 0)
@@ -148,7 +149,7 @@ public class TestSuite implements Test {
 	 * Constructs a TestSuite from the given class with the given name.
 	 * @see TestSuite#TestSuite(Class)
 	 */
-	public TestSuite(Class theClass, String name) {
+	public TestSuite(Class<? extends TestCase>  theClass, String name) {
 		this(theClass);
 		setName(name);
 	}
@@ -164,8 +165,8 @@ public class TestSuite implements Test {
 	 * Constructs a TestSuite from the given array of classes.  
 	 * @param classes
 	 */
-	public TestSuite (Class[] classes) {
-		for (Class each : classes)
+	public TestSuite (Class<? extends TestCase>[] classes) {
+		for (Class<? extends TestCase> each : classes)
 			addTest(new TestSuite(each));
 	}
 	
@@ -173,7 +174,7 @@ public class TestSuite implements Test {
 	 * Constructs a TestSuite from the given array of classes with the given name.
 	 * @see TestSuite#TestSuite(Class[])
 	 */
-	public TestSuite(Class[] classes, String name) {
+	public TestSuite(Class<? extends TestCase>[] classes, String name) {
 		this(classes);
 		setName(name);
 	}
@@ -188,7 +189,7 @@ public class TestSuite implements Test {
 	/**
 	 * Adds the tests from the given class to the suite
 	 */
-	public void addTestSuite(Class testClass) {
+	public void addTestSuite(Class<? extends TestCase> testClass) {
 		addTest(new TestSuite(testClass));
 	}
 	
@@ -257,13 +258,14 @@ public class TestSuite implements Test {
 	
 	/**
 	 */
+	@Override
 	public String toString() {
 		if (getName() != null)
 			return getName();
 		return super.toString();
 	 }
 
-	private void addTestMethod(Method m, List<String> names, Class theClass) {
+	private void addTestMethod(Method m, List<String> names, Class<? extends TestCase> theClass) {
 		String name= m.getName();
 		if (names.contains(name))
 			return;

@@ -6,10 +6,8 @@ Before first public candidate release:
 !* can we make the JUnit4TestCaseAdapter transparent to old runners so that they show the real class
 !* add  javadoc to API interfaces and Annotations
 !* make old code 1.5 compliant
-!* command line interface
 
 Before final JUnit 4 release:
-* @Ignore
 *   contact all test runner authors-- JBuilder, JDeveloper, NetBeans (?), IntelliJ, Ant
 		make sure TestListener is symmetric and meets needs of all runner developers
 *  Ant
@@ -33,7 +31,6 @@ Before final JUnit 4 release:
 * timeout annotation
 * TestRunEvent
 * think about compatibility with old runners--no clashing class names
-* assertEquals for collections (show at which elements the collections differ)
      
 Cool ideas:
 * Listener that informs a global JUnit test case server (URLConnection)
@@ -41,6 +38,8 @@ Cool ideas:
 
 
 Done
+!* command line interface
+* @Ignore
 * assertEquals(Object[], Object[])  Arrays.equals(
 !* make expected an attribute of @Test
 *   Runner.run(Object)

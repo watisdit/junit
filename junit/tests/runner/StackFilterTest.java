@@ -10,6 +10,7 @@ public class StackFilterTest extends TestCase {
 	String fFiltered;
 	String fUnfiltered;
 	
+	@Override
 	protected void setUp() {
 		StringWriter swin= new StringWriter();
 		PrintWriter pwin= new PrintWriter(swin);

@@ -91,12 +91,12 @@ public class Recorder {
 		return result;
 	}
 
-	private void addUser(String email) {
+	protected void addUser(String email) {
 		//TODO: Write to a log here
 		users.add(users.size(), email);
 	}
 
-	private void addRun(Run result) {
+	protected void addRun(Run result) {
 		//TODO: Write to a log here
 		runs.add(result);
 	}

@@ -17,10 +17,12 @@ public class RepeatedTest extends TestDecorator {
 		fTimesRepeat= repeat;
 	}
 
+	@Override
 	public int countTestCases() {
 		return super.countTestCases() * fTimesRepeat;
 	}
 
+	@Override
 	public void run(TestResult result) {
 		for (int i= 0; i < fTimesRepeat; i++) {
 			if (result.shouldStop())
@@ -29,6 +31,7 @@ public class RepeatedTest extends TestDecorator {
 		}
 	}
 
+	@Override
 	public String toString() {
 		return super.toString() + "(repeated)";
 	}

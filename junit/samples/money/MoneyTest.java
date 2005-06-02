@@ -14,6 +14,7 @@ public class MoneyTest extends TestCase {
 	public static void main(String args[]) {
 		junit.textui.TestRunner.run(MoneyTest.class);
 	}
+	@Override
 	protected void setUp() {
 		f12CHF= new Money(12, "CHF");
 		f14CHF= new Money(14, "CHF");

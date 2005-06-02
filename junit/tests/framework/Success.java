@@ -8,6 +8,7 @@ import junit.framework.TestCase;
  */
 public class Success extends TestCase {
 	
+	@Override
 	public void runTest() {
 	}
 	

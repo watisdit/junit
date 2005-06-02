@@ -15,14 +15,31 @@ import org.junit.runner.Runner;
 
 public class RecordingListener implements org.junit.runner.TestListener {
 
-	private final PrintStream fWriter;
-	private final String fEmail;
+	private PrintStream fWriter;
+	private String fEmail;
+	private String fHost= "localhost"; // This should default to recorder.org.junit
 
-	public RecordingListener(String email, PrintStream writer) {
-		fWriter= writer;
-		fEmail= email;
+	public RecordingListener() {
+		this("");
+	}
+	
+	public RecordingListener(String email) {
+		this(email, System.out);
 	}
 
+	public RecordingListener(String email, PrintStream writer) {
+		fEmail= email;
+		fWriter= writer;
+	}
+
+	public void setHost(String host) {
+		fHost= host;
+	}
+	
+	public void setEmail(String email) {
+		fEmail= email;
+	}
+	
 	public void testRunStarted() {
 	}
 
@@ -48,7 +65,7 @@ public class RecordingListener implements org.junit.runner.TestListener {
 //	}
 
 	private void processRun(Runner runner) throws Exception {
-		Socket socket= new Socket("localhost", 80);
+		Socket socket= new Socket(fHost, 80);
 		try {
 			writeRecord(runner, socket);
 			processResponse(runner, socket);

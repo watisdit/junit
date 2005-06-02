@@ -14,6 +14,7 @@ public class SuiteTest extends TestCase {
 	public SuiteTest(String name) {
 		super(name);
 	}
+	@Override
 	protected void setUp() {
 		fResult= new TestResult(); 
 	}
@@ -21,7 +22,6 @@ public class SuiteTest extends TestCase {
 		TestSuite suite= new TestSuite("Suite Tests");
 		// build the suite manually, because some of the suites are testing
 		// the functionality that automatically builds suites
-		suite.addTest(new SuiteTest("testNoTestCaseClass"));
 		suite.addTest(new SuiteTest("testNoTestCases"));
 		suite.addTest(new SuiteTest("testOneTestCase"));
 		suite.addTest(new SuiteTest("testNotPublicTestCase"));
@@ -40,12 +40,13 @@ public class SuiteTest extends TestCase {
 		assertTrue(fResult.wasSuccessful());
 		assertEquals(2, fResult.runCount());
 	}
-	public void testNoTestCaseClass() {
-		Test t= new TestSuite(NoTestCaseClass.class);
-		t.run(fResult);
-		assertEquals(1, fResult.runCount());  // warning test
-		assertTrue(! fResult.wasSuccessful());
-	}
+// This test case is obsolete, since the compiler will catch this error in 1.5
+//	public void testNoTestCaseClass() {
+//		Test t= new TestSuite(NoTestCaseClass.class);
+//		t.run(fResult);
+//		assertEquals(1, fResult.runCount());  // warning test
+//		assertTrue(! fResult.wasSuccessful());
+//	}
 	public void testNoTestCases() {
 		Test t= new TestSuite(NoTestCases.class);
 		t.run(fResult);

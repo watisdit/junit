@@ -18,12 +18,14 @@ public class ExtensionTest extends TestCase {
 		TornDown(Test test) {
 			super(test);
 		}
+		@Override
 		protected void tearDown() {
 			fTornDown= true;
 		}
 	}
 	public void testRunningErrorInTestSetup() {
 		TestCase test= new TestCase("failure") {
+			@Override
 			public void runTest() {
 				fail();
 			}
@@ -37,12 +39,14 @@ public class ExtensionTest extends TestCase {
 	}
 	public void testRunningErrorsInTestSetup() {
 		TestCase failure= new TestCase("failure") {
+			@Override
 			public void runTest() {
 				fail();
 			}
 		};
 
 		TestCase error= new TestCase("error") {
+			@Override
 			public void runTest() {
 				throw new Error();
 			}
@@ -64,6 +68,7 @@ public class ExtensionTest extends TestCase {
 		WasRun test= new WasRun();
 
 		TornDown wrapper= new TornDown(test) {
+			@Override
 			public void setUp() {
 				fail();
 			}
@@ -78,6 +83,7 @@ public class ExtensionTest extends TestCase {
 		WasRun test= new WasRun();
 
 		TestSetup wrapper= new TestSetup(test) {
+			@Override
 			public void setUp() {
 				fail();
 			}

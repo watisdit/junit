@@ -25,6 +25,7 @@ public class TestListenerTest extends TestCase implements TestListener {
 	public void endTest(Test test) {
 		fEndCount++;
 	}
+	@Override
 	protected void setUp() {
 		fResult= new TestResult();
 		fResult.addListener(this);
@@ -38,6 +39,7 @@ public class TestListenerTest extends TestCase implements TestListener {
 	}
 	public void testError() {
 		TestCase test= new TestCase("noop") {
+			@Override
 			public void runTest() {
 				throw new Error();
 			}
@@ -48,6 +50,7 @@ public class TestListenerTest extends TestCase implements TestListener {
 	}
 	public void testFailure() {
 		TestCase test= new TestCase("noop") {
+			@Override
 			public void runTest() {
 				fail();
 			}
@@ -58,6 +61,7 @@ public class TestListenerTest extends TestCase implements TestListener {
 	}
 	public void testStartStop() {
 		TestCase test= new TestCase("noop") {
+			@Override
 			public void runTest() {
 			}
 		};

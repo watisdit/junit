@@ -20,6 +20,7 @@ public class JUnit4TestCaseAdapter extends TestCase {
 		fTestIntrospector= new TestIntrospector(fTest.getClass());
 	}
 
+	@Override
 	protected void runTest() throws Throwable {
 		try {
 			fMethod.invoke(fTest, new Object[0]);
@@ -32,12 +33,14 @@ public class JUnit4TestCaseAdapter extends TestCase {
 			throw new Exception("Expected exception: " + fTestIntrospector.expectedException(fMethod));
 	}
 
+	@Override
 	protected void setUp() throws Exception {
 		List<Method> befores= fTestIntrospector.getTestMethods(Before.class);
 		for (Method before : befores)
 			before.invoke(fTest);
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		List<Method> afters= fTestIntrospector.getTestMethods(After.class);
 		for (Method after : afters)

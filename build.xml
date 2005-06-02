@@ -1,8 +1,7 @@
-<!-- JUnit build script using ant 1.4 -->
 <project name="junit" default="dist" basedir=".">
 	<property file="${user.home}/.junit.properties" />
 	<property name="build.compiler" value="classic" />
-	<property name="version" value="3.8.2" />
+	<property name="version" value="4.0rc1" />
 	<property name="dist"  value="junit${version}" />
 	<property name="versionfile"  value="junit/runner/Version.java" />
 	<property name="zipfile"  value="${dist}.zip" />
@@ -34,12 +33,13 @@
 		<jar 
 			jarfile="${dist}/src.jar"
 			basedir="."
-			excludes="**/*.jar, junit/tests/**, junit/samples/**, **/*.class, doc/**, README.html, stylesheet.css, build.xml, .classpath, .project, .settings/**, cpl-v10.html"
+			excludes="**/*.jar, junit/tests/**, junit/samples/**, **/*.class, doc/**, README.html, .classpath, .project, cpl-v10.html"
 		/>
 		<jar 
 			jarfile="${dist}/junit.jar"
 			basedir="."
-			excludes="**/*.jar, junit/tests/**, junit/samples/**, **/*.java, doc/**, README.html,  stylesheet.css, build.xml, jar-manifest.txt, .classpath, .project, .settings/**, cpl-v10.html"
+			excludes="**/*.jar, junit/tests/**, junit/samples/**, **/*.java, doc/**, README.html,  build.xml, jar-manifest.txt, .classpath, .project, cpl-v10.html"
+			manifest="META-INF/MANIFEST.MF"
 		/>
 		<copy todir="${dist}/junit/samples">
 			<fileset dir="junit/samples" />
@@ -48,17 +48,10 @@
 			<fileset dir="junit/tests" />
 		</copy>
 
-
-		<delete file="${dist}/junit/tests/runner/test.jar"/> 
-		<jar jarfile="${dist}/junit/tests/runner/test.jar" 
-	 	     basedir="." 
-		     includes="junit/tests/runner/LoadedFromJar.class"
-		 /> 
-
 		<mkdir dir="${dist}/javadoc" />
 		<javadoc 
 			sourcepath="."
-			packagenames="junit.framework.*, junit.extensions.*"
+			packagenames="org.junit, org.junit.runner"
 			destdir="${dist}/javadoc"
 			author="false"
 			version="false"
@@ -72,8 +65,16 @@
 		<copy file="README.html" tofile="${dist}/README.html" />
 		<copy file="cpl-v10.html" tofile="${dist}/cpl-v10.html" />
 		
-		<java classname="junit.textui.TestRunner" fork="yes">
-			<arg value="junit.samples.AllTests" />
+		<java classname="org.junit.runner.JUnitCore" fork="yes">
+		    <!--There must be a more intelligent way to do this-->
+			<arg value="org.junit.tests.AnnotationTest"/>
+			<arg value="org.junit.tests.AssertionTest"/>
+			<arg value="org.junit.tests.CommandLineTest"/>
+			<arg value="org.junit.tests.ForwardCompatibilityTest"/>
+			<arg value="org.junit.tests.OldTests"/>
+			<arg value="org.junit.tests.PreJUnit4TestCaseRunnerTest"/>
+			<arg value="org.junit.tests.TestMethodTest"/>
+			<arg value="org.junit.tests.TextListenerTest"/>
 			<classpath>
 				<pathelement location="${dist}" />
 				<pathelement location="${dist}/junit.jar" />
@@ -89,28 +90,6 @@
 		/>
 	</target>
 	
-	<target name="awtui" depends="dist">
-		<java classname="junit.awtui.TestRunner" fork="yes">
-			<arg value="-noloading" />
-			<arg value="junit.samples.AllTests" />
-			<classpath>
-				<pathelement location="${dist}" />
-				<pathelement location="${dist}/junit.jar" />
-			</classpath>
-		</java>
-	</target>
-	
-	<target name="swingui" depends="dist">
-		<java classname="junit.swingui.TestRunner" fork="yes">
-			<arg value="-noloading" />
-			<arg value="junit.samples.AllTests" />
-			<classpath>
-				<pathelement location="${dist}" />
-				<pathelement location="${dist}/junit.jar" />
-			</classpath>
-		</java>
-	</target>
-
 	<target name="clean">
 		<delete dir="${dist}" quiet="true"/>			
 		<delete file="${zipfile}" quiet="true"/> 

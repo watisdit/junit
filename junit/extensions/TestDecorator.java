@@ -32,6 +32,7 @@ public class TestDecorator extends Assert implements Test {
 		basicRun(result);
 	}
 
+	@Override
 	public String toString() {
 		return fTest.toString();
 	}

@@ -13,6 +13,7 @@ import junit.framework.TestResult;
 public class ActiveTestTest extends TestCase {
 
 	public static class SuccessTest extends TestCase {		
+		@Override
 		public void runTest() {
 		}
 	}

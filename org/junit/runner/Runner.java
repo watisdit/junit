@@ -3,6 +3,8 @@ package org.junit.runner;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.junit.internal.runner.JUnit4Strategy;
 import org.junit.internal.runner.PreJUnit4Strategy;
 import org.junit.internal.runner.RunnerStrategy;
@@ -29,7 +31,7 @@ public class Runner {
 	
 	private RunnerStrategy getStrategy(Class<? extends Object> testClass) {
 		if (junit.framework.TestCase.class.isAssignableFrom(testClass))
-			return new PreJUnit4Strategy(this, testClass); 
+			return new PreJUnit4Strategy(this, (Class< ? extends TestCase>) testClass); 
 		return new JUnit4Strategy(this, testClass);
 	}
 

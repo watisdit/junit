@@ -18,6 +18,7 @@ public class ListTest extends TestCase {
 	public static void main (String[] args) {
 		junit.textui.TestRunner.run (suite());
 	}
+	@Override
 	protected void setUp() {
 		fEmpty= new ArrayList<Integer>();
 		fFull= new ArrayList<Integer>();

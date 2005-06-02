@@ -12,6 +12,7 @@ public class SimpleTest extends TestCase {
 	protected int fValue1;
 	protected int fValue2;
 
+	@Override
 	protected void setUp() {
 		fValue1= 2;
 		fValue2= 3;

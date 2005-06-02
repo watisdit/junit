@@ -37,6 +37,7 @@ public class TestImplementorTest extends TestCase {
 	
 	public TestImplementorTest() {
 		TestCase testCase= new TestCase() {
+			@Override
 			public void runTest() {
 			}
 		};
