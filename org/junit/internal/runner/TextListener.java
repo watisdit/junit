@@ -1,22 +1,15 @@
-package org.junit.runner;
+package org.junit.internal.runner;
 
 import java.io.PrintStream;
 import java.text.NumberFormat;
 
+import org.junit.runner.Failure;
+import org.junit.runner.Runner;
+import org.junit.runner.TestListener;
+
 public class TextListener implements TestListener {
 
 	private final PrintStream fWriter;
-
-	static public void run(Class... testClasses) {
-		TextListener listener= new TextListener();
-		Runner runner= new Runner();
-		runner.addListener(listener);
-		try {
-			runner.run(testClasses);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	public TextListener() {
 		this(System.out);
@@ -42,6 +35,10 @@ public class TextListener implements TestListener {
 
 	public void testFailure(Failure failure) {
 		fWriter.append('E');
+	}
+	
+	public void testIgnored(Object method) {
+		fWriter.append('I');
 	}
 	
 	/*
@@ -103,5 +100,6 @@ public class TextListener implements TestListener {
 	protected String elapsedTimeAsString(long runTime) {
 		return NumberFormat.getInstance().format((double) runTime / 1000);
 	}
+
 
 }

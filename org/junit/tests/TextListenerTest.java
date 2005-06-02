@@ -7,8 +7,8 @@ import java.io.PrintStream;
 import junit.framework.TestCase;
 
 import org.junit.Test;
+import org.junit.internal.runner.TextListener;
 import org.junit.runner.Runner;
-import org.junit.runner.TextListener;
 
 public class TextListenerTest extends TestCase {
 	

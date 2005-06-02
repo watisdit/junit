@@ -1,18 +1,20 @@
 package org.junit.runner;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
-
 import org.junit.internal.runner.JUnit4Strategy;
 import org.junit.internal.runner.PreJUnit4Strategy;
 import org.junit.internal.runner.RunnerStrategy;
+import org.junit.internal.runner.TestNotifier;
 
 
-public class Runner {
+public class Runner implements TestNotifier {
 
 	private int fCount= 0;
+	private int fIgnoreCount= 0;
 	private List<Failure> fFailures= new ArrayList<Failure>();
 	private List<TestListener> fListeners= new ArrayList<TestListener>();
 	private long fRunTime;
@@ -46,12 +48,6 @@ public class Runner {
 			each.testRunFinished(this);
 	}
 
-	public void addFailure(Failure failure) {
-		fFailures.add(failure);
-		for (TestListener each : fListeners)
-			each.testFailure(failure);
-	}
-
 	public int getRunCount() {
 		return fCount;
 	}
@@ -68,6 +64,10 @@ public class Runner {
 		return fFailures;
 	}
 
+	public int getIgnoreCount() {
+		return fIgnoreCount;
+	}
+	
 	public void addListener(TestListener listener) {
 		fListeners.add(listener);
 	}
@@ -80,10 +80,22 @@ public class Runner {
 		return fListeners;
 	}
 
-	public void startTestCase(Object test, String name) {
+	public void fireTestStarted(Object test, String name) {
 		fCount++;
 		for (TestListener each : getListeners())
 			each.testStarted(test, name);
+	}
+
+	public void fireTestFailure(Failure failure) {
+		fFailures.add(failure);
+		for (TestListener each : fListeners)
+			each.testFailure(failure);
+	}
+
+	public void fireTestIgnored(Method method) {
+		fIgnoreCount++;
+		for (TestListener each : fListeners)
+			each.testIgnored(method);
 	}
 
 }

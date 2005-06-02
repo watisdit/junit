@@ -1,4 +1,6 @@
-package org.junit.runner;
+package org.junit.internal.runner;
+
+import org.junit.runner.Failure;
 
 public class TestFailure extends Failure {
 

@@ -66,8 +66,6 @@ public class TestIntrospector {
 		for (Class eachClass : getSuperClasses(fTestClass)) {
 			Method[] methods= eachClass.getDeclaredMethods();
 			for (Method eachMethod : methods) {
-				if (eachMethod.getAnnotation(Ignore.class) != null)
-					continue;
 				Annotation annotation= eachMethod.getAnnotation(annotationClass);
 				if (annotation != null && ! isShadowed(eachMethod, results)) 
 					results.add(eachMethod);
@@ -76,6 +74,10 @@ public class TestIntrospector {
 		if (runsTopToBottom(annotationClass))
 			Collections.reverse(results);
 		return results;
+	}
+
+	public boolean isIgnored(Method eachMethod) {
+		return eachMethod.getAnnotation(Ignore.class) != null;
 	}
 
 	private boolean runsTopToBottom(Class< ? extends Annotation> annotation) {

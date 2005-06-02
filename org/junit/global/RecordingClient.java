@@ -13,21 +13,21 @@ import java.util.Map;
 import org.junit.runner.Failure;
 import org.junit.runner.Runner;
 
-public class RecordingListener implements org.junit.runner.TestListener {
+public class RecordingClient implements org.junit.runner.TestListener {
 
 	private PrintStream fWriter;
 	private String fEmail;
 	private String fHost= "localhost"; // This should default to recorder.org.junit
 
-	public RecordingListener() {
+	public RecordingClient() {
 		this("");
 	}
 	
-	public RecordingListener(String email) {
+	public RecordingClient(String email) {
 		this(email, System.out);
 	}
 
-	public RecordingListener(String email, PrintStream writer) {
+	public RecordingClient(String email, PrintStream writer) {
 		fEmail= email;
 		fWriter= writer;
 	}
@@ -109,6 +109,9 @@ public class RecordingListener implements org.junit.runner.TestListener {
 	}
 
 	public void testFailure(Failure failure) {
+	}
+
+	public void testIgnored(Object method) {
 	}
 
 }

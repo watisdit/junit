@@ -36,6 +36,9 @@ public class PreJUnit4TestCaseRunnerTest {
 
 			public void testRunStarted() {
 			}
+
+			public void testIgnored(Object method) {
+			}
 		};
 		
 		runner.addListener(listener);

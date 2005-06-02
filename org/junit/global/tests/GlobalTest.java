@@ -1,4 +1,4 @@
-package org.junit.global;
+package org.junit.global.tests;
 
 import static org.junit.Assert.assertEquals;
 
@@ -10,18 +10,20 @@ import junit.framework.JUnit4TestAdapter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.global.RecordingClient;
+import org.junit.global.RecordingServer;
 import org.junit.runner.Runner;
 import org.junit.runner.TestListener;
 
 public class GlobalTest {
-	private Recorder recorder;
+	private RecordingServer recorder;
 	
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(GlobalTest.class);
 	}
 	
 	@Before public void start() {
-		recorder= new Recorder();
+		recorder= new RecordingServer();
 		recorder.start();
 	}
 	
@@ -54,7 +56,7 @@ public class GlobalTest {
 	private String runTests(String email) {
 		ByteArrayOutputStream results= new ByteArrayOutputStream();
 		PrintStream writer= new PrintStream(results);
-		TestListener listener= new RecordingListener(email, writer);
+		TestListener listener= new RecordingClient(email, writer);
 		Runner first= new Runner();
 		first.addListener(listener);
 		first.run(Example.class);

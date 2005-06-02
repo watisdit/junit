@@ -11,24 +11,22 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.Failure;
-import org.junit.runner.Runner;
-import org.junit.runner.TestFailure;
 
 public class JUnit4Strategy implements RunnerStrategy {
-	private Runner fRunner; //TODO: Find a way to decouple the strategy from a concrete Runner class
-	private final Class<? extends Object> fTestClass;
+	private final Class< ? extends Object> fTestClass;
 	private final TestIntrospector fTestIntrospector;
+	private TestNotifier fNotifier;
 
-	public JUnit4Strategy(Runner runner, Class<? extends Object> testClass) {
-		fRunner= runner;
+	public JUnit4Strategy(TestNotifier notifier, Class< ? extends Object> testClass) {
+		fNotifier= notifier;
 		fTestClass= testClass;
 		fTestIntrospector= new TestIntrospector(fTestClass);
 	}
 
 	public void run() {
 		List<Exception> errors= fTestIntrospector.validateTestMethods();
-		if (! errors.isEmpty()) {
-			for (Throwable each : errors) 
+		if (!errors.isEmpty()) {
+			for (Throwable each : errors)
 				addFailure(new Failure(each));
 			return;
 		}
@@ -38,10 +36,14 @@ public class JUnit4Strategy implements RunnerStrategy {
 				method.invoke(null);
 			List<Method> methods= fTestIntrospector.getTestMethods(Test.class);
 			for (Method method : methods) {
-				Constructor<? extends Object> constructor= fTestClass.getConstructor();
-				Object test= constructor.newInstance();
-				invokeMethod(test, method);
-			} 
+				if (fTestIntrospector.isIgnored(method)) {
+					fNotifier.fireTestIgnored(method);
+				} else {
+					Constructor< ? extends Object> constructor= fTestClass.getConstructor();
+					Object test= constructor.newInstance();
+					invokeMethod(test, method);
+				}
+			}
 			List<Method> afterMethods= fTestIntrospector.getTestMethods(AfterClass.class);
 			for (Method method : afterMethods)
 				method.invoke(null);
@@ -51,38 +53,38 @@ public class JUnit4Strategy implements RunnerStrategy {
 	}
 
 	void addFailure(Failure failure) {
-		fRunner.addFailure(failure);
+		fNotifier.fireTestFailure(failure);
 	}
 
 	private void invokeMethod(Object test, Method method) {
-		fRunner.startTestCase(test, method.getName());
+		fNotifier.fireTestStarted(test, method.getName());
 		try {
 			setUp(test);
 		} catch (InvocationTargetException e) {
 			addFailure(new TestFailure(test, method.getName(), e.getTargetException()));
 			return;
 		} catch (Throwable e) {
-			addFailure(new TestFailure(test, method.getName(), e)); // TODO: Write test for this
+			addFailure(new TestFailure(test, method.getName(), e)); // TODO:
 			return;
 		}
 		try {
 			method.invoke(test);
 			Class< ? extends Throwable> expected= fTestIntrospector.expectedException(method);
 			if (fTestIntrospector.expectsException(method)) {
-				addFailure(new TestFailure(test, method.getName(), new AssertionError("Expected exception: "  + expected.getName())));
+				addFailure(new TestFailure(test, method.getName(), new AssertionError("Expected exception: " + expected.getName())));
 			}
 		} catch (InvocationTargetException e) {
 			if (fTestIntrospector.isUnexpected(e.getTargetException(), method))
 				addFailure(new TestFailure(test, method.getName(), e.getTargetException()));
 		} catch (Throwable e) {
-			addFailure(new TestFailure(test, method.getName(), e)); // TODO: Write test for this
+			addFailure(new TestFailure(test, method.getName(), e)); // TODO:
 		} finally {
 			try {
 				tearDown(test);
 			} catch (InvocationTargetException e) {
 				addFailure(new TestFailure(test, method.getName(), e.getTargetException()));
 			} catch (Throwable e) {
-				addFailure(new TestFailure(test, method.getName(), e)); // TODO: Write test for this
+				addFailure(new TestFailure(test, method.getName(), e)); // TODO:
 			}
 		}
 	}
@@ -98,5 +100,5 @@ public class JUnit4Strategy implements RunnerStrategy {
 		for (Method before : befores)
 			before.invoke(test);
 	}
-	
+
 }

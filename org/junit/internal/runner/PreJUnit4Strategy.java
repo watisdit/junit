@@ -3,26 +3,26 @@ package org.junit.internal.runner;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestListener;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
-import org.junit.runner.Runner;
-import org.junit.runner.TestFailure;
-
-public class PreJUnit4Strategy implements TestListener,  RunnerStrategy {
+public class PreJUnit4Strategy implements junit.framework.TestListener,  RunnerStrategy {
 	
-	private Runner fRunner;
 	private Test fTest;
+	private TestNotifier fNotifier;
 
-	public PreJUnit4Strategy(Runner runner, Class<? extends TestCase> testClass) {
-		fRunner= runner;
+	public PreJUnit4Strategy(TestNotifier notifier, Class<? extends TestCase> testClass) {
+		this(notifier);
 		fTest= new TestSuite(testClass);
 	}
 	
-	public PreJUnit4Strategy(Runner runner, Test test) {
-		fRunner= runner;
+	public PreJUnit4Strategy(TestNotifier notifier, Test test) {
+		this(notifier);
 		fTest= test;
+	}
+	
+	private PreJUnit4Strategy(TestNotifier notifier) {
+		fNotifier= notifier;		
 	}
 	
 	public void run() {
@@ -38,7 +38,8 @@ public class PreJUnit4Strategy implements TestListener,  RunnerStrategy {
 			name= ((TestCase) test).getName();
 		else
 			name= test.toString();
-		fRunner.addFailure(new TestFailure(test, name, t));
+		TestFailure failure= new TestFailure(test, name, t);
+		fNotifier.fireTestFailure(failure);
 	}
 
 	public void addFailure(Test test, AssertionFailedError t) {
@@ -49,7 +50,7 @@ public class PreJUnit4Strategy implements TestListener,  RunnerStrategy {
 	}
 
 	public void startTest(Test test) {
-		fRunner.startTestCase(test, ((TestCase) test).getName());
+		fNotifier.fireTestStarted(test, ((TestCase) test).getName());
 	}
 
 }

@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Recorder {
+public class RecordingServer {
 
 	private class Run {
 		final long fTimestamp;

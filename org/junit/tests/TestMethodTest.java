@@ -1,10 +1,11 @@
 package org.junit.tests;
 
-import java.lang.reflect.Method;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
 import junit.framework.JUnit4TestAdapter;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -12,8 +13,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.internal.runner.TestIntrospector;
-
-import static org.junit.Assert.*;
+import org.junit.runner.Runner;
 
 public class TestMethodTest {
 
@@ -84,10 +84,10 @@ public class TestMethodTest {
 		@Ignore(reason= "For testing purposes") @Test public void withReason() {}
 	}
 
-	@Test public void ignoredTest() throws Exception {
-		List<Method> methods= new TestIntrospector(IgnoredTest.class).getTestMethods(Test.class);
-		assertEquals(1, methods.size());
-		assertTrue(methods.contains(IgnoredTest.class.getMethod("valid", new Class[0])));
+	@Test public void ignoreRunner() {
+		Runner runner= new Runner();
+		runner.run(IgnoredTest.class);
+		assertEquals(2, runner.getIgnoreCount());
 	}
 
 	public static junit.framework.Test suite() {

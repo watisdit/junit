@@ -5,12 +5,13 @@ import java.util.List;
 
 import junit.runner.Version;
 
-import org.junit.global.RecordingListener;
+import org.junit.global.RecordingClient;
+import org.junit.internal.runner.TextListener;
 
 
 public class JUnitCore {
 	
-	RecordingListener recorder= null;
+	RecordingClient recorder= null;
 	Runner runner= new Runner();
 	
 	private JUnitCore() {
@@ -25,7 +26,7 @@ public class JUnitCore {
 		TestListener listener= new TextListener();
 		runner.addListener(listener);
 		int i= 0;
-		if (args[i].startsWith("-")) {
+		while (args[i].startsWith("-")) {
 			if (args[i].equals("-email")) {
 				if (recorder == null)
 					addRecorder();
@@ -51,7 +52,7 @@ public class JUnitCore {
 	}
 
 	private void addRecorder() {
-		recorder= new RecordingListener();
+		recorder= new RecordingClient();
 		runner.addListener(recorder);
 	}
 
