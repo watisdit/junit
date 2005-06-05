@@ -34,6 +34,13 @@ public class TestIntrospector {
 		return expectedException(method) != null;
 	}
 
+	public long getTimeout(Method method) {
+		Test annotation= method.getAnnotation(Test.class);
+		if (annotation == null)
+			return 0L;
+		return annotation.timeout();
+	}
+
 	public Class< ? extends Throwable> expectedException(Method method) {
 		Test annotation= method.getAnnotation(Test.class);
 		if (annotation.expected() == None.class)

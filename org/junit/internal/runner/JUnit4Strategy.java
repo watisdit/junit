@@ -4,6 +4,13 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -39,9 +46,12 @@ public class JUnit4Strategy implements RunnerStrategy {
 				if (fTestIntrospector.isIgnored(method)) {
 					fNotifier.fireTestIgnored(method);
 				} else {
-					Constructor< ? extends Object> constructor= fTestClass.getConstructor();
-					Object test= constructor.newInstance();
-					invokeMethod(test, method);
+					long timeout= fTestIntrospector.getTimeout(method);
+					if (timeout <= 0) {
+						invoke(method);
+					} else {
+						invokeWithTimeout(method, timeout);
+					} 					
 				}
 			}
 			List<Method> afterMethods= fTestIntrospector.getTestMethods(AfterClass.class);
@@ -50,6 +60,34 @@ public class JUnit4Strategy implements RunnerStrategy {
 		} catch (Exception e) {
 			addFailure(new Failure(e));
 		}
+	}
+
+	private void invokeWithTimeout(Method method, long timeout) throws InterruptedException, ExecutionException, TimeoutException {
+		ExecutorService service= Executors.newSingleThreadExecutor();
+		Callable<?> callable= createCallable(method);
+		
+		Future<?> result= service.submit(callable);
+		service.shutdown();
+		boolean terminated= service.awaitTermination(timeout, TimeUnit.MILLISECONDS);
+		if (!terminated) 
+			service.shutdownNow();
+		//TODO hardcoded timeout
+		result.get(1000, TimeUnit.MILLISECONDS); // fetches the exception if any
+	}
+
+	private Callable<?> createCallable(final Method method) {
+		return new Callable() {
+			public Object call() throws Exception {
+				invoke(method);
+				return null;
+			}
+		};
+	}
+
+	private void invoke(Method method) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+		Constructor< ? extends Object> constructor= fTestClass.getConstructor();
+		Object test= constructor.newInstance();
+		invokeMethod(test, method);
 	}
 
 	void addFailure(Failure failure) {
