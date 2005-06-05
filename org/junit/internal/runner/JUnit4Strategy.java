@@ -62,11 +62,16 @@ public class JUnit4Strategy implements RunnerStrategy {
 		}
 	}
 
-	private void invokeWithTimeout(Method method, long timeout) throws InterruptedException, ExecutionException, TimeoutException {
+	private void invokeWithTimeout(final Method method, long timeout) throws InterruptedException, ExecutionException, TimeoutException {
 		ExecutorService service= Executors.newSingleThreadExecutor();
-		Callable<?> callable= createCallable(method);
 		
-		Future<?> result= service.submit(callable);
+		Callable<Object> callable= new Callable<Object>() {
+			public Object call() throws Exception {
+				invoke(method);
+				return null;
+			}
+		};
+		Future<Object> result= service.submit(callable);
 		service.shutdown();
 		boolean terminated= service.awaitTermination(timeout, TimeUnit.MILLISECONDS);
 		if (!terminated) 
@@ -75,17 +80,8 @@ public class JUnit4Strategy implements RunnerStrategy {
 		result.get(1000, TimeUnit.MILLISECONDS); // fetches the exception if any
 	}
 
-	private Callable<?> createCallable(final Method method) {
-		return new Callable() {
-			public Object call() throws Exception {
-				invoke(method);
-				return null;
-			}
-		};
-	}
-
 	private void invoke(Method method) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-		Constructor< ? extends Object> constructor= fTestClass.getConstructor();
+		Constructor<? extends Object> constructor= fTestClass.getConstructor();
 		Object test= constructor.newInstance();
 		invokeMethod(test, method);
 	}
