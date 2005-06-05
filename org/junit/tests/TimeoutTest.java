@@ -70,7 +70,6 @@ public class TimeoutTest {
 		}
 	}
 	
-	@Ignore // TODO Ignore isn't honored by the JUnit4TestCaseAdapter
 	@Test public void infiniteLoop() throws Exception {
 		Runner runner= new Runner();
 		runner.run(InfiniteLoopTest.class);

@@ -76,8 +76,8 @@ public class JUnit4Strategy implements RunnerStrategy {
 		boolean terminated= service.awaitTermination(timeout, TimeUnit.MILLISECONDS);
 		if (!terminated) 
 			service.shutdownNow();
-		//TODO hardcoded timeout
-		result.get(1000, TimeUnit.MILLISECONDS); // fetches the exception if any
+		//TODO how do we handle the hardcoded timeout, it is required to handle the infinite loop case
+		result.get(1000, TimeUnit.MILLISECONDS); // throws the exception if one occurred during the invocation
 	}
 
 	private void invoke(Method method) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
