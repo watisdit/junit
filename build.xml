@@ -39,7 +39,6 @@
 			jarfile="${dist}/junit.jar"
 			basedir="."
 			excludes="**/*.jar, junit/tests/**, junit/samples/**, **/*.java, doc/**, README.html,  build.xml, jar-manifest.txt, .classpath, .project, cpl-v10.html"
-			manifest="META-INF/MANIFEST.MF"
 		/>
 		<copy todir="${dist}/junit/samples">
 			<fileset dir="junit/samples" />
