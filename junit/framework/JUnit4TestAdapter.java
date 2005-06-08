@@ -21,6 +21,10 @@ public class JUnit4TestAdapter implements Test {
 	public int countTestCases() {
 		return fMethods.size();
 	}
+	
+	public List<Method> getTestMethods() {
+		return fMethods;
+	}
 
 	public void run(TestResult result) {
 		try {
