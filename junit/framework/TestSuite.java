@@ -138,7 +138,7 @@ public class TestSuite implements Test {
 		List<String> names= new ArrayList<String>();
 		while (Test.class.isAssignableFrom(superClass)) {
 			for (Method each : superClass.getDeclaredMethods())
-				addTestMethod(each, names, (Class< ? extends TestCase>) theClass);
+				addTestMethod(each, names, theClass);
 			superClass= superClass.getSuperclass();
 		}
 		if (fTests.size() == 0)
