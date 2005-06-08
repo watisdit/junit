@@ -1,6 +1,7 @@
 package junit.framework; 
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -22,8 +23,22 @@ public class JUnit4TestAdapter implements Test {
 		return fMethods.size();
 	}
 	
-	public List<Method> getTestMethods() {
-		return fMethods;
+	/**
+	 * Method added to enable existing test runners to get at the tests.
+	 */
+	public List<Test> getTests() {
+		List<Test> result= new ArrayList<Test>();
+		for (Method method : fMethods) {
+			Object test;
+			try {
+				test= fNewTestClass.newInstance();
+				TestCase wrapper= new JUnit4TestCaseAdapter(test, method);
+				result.add(wrapper);
+			} catch (Exception e) {
+				// skip the test
+			}
+		}
+		return result;
 	}
 
 	public void run(TestResult result) {
