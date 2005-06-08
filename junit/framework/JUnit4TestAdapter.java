@@ -10,6 +10,7 @@ import org.junit.internal.runner.TestIntrospector;
 public class JUnit4TestAdapter implements Test {
 
 	private List<Method> fMethods;
+	private final List<TestCase> fTests;
 	private final Class<? extends Object> fNewTestClass;
 	private TestIntrospector testIntrospector;
 
@@ -17,28 +18,12 @@ public class JUnit4TestAdapter implements Test {
 		fNewTestClass= newTestClass;
 		testIntrospector= new TestIntrospector(fNewTestClass);
 		fMethods= testIntrospector.getTestMethods(org.junit.Test.class);
+		fTests = wrapMethodsAsTests();
 	}
 
+	
 	public int countTestCases() {
 		return fMethods.size();
-	}
-	
-	/**
-	 * Method added to enable existing test runners to get at the tests.
-	 */
-	public List<Test> getTests() {
-		List<Test> result= new ArrayList<Test>();
-		for (Method method : fMethods) {
-			Object test;
-			try {
-				test= fNewTestClass.newInstance();
-				TestCase wrapper= new JUnit4TestCaseAdapter(test, method);
-				result.add(wrapper);
-			} catch (Exception e) {
-				// skip the test
-			}
-		}
-		return result;
 	}
 
 	public void run(TestResult result) {
@@ -54,6 +39,10 @@ public class JUnit4TestAdapter implements Test {
 		}
 	}
 
+	public List<TestCase> getTests() {
+		return fTests;
+	}
+	
 	private void oneTimeSetUp() throws Exception {
 		List<Method> beforeMethods= testIntrospector.getTestMethods(BeforeClass.class);
 		for (Method method : beforeMethods)
@@ -61,10 +50,8 @@ public class JUnit4TestAdapter implements Test {
 	}
 	
 	private void runTests(TestResult result) throws Exception {
-		for (Method method : fMethods) {
-			Object test= fNewTestClass.newInstance();
-			TestCase wrapper= new JUnit4TestCaseAdapter(test, method);
-			result.run(wrapper);
+		for (TestCase test : fTests) {
+			result.run(test);
 		}
 	}
 	
@@ -77,5 +64,19 @@ public class JUnit4TestAdapter implements Test {
 	@Override
 	public String toString() {
 		return "Wrapped " + fNewTestClass.toString();
+	}
+
+	private List<TestCase> wrapMethodsAsTests() {
+		List<TestCase> result = new ArrayList<TestCase>();
+		for (Method method : fMethods) {
+			try {
+				Object test = fNewTestClass.newInstance();
+				TestCase wrapper= new JUnit4TestCaseAdapter(test, method);
+				result.add(wrapper);
+			} catch (Exception e) {
+				// skip it
+			}
+		}
+		return result;
 	}
 }
