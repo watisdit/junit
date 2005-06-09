@@ -61,6 +61,10 @@ public class JUnit4TestAdapter implements Test {
 			method.invoke(null, new Object[0]);
 	}
 
+	public Class getTestClass() {
+		return fNewTestClass;
+	}
+	
 	@Override
 	public String toString() {
 		return "Wrapped " + fNewTestClass.toString();

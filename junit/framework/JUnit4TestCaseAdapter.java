@@ -51,4 +51,12 @@ public class JUnit4TestCaseAdapter extends TestCase {
 	public String getName() {
 		return fTest.getClass().getName() + "(" + fMethod.getName() + ")";
 	}
+	
+	public Method getTestMethod() {
+		return fMethod;
+	}
+	
+	public Object getTest() {
+		return fTest;
+	}
 }
