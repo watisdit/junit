@@ -1,68 +1,27 @@
-Theme: lower the barriers to entry and enable more sophisticated testing
+Theme: Encourage more developers to write more tests by further simplifying JUnit
 
 Before first public candidate release:
 !* update documentation
-    * ask Mike Clark to update the FAQ (pending)
+    * update the FAQ (pending)
 !* add  javadoc to API interfaces and Annotations
 
 Before final JUnit 4 release:
-* Separate project for RecorderServer
 * Make JUnitCore pluggable
-*   contact all test runner authors-- JBuilder (pending), JDeveloper, NetBeans (?), IntelliJ, Ant
+* contact all test runner authors
 		make sure TestListener is symmetric and meets needs of all runner developers
-*  Ant
+* Ant
   * Basic task
   * Compatibility with existing formatters
-*   support testing run once initialization code e.g. class Foo {{...}}
-*	deprecate test suites
-		need a way to describe collections of tests
-*	compatibility with 3.8
-		* junit test file converter: convert testFoo() to @Test foo()
-		     Suites?
-		     Decorators?
-		add an ant task
-*	enable tighther and more flexible IDE integration
-	* be able to specify the order of tests (ewwww....)
+* support testing run once initialization code e.g. class Foo {{...}}
+* enable tighter and more flexible IDE integration
+	* be able to specify the order of tests
 		enable test reordering/prioritization
 			run failures first (<- this seems like it is up to the runner)
 	* test categorization & filtering (<- seems like a runner issue) @Category(short, integration)  @Test(category=windowsOnly)
-*  	get 100% coverage
-* 	logging support (runner listeners should handle this?) (Log4JListener , 1.4 logging support (java.util.logging)))
-* timeout annotation
+* get 100% coverage
+* logging support (runner listeners should handle this?) (Log4JListener , 1.4 logging support (java.util.logging)))
 * TestRunEvent
 * think about compatibility with old runners--no clashing class names
      
 Cool ideas:
-* Listener that informs a global JUnit test case server (URLConnection)
 * TestProvider (useful when we have a command line?)
-
-
-Done
-* Add ignore count
-!* command line interface
-* @Ignore
-* assertEquals(Object[], Object[])  Arrays.equals(
-!* make expected an attribute of @Test
-*   Runner.run(Object)
-!* split Failure
-!* use consistent formatting for annotation (separate line, prefix on same line)
-!* subpackages for org.junit
-!* TestFailure
-!* warn when an annotated test method isn't public (check for Before, After, BeforeClass, AfterClass and Test)
-* Change the package name to org.junit?
-* test listening (test run listener)
-* annotation support
-		no need to inherit from test case
-			annotating test
-			annotating setup/teardown
-			annotating expected exceptions
-* use 1.5 features
-		compatibility with the assert keyword
-		use enhanced for
-* dump the graphical runners
-* get rid of failures and errors distinction
-!* make the JUnit4TestCaseAdapter more transparent to old runners so that they show the real class
-!* make old code 1.5 compliant
-
-
-
