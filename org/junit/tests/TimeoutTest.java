@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import java.util.concurrent.TimeoutException;
 import junit.framework.JUnit4TestAdapter;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.Runner;
 
