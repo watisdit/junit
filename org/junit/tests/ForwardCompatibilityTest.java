@@ -99,4 +99,19 @@ public class ForwardCompatibilityTest extends TestCase {
 		adapter.run(result);
 		assertEquals("before class before test after before test after after class ", log);
 	}
+	
+	public static class ExceptionInBeforeTest {
+		@Before public void error() {
+			throw new Error();
+		}
+		@Test public void nothing() {
+		}
+	}
+	
+	public void testExceptionInBefore() {
+		TestResult result= new TestResult();
+		junit.framework.Test adapter= new JUnit4TestAdapter(ExceptionInBeforeTest.class);
+		adapter.run(result);
+		assertEquals(1, result.errorCount());
+	}
 }

@@ -2,10 +2,14 @@ package org.junit.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+
 import java.util.concurrent.TimeoutException;
+
 import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestResult;
 import org.junit.Test;
 import org.junit.runner.Runner;
+import org.junit.tests.TestMethodTest.IgnoredTest;
 
 public class TimeoutTest {
 	
@@ -60,7 +64,7 @@ public class TimeoutTest {
 		runner.run(TimeoutFailureTest.class);
 		assertEquals(1, runner.getRunCount());
 		assertEquals(1, runner.getFailureCount());
-		assertEquals(InterruptedException.class, runner.getFailures().get(0).getException().getClass());
+		assertEquals(InterruptedException.class, runner.getFailures().get(0).getException().getClass()); //TODO: Should this be an AssertionError("Timeout exceeeded")
 	}
 	
 	static public class InfiniteLoopTest {
@@ -77,7 +81,12 @@ public class TimeoutTest {
 		assertEquals(TimeoutException.class, runner.getFailures().get(0).getException().getClass());
 	}
 
-
+	@Test public void compatibility() {
+		TestResult result= new TestResult();
+		new JUnit4TestAdapter(InfiniteLoopTest.class).run(result);
+		assertEquals(1, result.errorCount());
+	}
+	
 	static public junit.framework.Test suite() {
 		return new JUnit4TestAdapter(TimeoutTest.class);
 	}

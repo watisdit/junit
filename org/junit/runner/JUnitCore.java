@@ -5,8 +5,8 @@ import java.util.List;
 
 import junit.runner.Version;
 
-import org.junit.global.RecordingClient;
 import org.junit.internal.runner.TextListener;
+import org.threeriversinstitute.ponderosa.RecordingClient;
 
 
 public class JUnitCore {

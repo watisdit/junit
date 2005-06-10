@@ -1,4 +1,4 @@
-package junit.framework; 
+package junit.framework;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -9,23 +9,20 @@ import org.junit.internal.runner.TestIntrospector;
 
 public class JUnit4TestAdapter implements Test {
 
-	private List<Method> fMethods;
 	private final List<TestCase> fTests;
-	private final Class<? extends Object> fNewTestClass;
-	private TestIntrospector testIntrospector;
+	private final Class< ? extends Object> fNewTestClass;
 
-	public JUnit4TestAdapter(Class<? extends Object> newTestClass) {
+	public JUnit4TestAdapter(Class< ? extends Object> newTestClass) {
 		fNewTestClass= newTestClass;
-		testIntrospector= new TestIntrospector(fNewTestClass);
-		fMethods= testIntrospector.getTestMethods(org.junit.Test.class);
-		fTests = wrapMethodsAsTests();
+		fTests= createTests();
 	}
 
-	
 	public int countTestCases() {
-		return fMethods.size();
+		return fTests.size();
 	}
 
+	//TODO Could we just create a strategy on our test class and invoke it?
+	//We would have to add an error for every error sent to the test notifier
 	public void run(TestResult result) {
 		try {
 			oneTimeSetUp();
@@ -42,21 +39,21 @@ public class JUnit4TestAdapter implements Test {
 	public List<TestCase> getTests() {
 		return fTests;
 	}
-	
+
 	private void oneTimeSetUp() throws Exception {
-		List<Method> beforeMethods= testIntrospector.getTestMethods(BeforeClass.class);
+		List<Method> beforeMethods= getTestIntrospector().getTestMethods(BeforeClass.class);
 		for (Method method : beforeMethods)
 			method.invoke(null, new Object[0]);
 	}
-	
+
 	private void runTests(TestResult result) throws Exception {
 		for (TestCase test : fTests) {
 			result.run(test);
 		}
 	}
-	
+
 	private void oneTimeTearDown() throws Exception {
-		List<Method> beforeMethods= testIntrospector.getTestMethods(AfterClass.class);
+		List<Method> beforeMethods= getTestIntrospector().getTestMethods(AfterClass.class);
 		for (Method method : beforeMethods)
 			method.invoke(null, new Object[0]);
 	}
@@ -64,17 +61,21 @@ public class JUnit4TestAdapter implements Test {
 	public Class getTestClass() {
 		return fNewTestClass;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Wrapped " + fNewTestClass.toString();
 	}
 
-	private List<TestCase> wrapMethodsAsTests() {
-		List<TestCase> result = new ArrayList<TestCase>();
-		for (Method method : fMethods) {
+	private List<TestCase> createTests() {
+		List<TestCase> result= new ArrayList<TestCase>();
+		List<Method> methods= getTestIntrospector().getTestMethods(org.junit.Test.class);
+
+		for (Method method : methods) {
 			try {
-				Object test = fNewTestClass.newInstance();
+				if (getTestIntrospector().isIgnored(method))
+					continue;
+				Object test= fNewTestClass.newInstance();
 				TestCase wrapper= new JUnit4TestCaseAdapter(test, method);
 				result.add(wrapper);
 			} catch (Exception e) {
@@ -82,5 +83,9 @@ public class JUnit4TestAdapter implements Test {
 			}
 		}
 		return result;
+	}
+
+	private TestIntrospector getTestIntrospector() {
+		return new TestIntrospector(fNewTestClass);
 	}
 }

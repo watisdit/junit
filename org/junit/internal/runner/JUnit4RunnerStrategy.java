@@ -19,12 +19,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.Failure;
 
-public class JUnit4Strategy implements RunnerStrategy {
+public class JUnit4RunnerStrategy implements RunnerStrategy {
 	private final Class< ? extends Object> fTestClass;
 	private final TestIntrospector fTestIntrospector;
 	private TestNotifier fNotifier;
 
-	public JUnit4Strategy(TestNotifier notifier, Class< ? extends Object> testClass) {
+	public JUnit4RunnerStrategy(TestNotifier notifier, Class< ? extends Object> testClass) {
 		fNotifier= notifier;
 		fTestClass= testClass;
 		fTestIntrospector= new TestIntrospector(fTestClass);
@@ -43,16 +43,9 @@ public class JUnit4Strategy implements RunnerStrategy {
 				method.invoke(null);
 			List<Method> methods= fTestIntrospector.getTestMethods(Test.class);
 			for (Method method : methods) {
-				if (fTestIntrospector.isIgnored(method)) {
-					fNotifier.fireTestIgnored(method);
-				} else {
-					long timeout= fTestIntrospector.getTimeout(method);
-					if (timeout <= 0) {
-						invoke(method);
-					} else {
-						invokeWithTimeout(method, timeout);
-					} 					
-				}
+				Constructor<? extends Object> constructor= fTestClass.getConstructor();
+				Object test= constructor.newInstance();
+				invokeTestMethod(test, method);
 			}
 			List<Method> afterMethods= fTestIntrospector.getTestMethods(AfterClass.class);
 			for (Method method : afterMethods)
@@ -62,12 +55,24 @@ public class JUnit4Strategy implements RunnerStrategy {
 		}
 	}
 
-	private void invokeWithTimeout(final Method method, long timeout) throws InterruptedException, ExecutionException, TimeoutException {
+	public void invokeTestMethod(Object test, Method method) throws TimeoutException, InterruptedException, ExecutionException {
+		if (fTestIntrospector.isIgnored(method)) {
+			fNotifier.fireTestIgnored(method);
+		} else {
+			long timeout= fTestIntrospector.getTimeout(method);
+			if (timeout <= 0) {
+				invoke(test, method);
+			} else {
+				invokeWithTimeout(test, method, timeout);
+			} 					
+		}
+	}
+
+	private void invokeWithTimeout(final Object test, final Method method, long timeout) throws InterruptedException, ExecutionException, TimeoutException {
 		ExecutorService service= Executors.newSingleThreadExecutor();
-		
 		Callable<Object> callable= new Callable<Object>() {
 			public Object call() throws Exception {
-				invoke(method);
+				invoke(test, method);
 				return null;
 			}
 		};
@@ -76,13 +81,10 @@ public class JUnit4Strategy implements RunnerStrategy {
 		boolean terminated= service.awaitTermination(timeout, TimeUnit.MILLISECONDS);
 		if (!terminated) 
 			service.shutdownNow();
-		//TODO how do we handle the hardcoded timeout, it is required to handle the infinite loop case
-		result.get(1000, TimeUnit.MILLISECONDS); // throws the exception if one occurred during the invocation
+		result.get(timeout, TimeUnit.MILLISECONDS); // throws the exception if one occurred during the invocation
 	}
 
-	private void invoke(Method method) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-		Constructor<? extends Object> constructor= fTestClass.getConstructor();
-		Object test= constructor.newInstance();
+	private void invoke(Object test, Method method) {
 		invokeMethod(test, method);
 	}
 
@@ -90,7 +92,7 @@ public class JUnit4Strategy implements RunnerStrategy {
 		fNotifier.fireTestFailure(failure);
 	}
 
-	private void invokeMethod(Object test, Method method) {
+	public void invokeMethod(Object test, Method method) {
 		fNotifier.fireTestStarted(test, method.getName());
 		try {
 			setUp(test);

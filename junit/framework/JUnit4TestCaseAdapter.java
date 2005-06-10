@@ -1,52 +1,42 @@
 package junit.framework; 
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.internal.runner.TestIntrospector;
+import org.junit.internal.runner.JUnit4RunnerStrategy;
+import org.junit.internal.runner.TestNotifier;
+import org.junit.runner.Failure;
 
 public class JUnit4TestCaseAdapter extends TestCase {
 
 	private final Object fTest;
 	private final Method fMethod;
-	private final TestIntrospector fTestIntrospector;
+	private Throwable fException;
 
 	public JUnit4TestCaseAdapter(Object test, Method method) {
 		fTest= test;
 		fMethod= method;
-		fTestIntrospector= new TestIntrospector(fTest.getClass());
 	}
 
 	@Override
 	protected void runTest() throws Throwable {
-		try {
-			fMethod.invoke(fTest, new Object[0]);
-		} catch (InvocationTargetException e) {
-			if (fTestIntrospector.isUnexpected(e.getCause(), fMethod))
-				throw e.getCause();
-			return;
+			JUnit4RunnerStrategy strategy= new JUnit4RunnerStrategy(new CompatibilityNotifier(), fTest.getClass());
+			strategy.invokeTestMethod(fTest, fMethod);
+			if (fException != null)
+				throw fException;
+	}
+
+	private final class CompatibilityNotifier implements TestNotifier {
+		public void fireTestFailure(Failure failure) {
+			fException= failure.getException();
 		}
-		if (fTestIntrospector.expectsException(fMethod))
-			throw new Exception("Expected exception: " + fTestIntrospector.expectedException(fMethod));
+		
+		public void fireTestIgnored(Method method) {
+		}
+		
+		public void fireTestStarted(Object test, String name) {
+		}
 	}
-
-	@Override
-	protected void setUp() throws Exception {
-		List<Method> befores= fTestIntrospector.getTestMethods(Before.class);
-		for (Method before : befores)
-			before.invoke(fTest);
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		List<Method> afters= fTestIntrospector.getTestMethods(After.class);
-		for (Method after : afters)
-			after.invoke(fTest);
-	}
-
+	
 	@Override
 	public String getName() {
 		return fTest.getClass().getName() + "(" + fMethod.getName() + ")";

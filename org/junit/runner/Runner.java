@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
-import org.junit.internal.runner.JUnit4Strategy;
-import org.junit.internal.runner.PreJUnit4Strategy;
+import org.junit.internal.runner.JUnit4RunnerStrategy;
+import org.junit.internal.runner.PreJUnit4RunnerStrategy;
 import org.junit.internal.runner.RunnerStrategy;
 import org.junit.internal.runner.TestNotifier;
 
@@ -34,15 +34,15 @@ public class Runner implements TestNotifier {
 	@SuppressWarnings("unchecked")
 	private RunnerStrategy getStrategy(Class<? extends Object> testClass) {
 		if (junit.framework.TestCase.class.isAssignableFrom(testClass))
-			return new PreJUnit4Strategy(this, (Class< ? extends TestCase>) testClass); 
-		return new JUnit4Strategy(this, testClass);
+			return new PreJUnit4RunnerStrategy(this, (Class< ? extends TestCase>) testClass); 
+		return new JUnit4RunnerStrategy(this, testClass);
 	}
 
 	public void run(junit.framework.Test test) { 
 		for (TestListener each : fListeners)
 			each.testRunStarted();
 		long startTime= System.currentTimeMillis();
-		new PreJUnit4Strategy(this, test).run();
+		new PreJUnit4RunnerStrategy(this, test).run();
 		long endTime= System.currentTimeMillis();
 		fRunTime+= endTime - startTime;
 		for (TestListener each : fListeners)

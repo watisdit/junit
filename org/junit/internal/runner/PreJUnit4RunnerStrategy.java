@@ -6,22 +6,22 @@ import junit.framework.TestCase;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
-public class PreJUnit4Strategy implements junit.framework.TestListener,  RunnerStrategy {
+public class PreJUnit4RunnerStrategy implements junit.framework.TestListener,  RunnerStrategy {
 	
 	private Test fTest;
 	private TestNotifier fNotifier;
 
-	public PreJUnit4Strategy(TestNotifier notifier, Class<? extends TestCase> testClass) {
+	public PreJUnit4RunnerStrategy(TestNotifier notifier, Class<? extends TestCase> testClass) {
 		this(notifier);
 		fTest= new TestSuite(testClass);
 	}
 	
-	public PreJUnit4Strategy(TestNotifier notifier, Test test) {
+	public PreJUnit4RunnerStrategy(TestNotifier notifier, Test test) {
 		this(notifier);
 		fTest= test;
 	}
 	
-	private PreJUnit4Strategy(TestNotifier notifier) {
+	private PreJUnit4RunnerStrategy(TestNotifier notifier) {
 		fNotifier= notifier;		
 	}
 	

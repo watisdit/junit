@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestResult;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -88,6 +89,12 @@ public class TestMethodTest {
 		Runner runner= new Runner();
 		runner.run(IgnoredTest.class);
 		assertEquals(2, runner.getIgnoreCount());
+	}
+
+	@Test public void compatibility() {
+		TestResult result= new TestResult();
+		new JUnit4TestAdapter(IgnoredTest.class).run(result);
+		assertEquals(1, result.runCount());
 	}
 
 	public static junit.framework.Test suite() {

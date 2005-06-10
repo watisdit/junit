@@ -4,10 +4,8 @@ Before first public candidate release:
 !* update documentation
     * ask Mike Clark to update the FAQ (pending)
 !* add  javadoc to API interfaces and Annotations
---- support ignore in the JUnit4TestCaseAdapter
 
 Before final JUnit 4 release:
-* Fix build.xml
 * Separate project for RecorderServer
 * Make JUnitCore pluggable
 *   contact all test runner authors-- JBuilder (pending), JDeveloper, NetBeans (?), IntelliJ, Ant
