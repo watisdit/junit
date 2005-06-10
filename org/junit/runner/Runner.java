@@ -31,6 +31,7 @@ public class Runner implements TestNotifier {
 			each.testRunFinished(this);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private RunnerStrategy getStrategy(Class<? extends Object> testClass) {
 		if (junit.framework.TestCase.class.isAssignableFrom(testClass))
 			return new PreJUnit4Strategy(this, (Class< ? extends TestCase>) testClass); 
