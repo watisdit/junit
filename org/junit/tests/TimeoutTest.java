@@ -2,14 +2,11 @@ package org.junit.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-
 import java.util.concurrent.TimeoutException;
-
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestResult;
 import org.junit.Test;
 import org.junit.runner.Runner;
-import org.junit.tests.TestMethodTest.IgnoredTest;
 
 public class TimeoutTest {
 	
