@@ -21,8 +21,6 @@ public class JUnit4TestAdapter implements Test {
 		return fTests.size();
 	}
 
-	//TODO Could we just create a strategy on our test class and invoke it?
-	//We would have to add an error for every error sent to the test notifier
 	public void run(TestResult result) {
 		try {
 			oneTimeSetUp();
