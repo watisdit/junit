@@ -41,7 +41,7 @@ public class JUnit4TestAdapter implements Test {
 	private void oneTimeSetUp() throws Exception {
 		List<Method> beforeMethods= getTestIntrospector().getTestMethods(BeforeClass.class);
 		for (Method method : beforeMethods)
-			method.invoke(null, new Object[0]);
+			method.invoke(null);
 	}
 
 	private void runTests(TestResult result) throws Exception {
@@ -53,7 +53,7 @@ public class JUnit4TestAdapter implements Test {
 	private void oneTimeTearDown() throws Exception {
 		List<Method> beforeMethods= getTestIntrospector().getTestMethods(AfterClass.class);
 		for (Method method : beforeMethods)
-			method.invoke(null, new Object[0]);
+			method.invoke(null);
 	}
 
 	public Class getTestClass() {
