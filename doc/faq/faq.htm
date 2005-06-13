@@ -154,7 +154,7 @@ Table of Contents
       method?</a></li>
       <li><a href="#tests_14">How do I test things that must be run in
       a J2EE container (e.g. servlets, EJBs)?</a></li>
-      <li><a href="#tests_15">Do I need to write a TestCase class for
+      <li><a href="#tests_15">Do I need to write a test class for
       every class I need to test?</a></li>
       <li><a href="#tests_16">Is there a basic template I can use to
       create a test?</a></li>
@@ -194,7 +194,7 @@ Table of Contents
       <li><a href="#running_7">How do I pass command-line arguments to a test execution?</a>
       </li>
       <li><a href="#running_9">Why do I get a LinkageError when using 
-	  XML interfaces in my TestCase?</a>
+	  XML interfaces in my test class?</a>
       </li>
       <li><a href="#running_11">Why do I get the warning "AssertionFailedError: No 
 	  tests found in XXX" when I run my test?</a>
@@ -560,8 +560,7 @@ Table of Contents
 	  </code></blockquote>
 	</div>
 	<p>
-	  All the tests should pass with an "OK" (textual) or a
-	  green bar (graphical).
+	  All the tests should pass with an "OK" message.
 	</p>
 	<p>
 	  <i> 
@@ -675,28 +674,31 @@ Table of Contents
     <ol>
       <li>
 	<p>
-	  Create a subclass of <code>TestCase</code>:
+	  Create a class:
 	</p>
 	<div class="code">
 	  <pre><code>
 	      
   package junitfaq;
 	      
+  import org.junit.*;
+  import static org.junit.Assert.*;
+
   import java.util.*;
-  import junit.framework.*;
   
-  public class SimpleTest extends TestCase {
+  public class SimpleTest {
 	  </code></pre>
 	</div>      
       </li>
       <li>
 	<p>
-	  Write a test method to assert expected results on the
-	  object under test:
+	  Write a test method (annotated with <code>@Test</code>) that
+	  asserts expected results on the object under test:
 	</p>
 	<div class="code">
 	  <pre><code>
 
+    @Test
     public void testEmptyCollection() {
         Collection collection = new ArrayList();
         assertTrue(collection.isEmpty());
@@ -706,31 +708,33 @@ Table of Contents
       </li>
       <li>
 	<p>
-	  Write a <code>suite()</code> method that uses reflection
+	  If you are running your JUnit 4 tests with a JUnit 3.x runner,
+	  write a <code>suite()</code> method that uses reflection
 	  to dynamically create a test suite containing all
 	  the <code>testXXX()</code> methods:
 	</p>
 	<div class="code">
 	  <pre><code>
 
-    public static Test suite() {
-        return new TestSuite(SimpleTest.class);
+    public static junit.framework.Test suite() {
+        return new junit.framework.JUnit4TestAdapter(SimpleTest.class);
     }
 	  </code></pre>
 	</div>
       </li>
       <li>
 	<p>
-	  Write a <code>main()</code> method to conveniently run the
-	  test with the textual test runner:
+	  Although writing a <code>main()</code> method to run the
+	  test is much less important with the advent of IDE runners,
+	  it's still possible:
 	</p>
 	<div class="code">
 	  <pre><code>
 
-        public static void main(String args[]) {
-            junit.textui.TestRunner.run(suite());
-        }
+    public static void main(String args[]) {
+      org.junit.runner.JUnitCore.main("junitfaq.SimpleTest");
     }
+  }
 	  </code></pre>
 	</div>
       </li>
@@ -741,7 +745,17 @@ Table of Contents
 	<ul>
 	  <li>
 	    <p>
-	      To run the test with the textual test runner used
+	      To run the test from the console, type:
+	    </p>
+	    <div>
+	      <blockquote><code>
+java org.junit.runner.JUnitCore junitfaq.SimpleTest
+	      </code></blockquote>
+	    </div>
+	  </li>
+	  <li>
+	    <p>
+	      To run the test with the test runner used
 	      in <code>main()</code>, type:
 	    </p>
 	    <div>
@@ -749,35 +763,21 @@ Table of Contents
 java junitfaq.SimpleTest 
 	      </code></blockquote>
 	    </div>
-	    <p>
-	      The passing test results in the following textual output:
-	    </p>
-	    <div>
-	      <blockquote>
-		<pre><code>
-.
+	  </li>
+	</ul>
+	<p>
+	  The passing test results in the following textual output:
+	</p>
+	<div>
+	  <blockquote>
+	    <pre><code>
+		.
 Time: 0
 
 OK (1 tests)
-		</code></pre>
-	      </blockquote>
-	    </div>
-	  </li>
-	  <li>
-	    <p>
-	      To run the test with the graphical test runner, type:
-	    </p>
-	    <div>
-	      <blockquote><code>
-java org.junit.runner.JUnitCore junitfaq.SimpleTest
-	      </code></blockquote>
-	    </div>
-	    <p>
-	      The passing test results in a green bar displayed in
-	      the graphical UI.
-	    </p>
-	  </li>
-	</ul>
+	    </code></pre>
+	  </blockquote>
+	</div>
       </li>
     </ol>
   </li>
@@ -801,12 +801,14 @@ java org.junit.runner.JUnitCore junitfaq.SimpleTest
       in any order.
     </p>
     <p>
-      To create a test fixture, define a <code>setUp()</code> method
-      that initializes common objects and a <code>tearDown()</code>
-      method to cleanup those objects.  The JUnit framework
-      automatically invokes the <code>setUp()</code> method before
-      each test is run and the <code>tearDown()</code> method after
-      each test is run.
+      To create a test fixture, annotate a method
+      with <code>@Before</code> to initialize common objects. Annotate
+      a method with <code>@After</code> to run a method after a test
+      has run to clean up external resources allocated in the method
+      annotated with <code>@Before</code>.  The JUnit framework
+      automatically invokes the <code>@Before</code> method before
+      each test is run and the <code>@After</code> method after each
+      test is run.
     </p>
     <p>
       The following test uses a test fixture to initialize and cleanup
@@ -818,25 +820,30 @@ java org.junit.runner.JUnitCore junitfaq.SimpleTest
 
     package junitfaq;
 
-    import junit.framework.*;
+    import org.junit.*;
+    import static org.junit.Assert.*;
     import java.util.*;
     
-    public class SimpleTest extends TestCase {
+    public class SimpleTest {
     
         private Collection collection;
 	
-        protected void setUp() {
+        @Before
+        public void setUp() {
             collection = new ArrayList();
         }
 	
-        protected void tearDown() {
+        @After
+        public void tearDown() {
             collection.clear();
         }
 
+        @Test
         public void testEmptyCollection() {
             assertTrue(collection.isEmpty());
         }
 	
+        @Test
         public void testOneItemCollection() {
             collection.add("itemA");
             assertEquals(1, collection.size());
@@ -852,10 +859,10 @@ java org.junit.runner.JUnitCore junitfaq.SimpleTest
       <blockquote>
 	<pre><code>
 setUp()
-testOneItemCollection()
+testEmptyCollection()
 tearDown()
 setUp()
-testEmptyCollection()
+testOneItemCollection()
 tearDown()
 	</code></pre>
       </blockquote>
@@ -894,6 +901,7 @@ tearDown()
     <div class="code">
       <pre><code>
 
+    @Test
     public void testCollectionAdd() {
         Collection collection = new ArrayList();
         assertEquals(0, collection.size());
@@ -962,7 +970,8 @@ tearDown()
     </p>
     <div>
       <blockquote><pre>
-testGetSetX() {
+@Test
+public void testGetSetX() {
     setX(23);
     assertEquals(23, getX());
 }
@@ -973,7 +982,8 @@ testGetSetX() {
     </p>
     <div>
       <blockquote><pre>
-testGetSetX() {
+@Test
+public void testGetSetX() {
     x = 23;
     assertEquals(23, x);
 }
@@ -984,7 +994,8 @@ testGetSetX() {
     </p>
     <div>
       <blockquote><pre>
-testGetSetX() {
+@Test
+public void testGetSetX() {
     assertEquals(23, 23);
 }
 </pre></blockquote>
@@ -1003,7 +1014,8 @@ testGetSetX() {
     </p>
     <div>
       <blockquote><pre>
-testCreate() {
+@Test
+public void testCreate() {
     assertEquals(23, new MyClass(23).getX());
 }
       </pre></blockquote>
@@ -1015,30 +1027,18 @@ testCreate() {
       an expected exception is thrown?</b>
     </p>
     <p>
-      Catch the exception within the test method.  If it isn't thrown,
-      call the <code>fail()</code> method to signal the failure of the
-      test.
-    </p>
-    <p>
-      The following is an example test that passes when the
+      Add the optional <code>expected</code> attribute to
+      the <code>@Test</code> annotation.  The following is an example
+      test that passes when the
       expected <code>IndexOutOfBoundsException</code> is raised:
     </p>
     <div class="code">
       <pre><code>
 
+    @Test(expected=IndexOutOfBoundsException.class)
     public void testIndexOutOfBoundsException() {
-		
         ArrayList emptyList = new ArrayList();
-		
-        try {
-	
-            Object o = emptyList.get(0);
-	
-            fail("Should raise an IndexOutOfBoundsException");
-	
-        } catch (IndexOutOfBoundsException expected) {
-            assertTrue(true);
-        }
+	Object o = emptyList.get(0);
     }
       </code></pre>
     </div>
@@ -1061,6 +1061,7 @@ testCreate() {
     <div class="code-red">
       <pre><code>
 
+    @Test
     public void testIndexOutOfBoundsExceptionNotRaised() 
         throws IndexOutOfBoundsException {
     
@@ -1095,13 +1096,14 @@ testCreate() {
       But if you must...
     </p>
     <p>
-      You can use reflection to subvert the access control mechanism.
-      If you are using JDK 1.3 or higher you can use
+      If you are using JDK 1.3 or higher, you can use reflection to
+      subvert the access control mechanism with the aid of
       the <a
-      href="http://groups.yahoo.com/group/junit/files/src/PrivilegedAccessor.java">PrivilegedAccessor</a>
-      class.  Examples of how to use this class are available
-      in <a
-      href="http://groups.yahoo.com/group/junit/files/src/PrivilegedAccessorTest.java">PrivilegedAccessorTest</a>.
+      href="http://sourceforge.net/projects/privaccessor/">PrivilegedAccessor</a>.
+      For details on how to use it,
+      read <a
+      href="http://www.onjava.com/pub/a/onjava/2003/11/12/reflection.html">this
+      article</a>.
     </p>
   </li>
   <li>
@@ -1144,7 +1146,8 @@ testCreate() {
     </p>
     <div>
       <blockquote><pre><code>
-public class MyTestCase extends TestCase {
+public class MyTestCase {
+    @Test
     public void testSomething() {
         // Set up for the test, manipulating local variables
         assertTrue(condition1);
@@ -1159,21 +1162,25 @@ public class MyTestCase extends TestCase {
     </p>
     <div>
       <blockquote><pre><code>
-public class MyTestCase extends TestCase {
+public class MyTestCase {
     // Local variables become instance variables
 
-    protected void setUp() {
+    @Before
+    public void setUp() {
         // Set up for the test, manipulating instance variables
     }
     
+    @Test
     public void testCondition1() {
         assertTrue(condition1);
     }
 
+    @Test
     public void testCondition2() {
         assertTrue(condition2);
     }
 
+    @Test
     public void testCondition3() {
         assertTrue(condition3);
     }
@@ -1223,42 +1230,40 @@ public class MyTestCase extends TestCase {
   <li>
     <p>
       <b><a name="tests_15"></a>Do I need to write
-      a <code>TestCase</code> class for every class I need to
+      a test class for every class I need to
       test?</b>
     </p>
     <p>
       <i>(Submitted by: J. B. Rainsberger)</i>
     </p>
     <p>
-      No. It is a convention to start with one <code>TestCase</code>
+      No. It is a convention to start with one test
       class per class under test, but it is not necessary.
     </p>
     <p>
-      <code>TestCase</code> classes only provide a way to organize
-      tests, nothing more.  Generally you will start with
-      one <code>TestCase</code> class per class under test, but then
-      you may find that a small group of tests belong together with
-      their own common test fixture.[1] In this case, you may move
-      those tests to a new <code>TestCase</code> object. This is a
-      simple object-oriented refactoring: separating responsibilities
-      of an object that does too much.
+      Test classes only provide a way to organize tests, nothing more.
+      Generally you will start with one test class per class under
+      test, but then you may find that a small group of tests belong
+      together with their own common test fixture.[1] In this case,
+      you may move those tests to a new test class.  This is a simple
+      object-oriented refactoring: separating responsibilities of an
+      object that does too much.
     </p>
     <p>
       Another point to consider is that the <code>TestSuite</code> is
       the smallest execution unit in JUnit: you cannot execute
       anything smaller than a TestSuite at one time without changing
       source code. In this case, you probably do not want to put tests
-      in the same <code>TestCase</code> class unless they somehow
-      "belong together".  If you have two groups of tests that you
-      think you'd like to execute separately from one another, it is
-      wise to place them in separate <code>TestCase</code> classes.
+      in the same test class unless they somehow "belong together".
+      If you have two groups of tests that you think you'd like to
+      execute separately from one another, it is wise to place them in
+      separate test classes.
     </p>
     <p>
       <i>
 	[1] A test fixture is a common set of test data and
 	collaborating objects shared by many tests. Generally they are
-	implemented as instance variables in the <code>TestCase</code>
-	class.
+	implemented as instance variables in the test class.
       </i>
     </p>
   </li>
@@ -1279,9 +1284,10 @@ public class MyTestCase extends TestCase {
     </p>
     <div>
       <blockquote><pre><code>
-import junit.framework.TestCase;
+import org.junit.*;
+import static org.junit.Assert.*;
 
-public class SampleTest extends TestCase {
+public class SampleTest {
 
     private java.util.List emptyList;
 
@@ -1289,7 +1295,8 @@ public class SampleTest extends TestCase {
      * Sets up the test fixture. 
      * (Called before every test case method.)
      */
-    protected void setUp() {
+    @Before
+    public void setUp() {
         emptyList = new java.util.ArrayList();
     }
 
@@ -1297,28 +1304,19 @@ public class SampleTest extends TestCase {
      * Tears down the test fixture. 
      * (Called after every test case method.)
      */
-    protected void tearDown() {
+    @After
+    public void tearDown() {
         emptyList = null;
     }
     
+    @Test
     public void testSomeBehavior() {
         assertEquals("Empty list should have 0 elements", 0, emptyList.size());
     }
 
+    @Test(expected=IndexOutOfBoundsException.class)
     public void testForException() {
-
-        try {
-
-            Object o = emptyList.get(0);
-
-            fail("Should raise an IndexOutOfBoundsException");
-
-        } catch (IndexOutOfBoundsException success) {
-        }
-    }
-
-    public static void main(String args[]) {
-        junit.textui.TestRunner.run(SampleTest.class);
+        Object o = emptyList.get(0);
     }
 }
       </code></pre></blockquote>
@@ -1530,56 +1528,76 @@ test
       But if you must...
     </p>
     <p>
-      You can wrap the test suite containing all your tests in a
-      subclass of <code>TestSetup</code> which
-      invokes <code>setUp()</code> exactly once before all the tests
-      are run and invokes <code>tearDown()</code> exactly once after
-      all the tests have been run.
-    </p>
-    <p>
-      The following is an example <code>suite()</code> method that
-      uses a <code>TestSetup</code> for one-time initialization and
-      cleanup:
+      You can add a <code>@BeforeClass</code> annotation to a method
+      to be run before all the tests in a class, and
+      a <code>@AfterClass</code> annotation to a method to be run
+      after all the tests in a class.  Here's an example:
     </p>
     <div class="code">
       <pre><code>
 
-    import junit.framework.*;
-    import junit.extensions.TestSetup;
+    package junitfaq;
 
-    public class AllTestsOneTimeSetup {
-
-        public static Test suite() {
-  
-            TestSuite suite = new TestSuite();
-
-            suite.addTest(SomeTest.suite());
-            suite.addTest(AnotherTest.suite());
-
-            TestSetup wrapper = new TestSetup(suite) {
-
-                protected void setUp() {
-                    oneTimeSetUp();
-                }
-
-                protected void tearDown() {
-                    oneTimeTearDown();
-                }
-            };
-
-            return wrapper;
-        }
-
+    import org.junit.*;
+    import static org.junit.Assert.*;
+    import java.util.*;
+    
+    public class SimpleTest {
+    
+        private Collection collection;
+	
+        @BeforeClass
         public static void oneTimeSetUp() {
-            // one-time initialization code
+            // one-time initialization code        
         }
 
+        @AfterClass
         public static void oneTimeTearDown() {
             // one-time cleanup code
-        } 
+        }
+
+        @Before
+        public void setUp() {
+            collection = new ArrayList();
+        }
+	
+        @After
+        public void tearDown() {
+            collection.clear();
+        }
+
+        @Test
+        public void testEmptyCollection() {
+            assertTrue(collection.isEmpty());
+        }
+	
+        @Test
+        public void testOneItemCollection() {
+            collection.add("itemA");
+            assertEquals(1, collection.size());
+        }
     }
       </code></pre>
     </div>
+    <p>
+      Given this test, the methods will execute in the following
+      order:
+    </p>
+    <div>
+      <blockquote>
+	<pre><code>
+oneTimeSetUp()
+setUp()
+testEmptyCollection()
+tearDown()
+setUp()
+testOneItemCollection()
+tearDown()
+oneTimeTearDown()
+	</code></pre>
+      </blockquote>
+    </div>
+
   </li>
 </ol>
 
@@ -1676,7 +1694,7 @@ test
 	</p>
 	<p>
 	  <code>
-	    java junit.textui.TestRunner &lt;test class name&gt; 
+	    java org.junit.runner.JUnitCore &lt;test class name&gt; 
 	  </code>
 	</p>
       </li>
@@ -1849,7 +1867,7 @@ test
     <p>
       <b><a name="running_9"></a>Why do I get
       a <code>LinkageError</code> when using
-	XML interfaces in my TestCase?</b>
+	XML interfaces in my test?</b>
     </p>
     <p>
       <i>(Submitted by: Scott Stirling)</i>
@@ -1980,25 +1998,18 @@ excluded.8=net.jini.*
 	tests found in XXX" when I run my test?</b>
     </p>
     <p>
-      Make sure the test contains one or more methods with names
-      beginning with "test".
+      Make sure you have more or more method annotated with <code>@Test</code>.
     </p>
     <p>
       For example:
     </p>
     <div>
       <blockquote><pre>
+@Test
 public void testSomething() {
 }
       </pre></blockquote>
-    </div>
-    <p>
-      This error also commonly occurs when using
-      the <code>addTestSuite()</code> in an attempt to create a
-      hiearchy of test suites. For more information, see <a
-      href="#running_14">"How do I get one test suite to invoke
-      another?"</a>.
-    </p>    
+    </div>    
   </li>
   <li>
     <p>
@@ -2285,6 +2296,11 @@ end
     <p>
       Run all your acceptance, integration, stress, and unit tests at
       least once per day (or night).
+    </p>
+    <p>
+      If you're using Eclipse, be sure to check out David Saff's 
+      <a href="http://pag.csail.mit.edu/continuoustesting/">continuous
+      testing plug-in</a>.
     </p>
   </li>
   <li>
