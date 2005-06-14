@@ -90,8 +90,7 @@ public class SuiteTest extends TestCase {
 		assertEquals(1, fResult.runCount());
 	}
 	public void testCreateSuiteFromArray() {
-		Class[] testClassArray = { OneTestCase.class, DoublePrecisionAssertTest.class };
-		TestSuite suite = new TestSuite(testClassArray);
+		TestSuite suite = new TestSuite(OneTestCase.class, DoublePrecisionAssertTest.class);
 		assertEquals(2, suite.testCount());
 		assertEquals("junit.tests.framework.DoublePrecisionAssertTest" , ((TestSuite)suite.testAt(1)).getName());
 		assertEquals("junit.tests.framework.OneTestCase" , ((TestSuite)suite.testAt(0)).getName());

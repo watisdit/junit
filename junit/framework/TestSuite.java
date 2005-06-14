@@ -165,7 +165,7 @@ public class TestSuite implements Test {
 	 * Constructs a TestSuite from the given array of classes.  
 	 * @param classes
 	 */
-	public TestSuite (Class<? extends TestCase>[] classes) {
+	public TestSuite (Class<? extends TestCase>... classes) {
 		for (Class<? extends TestCase> each : classes)
 			addTest(new TestSuite(each));
 	}
