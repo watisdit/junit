@@ -1,0 +1,19 @@
+* name space of JUnit4 is org.junit
+* JUnit4 requires J2SE 5.0
+	leverage J2SE 5.0 features
+* @Test annotation
+	@Test(expected=IndexOutOfBoundsException.class)
+	@Test(timeout= 1000)
+* @Ignore(reason= "...")
+* @Before, @After setup/teardown
+* @BeforeClass, @AfterClass one-time setup/teardown
+* provide ForwardCompatibility so that existing test Runners can 
+  run JUnit4 tests:
+	public static junit.framework.Test suite() {
+		return new JUnit4TestAdapter(ListTest.class);
+	}
+* add assertEquals(Object[], Object[])
+* Add backward compatibility for old JUnit tests in the new Runner
+* support the assert keyword and use AssertionError 
+* remove the old graphical runners
+* simplify: get rid of failures and errors distinction
