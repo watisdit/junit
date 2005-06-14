@@ -8,5 +8,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Ignore {
-	String reason() default "";
+	/**
+	 * The reason why a change is ignored
+	 */
+	String value() default ""; 
 }

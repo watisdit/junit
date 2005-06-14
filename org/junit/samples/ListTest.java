@@ -6,6 +6,7 @@ import java.util.List;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -37,7 +38,7 @@ public class ListTest {
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(ListTest.class);
 	}
-	@Test public void capacity() {
+	@Ignore("not today") @Test public void capacity() {
 		int size= fFull.size(); 
 		for (int i= 0; i < 100; i++)
 			fFull.add(i);

@@ -82,7 +82,7 @@ public class TestMethodTest {
 	static public class IgnoredTest {
 		@Test public void valid() {}
 		@Ignore @Test public void ignored() {}
-		@Ignore(reason= "For testing purposes") @Test public void withReason() {}
+		@Ignore("For testing purposes") @Test public void withReason() {}
 	}
 
 	@Test public void ignoreRunner() {
