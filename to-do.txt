@@ -6,6 +6,7 @@ Before first public candidate release:
 
 Before final JUnit 4 release:
 * make suites simpler for both the IDE providers and the users
+	* provide a @Suite annotation
 * make sure TestListener is symmetric and meets needs of runner developers
 	* TestRunEvent
 * Ant
