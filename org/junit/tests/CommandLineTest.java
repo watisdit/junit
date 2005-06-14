@@ -1,6 +1,7 @@
 package org.junit.tests;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -36,6 +37,32 @@ public class CommandLineTest {
 		testWasRun= false;
 		JUnitCore.main(new String[]{"org.junit.tests.CommandLineTest$Example"});
 		assertTrue(testWasRun);
+	}
+	
+	@Test public void runAClass() {
+		testWasRun= false;
+		JUnitCore.run(Example.class);
+		assertTrue(testWasRun);		
+	}
+
+	private static int fCount;
+
+	static public class Count {
+		@Test public void increment() {
+			fCount++;
+		}
+	}
+	
+	@Test public void runTwoClassesAsArray() {
+		fCount= 0;
+		JUnitCore.run(new Class[] {Count.class, Count.class});
+		assertEquals(2, fCount);		
+	}
+
+	@Test public void runTwoClasses() {
+		fCount= 0;
+		JUnitCore.run(Count.class, Count.class);
+		assertEquals(2, fCount);		
 	}
 
 	static public junit.framework.Test suite() {

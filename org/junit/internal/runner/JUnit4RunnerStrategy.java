@@ -88,7 +88,7 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 		invokeMethod(test, method);
 	}
 
-	void addFailure(Failure failure) {
+	private void addFailure(Failure failure) {
 		fNotifier.fireTestFailure(failure);
 	}
 

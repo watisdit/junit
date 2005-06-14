@@ -5,7 +5,7 @@ public interface TestListener {
 
 	void testRunStarted();
 	
-	void testRunFinished(Runner runner);
+	void testRunFinished(Runner runner); //TODO: Something is wrong here... Should take an event anyway
 	
 	public void testStarted(Object test, String name);
 

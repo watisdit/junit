@@ -1,4 +1,4 @@
-package org.threeriversinstitute.ponderosa;
+package org.junit.extensions;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -16,7 +16,7 @@ public class RecordingClient implements org.junit.runner.TestListener {
 	private PrintStream fWriter;
 	private String fEmail;
 	private String fHost= "localhost"; // This should default to recorder.org.junit
-	public static final int PORT = 812;
+	public static final int PORT = 80;
 
 	public RecordingClient() {
 		this("");

@@ -5,8 +5,8 @@ import java.util.List;
 
 import junit.runner.Version;
 
+import org.junit.extensions.RecordingClient;
 import org.junit.internal.runner.TextListener;
-import org.threeriversinstitute.ponderosa.RecordingClient;
 
 
 public class JUnitCore {
@@ -18,13 +18,15 @@ public class JUnitCore {
 	}
 
 	public static void main(String... args) {
-		new JUnitCore().run(args);
+		new JUnitCore().runMain(args);
 	}
 	
-	private void run(String... args) {
+	public static void run(Class... classes) {
+		new JUnitCore().runClasses(classes);
+	}
+	
+	private void runMain(String... args) {
 		System.out.println("JUnit version " + Version.id());
-		TestListener listener= new TextListener();
-		runner.addListener(listener);
 		int i= 0;
 		while (args[i].startsWith("-")) {
 			if (args[i].equals("-email")) {
@@ -48,7 +50,13 @@ public class JUnitCore {
 				System.out.println("Could not find class: " + args[i]);
 			}
 		}
-		runner.run(classes.toArray(new Class[0]));
+		runClasses(classes.toArray(new Class[0]));
+	}
+
+	private void runClasses(Class[] classes) {
+		TestListener listener= new TextListener();
+		runner.addListener(listener);
+		runner.run(classes);
 	}
 
 	private void addRecorder() {
