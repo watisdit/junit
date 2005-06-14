@@ -1,27 +1,19 @@
-Theme: Encourage more developers to write more tests by further simplifying JUnit
-
 Before first public candidate release:
-!* update documentation
+* update documentation
     * update the FAQ (pending)
-!* add  javadoc to API interfaces and Annotations
+* add  javadoc to API interfaces and Annotations
+
 
 Before final JUnit 4 release:
-* Make JUnitCore pluggable
-* contact all test runner authors
-		make sure TestListener is symmetric and meets needs of all runner developers
+* make suites simpler for both the IDE providers and the users
+* make sure TestListener is symmetric and meets needs of runner developers
+	* TestRunEvent
 * Ant
-  * Basic task
-  * Compatibility with existing formatters
-* support testing run once initialization code e.g. class Foo {{...}}
+	* Basic task
 * enable tighter and more flexible IDE integration
-	* be able to specify the order of tests
-		enable test reordering/prioritization
-			run failures first (<- this seems like it is up to the runner)
+	* enable test reordering/prioritization
 	* test categorization & filtering (<- seems like a runner issue) @Category(short, integration)  @Test(category=windowsOnly)
 * get 100% coverage
+
 * logging support (runner listeners should handle this?) (Log4JListener , 1.4 logging support (java.util.logging)))
-* TestRunEvent
-* think about compatibility with old runners--no clashing class names
-     
-Cool ideas:
-* TestProvider (useful when we have a command line?)
+* support testing run once initialization code e.g. class Foo {{...}}
