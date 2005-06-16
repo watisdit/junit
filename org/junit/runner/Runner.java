@@ -20,11 +20,17 @@ public class Runner implements TestNotifier {
 	private long fRunTime;
 
 	public void run(Class... testClasses) {
-		for (TestListener each : fListeners)
-			each.testRunStarted();
-		long startTime= System.currentTimeMillis();
+		List<RunnerStrategy> strategies= new ArrayList<RunnerStrategy>();
 		for (Class<? extends Object> each : testClasses)
-			getStrategy(each).run();
+			strategies.add(getStrategy(each));
+		int count= 0;
+		for (RunnerStrategy each : strategies)
+			count+= each.testCount();
+		for (TestListener each : fListeners)
+			each.testRunStarted(count);
+		long startTime= System.currentTimeMillis();
+		for (RunnerStrategy each : strategies)
+			each.run();
 		long endTime= System.currentTimeMillis();
 		fRunTime+= endTime - startTime;
 		for (TestListener each : fListeners)
@@ -38,11 +44,13 @@ public class Runner implements TestNotifier {
 		return new JUnit4RunnerStrategy(this, testClass);
 	}
 
+	//TODO: Get rid of this duplication
 	public void run(junit.framework.Test test) { 
+		PreJUnit4RunnerStrategy runnerStrategy= new PreJUnit4RunnerStrategy(this, test);
 		for (TestListener each : fListeners)
-			each.testRunStarted();
+			each.testRunStarted(runnerStrategy.testCount());
 		long startTime= System.currentTimeMillis();
-		new PreJUnit4RunnerStrategy(this, test).run();
+		runnerStrategy.run();
 		long endTime= System.currentTimeMillis();
 		fRunTime+= endTime - startTime;
 		for (TestListener each : fListeners)

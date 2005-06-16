@@ -1,6 +1,8 @@
 package junit.framework;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -80,9 +82,11 @@ public class TestResult extends Object {
 	/**
 	 * Returns an Enumeration for the errors
 	 */
-	public synchronized List<TestFailure> errors() {
-		return fErrors;
+	public synchronized Enumeration<TestFailure> errors() {
+		return Collections.enumeration(fErrors);
 	}
+	
+
 	/**
 	 * Gets the number of detected failures.
 	 */
@@ -92,9 +96,10 @@ public class TestResult extends Object {
 	/**
 	 * Returns an Enumeration for the failures
 	 */
-	public synchronized List<TestFailure> failures() {
-		return fFailures;
+	public synchronized Enumeration<TestFailure> failures() {
+		return Collections.enumeration(fFailures);
 	}
+	
 	/**
 	 * Runs a TestCase.
 	 */

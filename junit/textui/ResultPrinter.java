@@ -3,8 +3,7 @@ package junit.textui;
 
 import java.io.PrintStream;
 import java.text.NumberFormat;
-import java.util.List;
-
+import java.util.Enumeration;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestFailure;
@@ -51,15 +50,15 @@ public class ResultPrinter implements TestListener {
 		printDefects(result.failures(), result.failureCount(), "failure");
 	}
 	
-	protected void printDefects(List<TestFailure> booBoos, int count, String type) {
+	protected void printDefects(Enumeration<TestFailure> booBoos, int count, String type) {
 		if (count == 0) return;
 		if (count == 1)
 			getWriter().println("There was " + count + " " + type + ":");
 		else
 			getWriter().println("There were " + count + " " + type + "s:");
-		int i= 1;
-		for (TestFailure each : booBoos)
-			printDefect(each, i++);
+		for (int i= 1; booBoos.hasMoreElements(); i++) {
+			printDefect(booBoos.nextElement(), i);
+		}
 	}
 	
 	public void printDefect(TestFailure booBoo, int count) { // only public for testing purposes

@@ -51,8 +51,8 @@ public class TimeoutTest {
 	}
 
 	static public class TimeoutFailureTest {
-		@Test(timeout= 1000) public void success() throws InterruptedException {			
-			Thread.sleep(2000);
+		@Test(timeout= 100) public void success() throws InterruptedException {			
+			Thread.sleep(200);
 		}
 	}
 	
@@ -61,11 +61,11 @@ public class TimeoutTest {
 		runner.run(TimeoutFailureTest.class);
 		assertEquals(1, runner.getRunCount());
 		assertEquals(1, runner.getFailureCount());
-		assertEquals(InterruptedException.class, runner.getFailures().get(0).getException().getClass()); //TODO: Should this be an AssertionError("Timeout exceeeded")
+		assertEquals(InterruptedException.class, runner.getFailures().get(0).getException().getClass());
 	}
 	
 	static public class InfiniteLoopTest {
-		@Test(timeout= 1000) public void failure() {
+		@Test(timeout= 100) public void failure() {
 			for(;;);
 		}
 	}

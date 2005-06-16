@@ -44,7 +44,7 @@ public class ForwardCompatibilityTest extends TestCase {
 		TestResult result= new TestResult();
 		junit.framework.Test adapter= new JUnit4TestAdapter(ErrorTest.class);
 		adapter.run(result);
-		assertEquals(exception, result.errors().get(0).thrownException());
+		assertEquals(exception, result.errors().nextElement().thrownException());
 	}
 	
 	public static class NoExceptionTest {

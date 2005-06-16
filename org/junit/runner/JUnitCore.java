@@ -5,13 +5,13 @@ import java.util.List;
 
 import junit.runner.Version;
 
-import org.junit.extensions.RecordingClient;
+import org.junit.extensions.PonderosaClient;
 import org.junit.internal.runner.TextListener;
 
 
 public class JUnitCore {
 	
-	RecordingClient recorder= null;
+	PonderosaClient recorder= null;
 	Runner runner= new Runner();
 	
 	private JUnitCore() {
@@ -60,8 +60,11 @@ public class JUnitCore {
 	}
 
 	private void addRecorder() {
-		recorder= new RecordingClient();
+		recorder= new PonderosaClient();
 		runner.addListener(recorder);
 	}
 
+	public String getVersion() {
+		return Version.id();
+	}
 }

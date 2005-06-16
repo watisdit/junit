@@ -20,7 +20,7 @@ public class TextListener implements TestListener {
 	}
 
 	// TestListener implementation
-	public void testRunStarted() {
+	public void testRunStarted(int testCount) {
 	}
 
 	public void testRunFinished(Runner runner) {

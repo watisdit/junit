@@ -5,8 +5,12 @@ Before first public candidate release:
 
 
 Before final JUnit 4 release:
+* get rid of JUnit4TestCaseAdapter (use JUnit4RunnerStrategy in JUnit4TestAdapter)
+* update the build process
+    * automatically upload a new JAR
+* dynamically generated test cases
 * make suites simpler for both the IDE providers and the users
-	* provide a @Suite annotation
+* class level test annotations?
 * make sure TestListener is symmetric and meets needs of runner developers
 	* TestRunEvent
 * Ant
@@ -16,5 +20,5 @@ Before final JUnit 4 release:
 	* test categorization & filtering (<- seems like a runner issue) @Category(short, integration)  @Test(category=windowsOnly)
 * get 100% coverage
 
-* logging support (runner listeners should handle this?) (Log4JListener , 1.4 logging support (java.util.logging)))
+* Example TestListener: (Log4JListener , 1.4 logging support (java.util.logging), others...))
 * support testing run once initialization code e.g. class Foo {{...}}

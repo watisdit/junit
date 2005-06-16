@@ -14,7 +14,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.Test.None;
 
 
 public class TestIntrospector {
@@ -23,30 +22,6 @@ public class TestIntrospector {
 	
 	public TestIntrospector(Class<? extends Object> testClass) {
 		fTestClass= testClass;
-	}
-
-	public boolean isUnexpected(Throwable exception, Method method) {
-		Class< ? extends Throwable> expected= expectedException(method);
-		return !exception.getClass().equals(expected);
-	}
-
-	public boolean expectsException(Method method) {
-		return expectedException(method) != null;
-	}
-
-	public long getTimeout(Method method) {
-		Test annotation= method.getAnnotation(Test.class);
-		if (annotation == null)
-			return 0L;
-		return annotation.timeout();
-	}
-
-	public Class< ? extends Throwable> expectedException(Method method) {
-		Test annotation= method.getAnnotation(Test.class);
-		if (annotation.expected() == None.class)
-			return null;
-		else
-			return annotation.expected();
 	}
 
 	public List<Exception> validateTestMethods() {

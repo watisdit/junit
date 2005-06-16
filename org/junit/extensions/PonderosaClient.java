@@ -11,22 +11,22 @@ import java.util.Map;
 import org.junit.runner.Failure;
 import org.junit.runner.Runner;
 
-public class RecordingClient implements org.junit.runner.TestListener {
+public class PonderosaClient implements org.junit.runner.TestListener {
 
 	private PrintStream fWriter;
 	private String fEmail;
-	private String fHost= "localhost"; // This should default to recorder.org.junit
+	private String fHost= "localhost"; // This should default to ponderosa.threeriversinstitute.org
 	public static final int PORT = 80;
 
-	public RecordingClient() {
+	public PonderosaClient() {
 		this("");
 	}
 	
-	public RecordingClient(String email) {
+	public PonderosaClient(String email) {
 		this(email, System.out);
 	}
 
-	public RecordingClient(String email, PrintStream writer) {
+	public PonderosaClient(String email, PrintStream writer) {
 		fEmail= email;
 		fWriter= writer;
 	}
@@ -39,7 +39,7 @@ public class RecordingClient implements org.junit.runner.TestListener {
 		fEmail= email;
 	}
 	
-	public void testRunStarted() {
+	public void testRunStarted(int testCount) {
 	}
 
 	public void testRunFinished(Runner runner) {
@@ -67,7 +67,7 @@ public class RecordingClient implements org.junit.runner.TestListener {
 	}
 
 	private String encodeRun(Runner runner) {
-		return "email=" + fEmail + ":run count=" + runner.getRunCount() + ":fail count=" + runner.getFailureCount() + ":" + "run time=" + runner.getRunTime() + ":" + "version=" + "4.0" + ":";
+		return "run:email=" + fEmail + ":run count=" + runner.getRunCount() + ":fail count=" + runner.getFailureCount() + ":" + "run time=" + runner.getRunTime() + ":" + "version=" + "4.0" + ":";
 	}
 
 	private Map<String, String> parse(String string) {

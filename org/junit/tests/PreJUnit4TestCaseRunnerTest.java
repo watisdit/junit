@@ -34,7 +34,7 @@ public class PreJUnit4TestCaseRunnerTest {
 			public void testFailure(Failure failure) {
 			}
 
-			public void testRunStarted() {
+			public void testRunStarted(int testCount) {
 			}
 
 			public void testIgnored(Object method) {

@@ -59,7 +59,8 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 		if (fTestIntrospector.isIgnored(method)) {
 			fNotifier.fireTestIgnored(method);
 		} else {
-			long timeout= fTestIntrospector.getTimeout(method);
+			Test annotation= method.getAnnotation(Test.class);
+			long timeout= annotation.timeout();
 			if (timeout <= 0) {
 				invoke(test, method);
 			} else {
@@ -105,12 +106,12 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 		}
 		try {
 			method.invoke(test);
-			Class< ? extends Throwable> expected= fTestIntrospector.expectedException(method);
-			if (fTestIntrospector.expectsException(method)) {
+			Class< ? extends Throwable> expected= expectedException(method);
+			if (expectsException(method)) {
 				addFailure(new TestFailure(test, method.getName(), new AssertionError("Expected exception: " + expected.getName())));
 			}
 		} catch (InvocationTargetException e) {
-			if (fTestIntrospector.isUnexpected(e.getTargetException(), method))
+			if (isUnexpected(e.getTargetException(), method))
 				addFailure(new TestFailure(test, method.getName(), e.getTargetException()));
 		} catch (Throwable e) {
 			addFailure(new TestFailure(test, method.getName(), e)); // TODO:
@@ -135,6 +136,27 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 		List<Method> befores= fTestIntrospector.getTestMethods(Before.class);
 		for (Method before : befores)
 			before.invoke(test);
+	}
+
+	private boolean isUnexpected(Throwable exception, Method method) {
+		Class< ? extends Throwable> expected= expectedException(method);
+		return !exception.getClass().equals(expected);
+	}
+
+	private boolean expectsException(Method method) {
+		return expectedException(method) != null;
+	}
+
+	private Class< ? extends Throwable> expectedException(Method method) {
+		Test annotation= method.getAnnotation(Test.class);
+		if (annotation.expected() == Test.None.class)
+			return null;
+		else
+			return annotation.expected();
+	}
+
+	public int testCount() {
+		return fTestIntrospector.getTestMethods(Test.class).size();
 	}
 
 }

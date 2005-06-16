@@ -6,4 +6,6 @@ public interface RunnerStrategy {
 
 	public void run();
 
+	public int testCount();
+
 }

@@ -53,4 +53,8 @@ public class PreJUnit4RunnerStrategy implements junit.framework.TestListener,  R
 		fNotifier.fireTestStarted(test, ((TestCase) test).getName());
 	}
 
+	public int testCount() {
+		return fTest.countTestCases();
+	}
+
 }

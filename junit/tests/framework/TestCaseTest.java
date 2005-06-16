@@ -132,7 +132,7 @@ public class TestCaseTest extends TestCase {
 		};
 		TestResult result= new TestResult();
 		t.run(result);
-		TestFailure failure= result.errors().get(0);
+		TestFailure failure= result.errors().nextElement();
 		assertEquals("running", failure.thrownException().getMessage());
 	}
 	
