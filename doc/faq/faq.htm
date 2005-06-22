@@ -169,8 +169,6 @@ Table of Contents
     </p>
     <ol>
       <li><a href="#organize_1">Where should I put my test files?</a></li>
-      <li><a href="#organize_2">How do I write a test suite for all of
-      my tests?</a></li>
       <li><a href="#organize_3">How can I run setUp() and tearDown()
       code once for all of my tests?</a></li>
     </ol>
@@ -709,9 +707,9 @@ Table of Contents
       <li>
 	<p>
 	  If you are running your JUnit 4 tests with a JUnit 3.x runner,
-	  write a <code>suite()</code> method that uses reflection
-	  to dynamically create a test suite containing all
-	  the <code>testXXX()</code> methods:
+	  write a <code>suite()</code> method that uses the 
+	  <code>JUnit4TestAdapter</code> class to create a suite
+	  containing all of your test methods:
 	</p>
 	<div class="code">
 	  <pre><code>
@@ -1321,41 +1319,6 @@ public class SampleTest {
 }
       </code></pre></blockquote>
     </div>
-    <p>
-      SampleTestSuite is a template for a suite of tests:
-    </p>
-    <div>
-      <blockquote><pre><code>
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
-public class SampleTestSuite {
-
-    public static Test suite() {
-
-        TestSuite suite = new TestSuite("Sample Tests");
-        
-        //
-        // Add one entry for each test class
-        // or test suite.
-        //
-        suite.addTestSuite(SampleTest.class);
-        
-        //
-        // For a master test suite, use this pattern.
-        // (Note that here, it's recursive!)
-        //
-        suite.addTest(AnotherTestSuite.suite());
-
-        return suite;
-    }
-
-    public static void main(String args[]) {
-        junit.textui.TestRunner.run(suite());
-    }
-}
-      </code></pre></blockquote>
-    </div>
   </li>
   <li>
     <p>
@@ -1458,54 +1421,6 @@ test
       author of this FAQ sees no clear advantage to adopting this
       approach and believes that said developers also put their curly
       braces on the wrong line.  :-)
-    </p>
-  </li>
-  <li>
-    <p>
-      <b><a name="organize_2"></a>How do I write a test suite for all
-      of my tests?</b>
-    </p>
-    <p>
-      Ideally, this is the job of your IDE.  
-    </p>
-    <p>
-      To create a test suite by hand, write a <code>suite()</code>
-      method that creates a <code>TestSuite</code> containing all your
-      tests.
-    </p>
-    <p>
-      For example:
-    </p>
-    <div class="code">
-      <pre><code>
-
-    import junit.framework.*;
-
-    public class AllTests {
-
-        public static Test suite() {
-
-            TestSuite suite = new TestSuite();
-
-            suite.addTest(SomeTest.suite());
-            suite.addTest(AnotherTest.suite());
-		
-            return suite;
-        }
-
-        public static void main(String[] args) {
-            junit.textui.TestRunner.run(suite());
-        }
-    }
-      </code></pre>
-    </div> 
-    <p>
-      Running <code>AllTests</code> will automatically run all of its
-      contained tests in one fell swoop.
-    </p>
-    <p>
-      You can arbitrarily group any tests into test suites as
-      appropriate by package, logical layers, test type, etc.
     </p>
   </li>
   <li>
