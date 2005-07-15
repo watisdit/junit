@@ -2,6 +2,7 @@ Before first public candidate release:
 * update documentation
     * update the FAQ (pending)
 * add  javadoc to API interfaces and Annotations
+* if an exception is expected, but actual and expected differ, then this should be explained in the error message
 
 
 Before final JUnit 4 release:
