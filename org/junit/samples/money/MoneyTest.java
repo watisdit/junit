@@ -96,6 +96,13 @@ public class MoneyTest {
 		assertEquals(f12CHF.hashCode(), equalMoney.hashCode());
 		assertTrue(!f12CHF.equals(f14CHF));
 	}
+	@Test public void zeroMoniesAreEqualRegardlessOfCurrency() {
+		   Money zeroDollars = new Money(0, "USD");
+		   Money zeroFrancs = new Money(0, "CHF");
+				
+		   assertEquals(zeroDollars, zeroFrancs);
+		   assertEquals(zeroDollars.hashCode(), zeroFrancs.hashCode());
+		}
 	@Test public void testMoneyHash() {
 		assertTrue(!f12CHF.equals(null)); 
 		Money equal= new Money(12, "CHF");

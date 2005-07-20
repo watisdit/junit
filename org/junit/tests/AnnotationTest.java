@@ -406,4 +406,49 @@ public class AnnotationTest extends TestCase {
 		assertFalse(log.contains("Super"));
 	}
 	
+//	static public class RunAllAfters {
+//		@Before public void good() {
+//		}
+//		@Before public void bad() {
+//			throw new Error();
+//		}
+//		@Test public void empty() {
+//		}
+//		@After public void one() {
+//			log+= "one";
+//		}
+//		@After public void  two() {
+//			log+= "two";
+//		}
+//	}
+//	
+//	public void testRunAllAfters() {
+//		log= "";
+//		Runner runner= new Runner();
+//		runner.run(RunAllAfters.class);
+//		assertTrue(log.contains("one"));
+//		assertTrue(log.contains("two"));
+//	}
+//	
+//	static public class RunAllAftersRegardless {
+//		@Test public void empty() {
+//		}
+//		@After public void one() {
+//			log+= "one";
+//			throw new Error();
+//		}
+//		@After public void  two() {
+//			log+= "two";
+//			throw new Error();
+//		}
+//	}
+//	
+//	public void testRunAllAftersRegardless() {
+//		log= "";
+//		Runner runner= new Runner();
+//		runner.run(RunAllAfters.class);
+//		assertTrue(log.contains("one"));
+//		assertTrue(log.contains("two"));
+//		assertEquals(2, runner.getFailureCount());
+//	}
 }

@@ -50,6 +50,8 @@ public class Money implements IMoney {
 	}
 	@Override
 	public int hashCode() {
+		if (fAmount == 0)
+			return 0;
 		return fCurrency.hashCode()+fAmount;
 	}
 	public boolean isZero() {

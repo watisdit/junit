@@ -1,25 +1,35 @@
-Before first public candidate release:
+Before first public release:
 * update documentation
-    * update the FAQ (pending)
 * add  javadoc to API interfaces and Annotations
+* make sure TestListener is symmetric and meets needs of runner developers
+	* TestRunEvent
 * if an exception is expected, but actual and expected differ, then this should be explained in the error message
 
 
-Before final JUnit 4 release:
+
+Before next JUnit 4 release:
+* be able to run all tests simply from the command line
 * get rid of JUnit4TestCaseAdapter (use JUnit4RunnerStrategy in JUnit4TestAdapter)
 * update the build process
     * automatically upload a new JAR
 * dynamically generated test cases
 * make suites simpler for both the IDE providers and the users
 * class level test annotations?
-* make sure TestListener is symmetric and meets needs of runner developers
-	* TestRunEvent
 * Ant
 	* Basic task
 * enable tighter and more flexible IDE integration
 	* enable test reordering/prioritization
 	* test categorization & filtering (<- seems like a runner issue) @Category(short, integration)  @Test(category=windowsOnly)
 * get 100% coverage
+* ParameterizedTest
+* Suite annotaitn example:
+	@Suite(tests={MoneyTest.class, SimpleTest.class})
+	or with filters
+	@Suite(pattern="*Test"}
+	@Suite(package="org.junit.test.*")
+
+	@Suite
+* annotation for suite() method
 
 * Example TestListener: (Log4JListener , 1.4 logging support (java.util.logging), others...))
 * support testing run once initialization code e.g. class Foo {{...}}

@@ -39,17 +39,6 @@ public class PonderosaClient implements org.junit.runner.TestListener {
 		fEmail= email;
 	}
 	
-	public void testRunStarted(int testCount) {
-	}
-
-	public void testRunFinished(Runner runner) {
-		try {
-			processRun(runner);
-		} catch (Exception e) {
-			fWriter.println("Error processing test run:\n" + e);
-		}
-	}
-
 	private void processRun(Runner runner) throws Exception {
 		URL url= new URL("http", fHost, PORT, encodeRun(runner));
 		URLConnection socket = url.openConnection();
@@ -85,6 +74,17 @@ public class PonderosaClient implements org.junit.runner.TestListener {
 		return results;
 	}
 
+	public void testRunStarted(int testCount) {
+	}
+	
+	public void testRunFinished(Runner runner) {
+		try {
+			processRun(runner);
+		} catch (Exception e) {
+			fWriter.println("Error processing test run:\n" + e);
+		}
+	}
+	
 	public void testStarted(Object test, String name) {
 	}
 
@@ -95,3 +95,4 @@ public class PonderosaClient implements org.junit.runner.TestListener {
 	}
 
 }
+
