@@ -4,8 +4,7 @@ Before first public release:
 * make sure TestListener is symmetric and meets needs of runner developers
 	* TestRunEvent
 * if an exception is expected, but actual and expected differ, then this should be explained in the error message
-
-
+* TestNotifier API rationalization (why does testIgnored take a method and testStarted take an object and a string?)
 
 Before next JUnit 4 release:
 * be able to run all tests simply from the command line

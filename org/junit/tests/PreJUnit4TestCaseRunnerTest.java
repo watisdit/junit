@@ -39,6 +39,9 @@ public class PreJUnit4TestCaseRunnerTest {
 
 			public void testIgnored(Object method) {
 			}
+
+			public void testFinished(Object test, String name) {
+			}
 		};
 		
 		runner.addListener(listener);

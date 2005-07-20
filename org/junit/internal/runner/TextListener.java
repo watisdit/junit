@@ -101,5 +101,8 @@ public class TextListener implements TestListener {
 		return NumberFormat.getInstance().format((double) runTime / 1000);
 	}
 
+	public void testFinished(Object test, String name) {
+	}
+
 
 }

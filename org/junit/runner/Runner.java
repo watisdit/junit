@@ -107,4 +107,9 @@ public class Runner implements TestNotifier {
 			each.testIgnored(method);
 	}
 
+	public void fireTestFinished(Object test, String name) {
+		for (TestListener each : getListeners())
+			each.testFinished(test, name);
+	}
+
 }

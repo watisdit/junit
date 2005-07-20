@@ -1,6 +1,7 @@
 package org.junit.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -9,6 +10,8 @@ import org.junit.runner.Runner;
 import org.junit.runner.TestListener;
 
 public class RunnerTest {
+
+	private boolean wasRun;
 
 	public class MyListener implements TestListener {
 
@@ -28,6 +31,9 @@ public class RunnerTest {
 		}
 
 		public void testIgnored(Object method) {
+		}
+
+		public void testFinished(Object test, String name) {
 		}
 		
 	}
@@ -56,6 +62,25 @@ public class RunnerTest {
 		runner.addListener(listener);
 		runner.run(ExampleTest.class);
 		assertEquals(1, listener.testCount);
+	}
+	
+	public static class NewExample {
+		@Test public void empty() {
+		}
+	}
+	
+	@Test public void testFinished() {
+		Runner runner= new Runner();
+		wasRun= false;
+		TestListener listener= new MyListener() {
+			@Override
+			public void testFinished(Object test, String name) {
+				wasRun= true;
+			}
+		};
+		runner.addListener(listener);
+		runner.run(NewExample.class);
+		assertTrue(wasRun);
 	}
 	
 	public static junit.framework.Test suite() {

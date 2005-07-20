@@ -7,11 +7,12 @@ public interface TestListener {
 	
 	void testRunFinished(Runner runner); //TODO: Something is wrong here... Should take an event anyway
 	
-	public void testStarted(Object test, String name);
+	void testStarted(Object test, String name);
 
-	public void testFailure(Failure failure);
+	void testFinished(Object test, String name);
+
+	void testFailure(Failure failure);
 
 	void testIgnored(Object method);
-
 
 }

@@ -94,5 +94,8 @@ public class PonderosaClient implements org.junit.runner.TestListener {
 	public void testIgnored(Object method) {
 	}
 
+	public void testFinished(Object test, String name) {
+	}
+
 }
 

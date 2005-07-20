@@ -7,8 +7,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * A <code>TestSuite</code> is a <code>Composite</code> of Tests.
@@ -106,7 +107,7 @@ public class TestSuite implements Test {
 	
 	private String fName;
 
-	private List<Test> fTests= new ArrayList<Test>(10);
+	private Vector<Test> fTests= new Vector<Test>(10); // Cannot convert this to List because it is used directly by some test runners
 
     /**
 	 * Constructs an empty TestSuite.
@@ -252,8 +253,8 @@ public class TestSuite implements Test {
 	/**
 	 * Returns the tests as an enumeration
 	 */
-	public Iterator<Test> tests() {
-		return fTests.iterator();
+	public Enumeration<Test> tests() {
+		return fTests.elements();
 	}
 	
 	/**

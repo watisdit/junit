@@ -96,6 +96,14 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 	public void invokeMethod(Object test, Method method) {
 		fNotifier.fireTestStarted(test, method.getName());
 		try {
+			quietlyInvokeMethod(test, method);
+		} finally {
+			fNotifier.fireTestFinished(test, method.getName());
+		}
+	}
+
+	private void quietlyInvokeMethod(Object test, Method method) {
+		try {
 			setUp(test);
 		} catch (InvocationTargetException e) {
 			addFailure(new TestFailure(test, method.getName(), e.getTargetException()));

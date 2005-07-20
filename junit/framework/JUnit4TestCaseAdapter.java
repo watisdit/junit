@@ -35,6 +35,9 @@ public class JUnit4TestCaseAdapter extends TestCase {
 		
 		public void fireTestStarted(Object test, String name) {
 		}
+
+		public void fireTestFinished(Object test, String name) {
+		}
 	}
 	
 	@Override
