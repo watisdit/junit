@@ -32,4 +32,9 @@ public class TestFailure extends Failure {
 	public String getMethodName() {
 		return fMethodName;
 	}
+	
+	@Override
+	public boolean isTestFailure() {
+		return true;
+	}
 }
