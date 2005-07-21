@@ -5,14 +5,14 @@ import java.io.StringWriter;
 
 
 /**
- * A <code>Failure</code> collects a failed test together with
- * the caught exception.
+ * A <code>Failure</code> holds the exception
+ * thrown from a test.
  */
-public class Failure extends Object {
+public class Failure {
 	protected Throwable fThrownException;
 	
 	/**
-	 * Constructs a TestFailure with only the given exception.
+	 * Constructs a Failure with only the given exception.
 	 */
 	public Failure(Throwable thrownException) {
 		fThrownException= thrownException;

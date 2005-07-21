@@ -2,6 +2,10 @@ package org.junit.internal.runner;
 
 import org.junit.runner.Failure;
 
+/**
+ * A Test Failure holds the failed Test, method name, and the 
+ * thrown exception
+ */
 public class TestFailure extends Failure {
 
 	protected Object fFailedTest;
@@ -19,5 +23,13 @@ public class TestFailure extends Failure {
 	@Override
 	public String getTestHeader() {
 		return fFailedTest.getClass().getName() + "." + fMethodName + "()";
+	}
+	
+	public Object getFailedTest() {
+		return fFailedTest;
+	}
+	
+	public String getMethodName() {
+		return fMethodName;
 	}
 }
