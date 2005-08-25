@@ -37,11 +37,16 @@ public class Runner implements TestNotifier {
 			each.testRunFinished(this);
 	}
 	
-	@SuppressWarnings("unchecked")
+	// TODO: Support AllTests here
+	@SuppressWarnings("unchecked") 
 	private RunnerStrategy getStrategy(Class<? extends Object> testClass) {
-		if (junit.framework.TestCase.class.isAssignableFrom(testClass))
+		if (isPre4Test(testClass))
 			return new PreJUnit4RunnerStrategy(this, (Class< ? extends TestCase>) testClass); 
 		return new JUnit4RunnerStrategy(this, testClass);
+	}
+
+	private boolean isPre4Test(Class< ? extends Object> testClass) {
+		return junit.framework.TestCase.class.isAssignableFrom(testClass);
 	}
 
 	//TODO: Get rid of this duplication

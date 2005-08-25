@@ -25,14 +25,6 @@ public class AssertionTest {
 		assertEquals("not equal", new Object[] {new Object()}, new Object[] {new Object()});
 	}
 	
-	@Test public void arraysNotEqualErrorMessage() {
-		try {
-			assertEquals("not equal", new Object[] {new Object()}, new Object[] {new Object()});
-		} catch (AssertionError exception) {
-			assertEquals("not equal: arrays first differed at element 0", exception.getMessage());
-		}
-	}
-	
 	@Test public void arraysExpectedNullMessage() {
 		try {
 			assertEquals("not equal", null, new Object[] {new Object()});
@@ -56,6 +48,24 @@ public class AssertionTest {
 			assertEquals("not equal: array lengths differed, expected.length=0 actual.length=1", exception.getMessage());
 		}
 	}
+	
+	@Test public void arraysElementsDiffer() {
+		try {
+			assertEquals("not equal", new Object[] {"one"} , new Object[] {"two"});
+		} catch (AssertionError exception) {
+			assertEquals("not equal: arrays first differed at element 0 expected:<one> but was:<two>", exception.getMessage());
+		}
+	}
+	
+	@Test public void stringsDifferWithUserMessage() {
+		try {
+			assertEquals("not equal", "one", "two");
+		} catch (Throwable exception) {
+			assertEquals("not equal expected:<[one]> but was:<[two]>", exception.getMessage());
+		}
+	}
+	
+	//TODO: Should we compact the comparison of Objects and not just Strings? In any case, we should compact the comparison of elements which are Strings
 	
 	@Test public void arraysEqual() {
 		Object element= new Object();

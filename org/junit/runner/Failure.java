@@ -48,4 +48,9 @@ public class Failure {
 	public String getTestHeader() {
 		return "Test mechanism failure";
 	}
+	
+	public boolean isTestFailure() {
+		return false;
+	}
+
 }

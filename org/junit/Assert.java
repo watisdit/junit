@@ -46,7 +46,6 @@ public class Assert {
 		assertFalse(null, condition);
 	}
 
-	// TODO: Make failXXX() and format() private, unless someone has a good reason to leave them public
 	/**
 	 * Fails a test with the given message.
 	 */
@@ -99,7 +98,7 @@ public class Assert {
 			Object o1= expected[i];
 			Object o2= actual[i];
 			if (!(o1 == null ? o2 == null : o1.equals(o2)))
-				fail(message + ":" + " arrays first differed at element " + i);
+				fail(message + ":" + " arrays first differed at element " + i + format("", o1, o2));
 		}
 	}
 
@@ -325,25 +324,25 @@ public class Assert {
 		assertNotSame(null, expected, actual);
 	}
 
-	static public void failSame(String message) {
+	static private void failSame(String message) {
 		String formatted= "";
 		if (message != null)
 			formatted= message + " ";
 		fail(formatted + "expected not same");
 	}
 
-	static public void failNotSame(String message, Object expected, Object actual) {
+	static private void failNotSame(String message, Object expected, Object actual) {
 		String formatted= "";
 		if (message != null)
 			formatted= message + " ";
 		fail(formatted + "expected same:<" + expected + "> was not:<" + actual + ">");
 	}
 
-	static public void failNotEquals(String message, Object expected, Object actual) {
+	static private void failNotEquals(String message, Object expected, Object actual) {
 		fail(format(message, expected, actual));
 	}
 
-	static public String format(String message, Object expected, Object actual) {
+	static private String format(String message, Object expected, Object actual) {
 		String formatted= "";
 		if (message != null)
 			formatted= message + " ";
