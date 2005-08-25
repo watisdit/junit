@@ -1,6 +1,7 @@
 package org.junit.internal.runner;
 
 import java.io.PrintStream;
+import java.lang.reflect.Method;
 import java.text.NumberFormat;
 
 import org.junit.runner.Failure;
@@ -37,7 +38,7 @@ public class TextListener implements TestListener {
 		fWriter.append('E');
 	}
 	
-	public void testIgnored(Object method) {
+	public void testIgnored(Method method) {
 		fWriter.append('I');
 	}
 	

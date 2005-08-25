@@ -1,5 +1,7 @@
 package org.junit.tests;
 
+import java.lang.reflect.Method;
+
 import org.junit.Test;
 import org.junit.runner.Failure;
 import org.junit.runner.Runner;
@@ -37,7 +39,7 @@ public class PreJUnit4TestCaseRunnerTest {
 			public void testRunStarted(int testCount) {
 			}
 
-			public void testIgnored(Object method) {
+			public void testIgnored(Method method) {
 			}
 
 			public void testFinished(Object test, String name) {

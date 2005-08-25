@@ -4,7 +4,7 @@ package junit.framework;
  * A set of assert methods. Messages are only displayed when an assert fails.
  */
 
-public class Assert extends org.junit.Assert {
+public class Assert {
 	/**
 	 * Protect constructor since it is a static only class
 	 */

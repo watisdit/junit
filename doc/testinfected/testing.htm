@@ -452,7 +452,7 @@ of 7 USD. To verify the problem let's implement a test case and run it.
 <pre><tt>public void testSimplify() {
 &nbsp;&nbsp;&nbsp; // {[12 CHF][7 USD]} + [-12 CHF] == [7 USD]
 &nbsp;&nbsp;&nbsp; Money expected= new Money(7, "USD");
-&nbsp;&nbsp;&nbsp; Assert.assertEquals(expected, fMS1.add(new Money(-12, "CHF")));
+&nbsp;&nbsp;&nbsp; Assert.assertEquals(expected, fMB1.add(new Money(-12, "CHF")));
 }</tt></pre>
 When you are developing in this style you will often have a thought and
 turn immediately to writing a test, rather than going straight to the code.

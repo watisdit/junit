@@ -2,6 +2,9 @@ package org.junit.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import java.lang.reflect.Method;
+
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -30,7 +33,7 @@ public class RunnerTest {
 		public void testFailure(Failure failure) {
 		}
 
-		public void testIgnored(Object method) {
+		public void testIgnored(Method method) {
 		}
 
 		public void testFinished(Object test, String name) {

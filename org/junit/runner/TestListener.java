@@ -1,5 +1,7 @@
 package org.junit.runner;
 
+import java.lang.reflect.Method;
+
 
 public interface TestListener {
 
@@ -13,6 +15,6 @@ public interface TestListener {
 
 	void testFailure(Failure failure);
 
-	void testIgnored(Object method);
+	void testIgnored(Method method);
 
 }

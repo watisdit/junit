@@ -3,6 +3,7 @@ package org.junit.extensions;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -91,7 +92,7 @@ public class PonderosaClient implements org.junit.runner.TestListener {
 	public void testFailure(Failure failure) {
 	}
 
-	public void testIgnored(Object method) {
+	public void testIgnored(Method method) {
 	}
 
 	public void testFinished(Object test, String name) {

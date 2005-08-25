@@ -42,11 +42,8 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 			for (Method method : beforeMethods)
 				method.invoke(null);
 			List<Method> methods= fTestIntrospector.getTestMethods(Test.class);
-			for (Method method : methods) {
-				Constructor<? extends Object> constructor= fTestClass.getConstructor();
-				Object test= constructor.newInstance();
-				invokeTestMethod(test, method);
-			}
+			for (Method method : methods)
+				invokeTestMethod(method);
 			List<Method> afterMethods= fTestIntrospector.getTestMethods(AfterClass.class);
 			for (Method method : afterMethods)
 				method.invoke(null);
@@ -55,7 +52,12 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 		}
 	}
 
-	public void invokeTestMethod(Object test, Method method) throws TimeoutException, InterruptedException, ExecutionException {
+	private void invokeTestMethod(Method method) throws Exception {
+		Object test= getTestConstructor().newInstance();
+		invokeTestMethod(test, method);
+	}
+
+	public void invokeTestMethod(Object test, Method method) throws Exception {
 		if (fTestIntrospector.isIgnored(method)) {
 			fNotifier.fireTestIgnored(method);
 		} else {
@@ -67,6 +69,10 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 				invokeWithTimeout(test, method, timeout);
 			} 					
 		}
+	}
+
+	protected Constructor< ? extends Object> getTestConstructor() throws NoSuchMethodException, SecurityException {
+		return fTestClass.getConstructor();
 	}
 
 	private void invokeWithTimeout(final Object test, final Method method, long timeout) throws InterruptedException, ExecutionException, TimeoutException {
@@ -89,7 +95,7 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 		invokeMethod(test, method);
 	}
 
-	private void addFailure(Failure failure) {
+	public void addFailure(Failure failure) {
 		fNotifier.fireTestFailure(failure);
 	}
 

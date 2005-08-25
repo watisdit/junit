@@ -5,14 +5,14 @@ import java.io.StringWriter;
 
 
 /**
- * A <code>Failure</code> holds the exception
- * thrown from a test.
+ * A <code>Failure</code> reports an exception caught while
+ * executing JUnit tests.
  */
 public class Failure {
 	protected Throwable fThrownException;
 	
 	/**
-	 * Constructs a Failure with only the given exception.
+	 * Constructs a TestFailure with only the given exception.
 	 */
 	public Failure(Throwable thrownException) {
 		fThrownException= thrownException;
@@ -47,9 +47,5 @@ public class Failure {
 	
 	public String getTestHeader() {
 		return "Test mechanism failure";
-	}
-	
-	public boolean isTestFailure() {
-		return false;
 	}
 }

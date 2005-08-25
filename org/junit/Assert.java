@@ -46,6 +46,7 @@ public class Assert {
 		assertFalse(null, condition);
 	}
 
+	// TODO: Make failXXX() and format() private, unless someone has a good reason to leave them public
 	/**
 	 * Fails a test with the given message.
 	 */
