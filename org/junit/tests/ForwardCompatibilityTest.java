@@ -70,6 +70,12 @@ public class ForwardCompatibilityTest extends TestCase {
 		assertTrue(result.wasSuccessful());
 	}
 	
+	public static class UnExpectedExceptionTest {
+		@Test(expected = Exception.class) public void expected() throws Exception {
+			throw new Error();
+		}
+	}
+	
 	static String log;
 	public static class BeforeClassTest {
 		@BeforeClass public static void beforeClass() {

@@ -1,6 +1,5 @@
 package org.junit.internal.runner;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -30,6 +29,10 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 		fTestIntrospector= new TestIntrospector(fTestClass);
 	}
 
+	public int testCount() {
+		return fTestIntrospector.getTestMethods(Test.class).size();
+	}
+
 	public void run() {
 		List<Exception> errors= fTestIntrospector.validateTestMethods();
 		if (!errors.isEmpty()) {
@@ -52,27 +55,27 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 		}
 	}
 
+	private void addFailure(Failure failure) {
+		fNotifier.fireTestFailure(failure);
+	}
+	
 	private void invokeTestMethod(Method method) throws Exception {
-		Object test= getTestConstructor().newInstance();
+		Object test= fTestClass.getConstructor().newInstance();
 		invokeTestMethod(test, method);
 	}
 
 	public void invokeTestMethod(Object test, Method method) throws Exception {
 		if (fTestIntrospector.isIgnored(method)) {
 			fNotifier.fireTestIgnored(method);
-		} else {
-			Test annotation= method.getAnnotation(Test.class);
-			long timeout= annotation.timeout();
-			if (timeout <= 0) {
-				invoke(test, method);
-			} else {
-				invokeWithTimeout(test, method, timeout);
-			} 					
+			return;
 		}
-	}
-
-	protected Constructor< ? extends Object> getTestConstructor() throws NoSuchMethodException, SecurityException {
-		return fTestClass.getConstructor();
+		Test annotation= method.getAnnotation(Test.class);
+		long timeout= annotation.timeout();
+		if (timeout <= 0) {
+			invoke(test, method);
+		} else {
+			invokeWithTimeout(test, method, timeout);
+		}
 	}
 
 	private void invokeWithTimeout(final Object test, final Method method, long timeout) throws InterruptedException, ExecutionException, TimeoutException {
@@ -86,7 +89,7 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 		Future<Object> result= service.submit(callable);
 		service.shutdown();
 		boolean terminated= service.awaitTermination(timeout, TimeUnit.MILLISECONDS);
-		if (!terminated) 
+		if (!terminated)
 			service.shutdownNow();
 		result.get(timeout, TimeUnit.MILLISECONDS); // throws the exception if one occurred during the invocation
 	}
@@ -95,11 +98,7 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 		invokeMethod(test, method);
 	}
 
-	public void addFailure(Failure failure) {
-		fNotifier.fireTestFailure(failure);
-	}
-
-	public void invokeMethod(Object test, Method method) {
+	private void invokeMethod(Object test, Method method) {
 		fNotifier.fireTestStarted(test, method.getName());
 		try {
 			quietlyInvokeMethod(test, method);
@@ -118,15 +117,17 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 			addFailure(new TestFailure(test, method.getName(), e)); // TODO:
 			return;
 		}
+		Class< ? extends Throwable> expected= expectedException(method);
 		try {
 			method.invoke(test);
-			Class< ? extends Throwable> expected= expectedException(method);
 			if (expectsException(method)) {
 				addFailure(new TestFailure(test, method.getName(), new AssertionError("Expected exception: " + expected.getName())));
 			}
 		} catch (InvocationTargetException e) {
-			if (isUnexpected(e.getTargetException(), method))
+			if (expected == null)
 				addFailure(new TestFailure(test, method.getName(), e.getTargetException()));
+			else if (isUnexpected(e.getTargetException(), method))
+				addFailure(new TestFailure(test, method.getName(), new AssertionError("Unexpected exception, expected<" + expected.getName() + "> but was<" + e.getTargetException().getClass().getName() + ">")));
 		} catch (Throwable e) {
 			addFailure(new TestFailure(test, method.getName(), e)); // TODO:
 		} finally {
@@ -140,16 +141,16 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 		}
 	}
 
-	public void tearDown(Object test) throws Exception {
-		List<Method> afters= fTestIntrospector.getTestMethods(After.class);
-		for (Method after : afters)
-			after.invoke(test);
-	}
-
-	public void setUp(Object test) throws Exception {
+	private void setUp(Object test) throws Exception {
 		List<Method> befores= fTestIntrospector.getTestMethods(Before.class);
 		for (Method before : befores)
 			before.invoke(test);
+	}
+	
+	private void tearDown(Object test) throws Exception {
+		List<Method> afters= fTestIntrospector.getTestMethods(After.class);
+		for (Method after : afters)
+			after.invoke(test);
 	}
 
 	private boolean isUnexpected(Throwable exception, Method method) {
@@ -167,10 +168,6 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 			return null;
 		else
 			return annotation.expected();
-	}
-
-	public int testCount() {
-		return fTestIntrospector.getTestMethods(Test.class).size();
 	}
 
 }

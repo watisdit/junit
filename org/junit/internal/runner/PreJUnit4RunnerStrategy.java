@@ -32,6 +32,7 @@ public class PreJUnit4RunnerStrategy implements junit.framework.TestListener,  R
 	}
 
 	// Implement junit.framework.TestListener
+	//TODO method not covered
 	public void addError(Test test, Throwable t) {
 		String name;
 		if (test instanceof TestCase)
@@ -42,6 +43,7 @@ public class PreJUnit4RunnerStrategy implements junit.framework.TestListener,  R
 		fNotifier.fireTestFailure(failure);
 	}
 
+	//TODO method not covered
 	public void addFailure(Test test, AssertionFailedError t) {
 		addError(test, t);
 	}
