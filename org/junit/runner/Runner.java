@@ -1,11 +1,16 @@
 package org.junit.runner;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
+import org.junit.Parameters;
 import org.junit.internal.runner.JUnit4RunnerStrategy;
+import org.junit.internal.runner.ParameterizedRunnerStrategy;
 import org.junit.internal.runner.PreJUnit4RunnerStrategy;
 import org.junit.internal.runner.RunnerStrategy;
 import org.junit.internal.runner.TestNotifier;
@@ -40,9 +45,26 @@ public class Runner implements TestNotifier {
 	// TODO: Support AllTests here
 	@SuppressWarnings("unchecked") 
 	private RunnerStrategy getStrategy(Class<? extends Object> testClass) {
-		if (isPre4Test(testClass))
+		// TODO: RunnerStrategies statically know whether they apply to a class
+		if (isParameterizedTest(testClass))
+			return new ParameterizedRunnerStrategy(this, testClass);
+		else if (isPre4Test(testClass))
 			return new PreJUnit4RunnerStrategy(this, (Class< ? extends TestCase>) testClass); 
-		return new JUnit4RunnerStrategy(this, testClass);
+		else
+			return new JUnit4RunnerStrategy(this, testClass);
+	}
+
+	private boolean isParameterizedTest(Class< ? extends Object> testClass) {
+		for (Field each : testClass.getDeclaredFields()) {
+			if (Modifier.isStatic(each.getModifiers())) {
+				Annotation[] annotations= each.getAnnotations();
+				for (Annotation annotation : annotations) {
+					if (annotation.annotationType() == Parameters.class)
+						return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	private boolean isPre4Test(Class< ? extends Object> testClass) {

@@ -19,7 +19,7 @@ Before next JUnit 4 release:
 	* enable test reordering/prioritization
 	* test categorization & filtering (<- seems like a runner issue) @Category(short, integration)  @Test(category=windowsOnly)
 * ParameterizedTest
-* Suite annotaitn example:
+* Suite annotation example:
 	@Suite(tests={MoneyTest.class, SimpleTest.class})
 	or with filters
 	@Suite(pattern="*Test"}
