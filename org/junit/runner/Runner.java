@@ -55,7 +55,8 @@ public class Runner implements TestNotifier {
 	}
 
 	private boolean isParameterizedTest(Class< ? extends Object> testClass) {
-		for (Field each : testClass.getDeclaredFields()) {
+	// TODO duplicated code with ParameterizedRunnerStrategy
+		for (Method each : testClass.getMethods()) { // TODO inherit @Parameters ???
 			if (Modifier.isStatic(each.getModifiers())) {
 				Annotation[] annotations= each.getAnnotations();
 				for (Annotation annotation : annotations) {

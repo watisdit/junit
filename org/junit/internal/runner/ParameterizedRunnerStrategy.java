@@ -27,7 +27,7 @@ public class ParameterizedRunnerStrategy implements RunnerStrategy {
 				runParameter(Array.get(parameters, i));
 		} catch (Exception e) {
 			e.printStackTrace();
-			// TODO: what to do?
+			// TODO: what to do? Create a Failure
 		}
 	}
 
@@ -37,7 +37,6 @@ public class ParameterizedRunnerStrategy implements RunnerStrategy {
 			setParameters(test, parameters);
 			new JUnit4RunnerStrategy(fNotifier, fTestClass).invokeTestMethod(test, eachMethod);
 		}
-		// test.toString();
 	}
 
 	private void setParameters(Object test, Object parameters) throws Exception {
@@ -55,7 +54,7 @@ public class ParameterizedRunnerStrategy implements RunnerStrategy {
 		if (field.getType() == int.class)
 			field.setInt(test, Array.getInt(parameters, index));
 		else
-			// TODO
+			// TODO rest of the types
 			throw new Exception("Haven't handled this case");
 		// field.set(test, Array.get(parameters, index));
 	}
@@ -72,13 +71,11 @@ public class ParameterizedRunnerStrategy implements RunnerStrategy {
 	}
 
 	private Object getParametersList() throws Exception {
-		Field data= getParametersField();
-		Object object= data.get(null);
-		return object;
+		return getParametersMethod().invoke(null, new Object[0]);
 	}
 
-	private Field getParametersField() throws Exception {
-		for (Field each : fTestClass.getDeclaredFields()) {
+	private Method getParametersMethod() throws Exception {
+		for (Method each : fTestClass.getMethods()) {
 			if (Modifier.isStatic(each.getModifiers())) {
 				Annotation[] annotations= each.getAnnotations();
 				for (Annotation annotation : annotations) {
@@ -87,7 +84,7 @@ public class ParameterizedRunnerStrategy implements RunnerStrategy {
 				}
 			}
 		}
-		throw new Exception("No data field");
+		throw new Exception("No parameters method");
 	}
 
 }

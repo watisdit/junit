@@ -9,7 +9,9 @@ import static org.junit.Assert.*;
 
 public class ParameterizedTestTest {
 	static public class FibonacciTest {
-		@Parameters public static int[][] data= new int[][] {{0, 0}, {1, 1}, {2, 1}, {3, 2}, {4, 3}, {5, 5}, {6, 8}};
+		@Parameters public static Object[] data() {
+			return new int[][] {{0, 0}, {1, 1}, {2, 1}, {3, 2}, {4, 3}, {5, 5}, {6, 8}};
+		}
 		
 		@Parameter(0) public int expected;
 		@Parameter(1) public int input; 
@@ -30,7 +32,14 @@ public class ParameterizedTestTest {
 		assertEquals(6, runner.getFailureCount());
 	}
 	
-	// TODO cross product of parameters and test methods
+//	static public class ParameterizedTest {
+//		@Parameters public static Object[] data() {
+//			if (data == null)
+//				data= computeData();
+//			return data;
+//		}
+//		@Parameters public static Object[] data= computeData();
+//	}
 
 	static public junit.framework.Test suite() {
 		return new JUnit4TestAdapter(ParameterizedTestTest.class);
