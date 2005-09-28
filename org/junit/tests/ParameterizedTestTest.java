@@ -1,20 +1,27 @@
 package org.junit.tests;
 
+import static org.junit.Assert.assertEquals;
 import junit.framework.JUnit4TestAdapter;
-import org.junit.Parameter;
+import org.junit.Ignore;
 import org.junit.Parameters;
 import org.junit.Test;
 import org.junit.runner.Runner;
-import static org.junit.Assert.*;
 
 public class ParameterizedTestTest {
+	
+	//@Factory(Parameterized.class)
 	static public class FibonacciTest {
 		@Parameters public static Object[] data() {
 			return new int[][] {{0, 0}, {1, 1}, {2, 1}, {3, 2}, {4, 3}, {5, 5}, {6, 8}};
 		}
 		
-		@Parameter(0) public int expected;
-		@Parameter(1) public int input; 
+		private int input; 
+		private int expected;
+		
+		public FibonacciTest(int input, int expected) {
+			this.input= input;
+			this.expected= expected;
+		}
 		
 		@Test public void test() {
 			assertEquals(expected, fib(input));
@@ -25,7 +32,7 @@ public class ParameterizedTestTest {
 		}
 	}
 
-	@Test public void count() {
+	@Ignore("prototype") @Test public void count() {
 		Runner runner= new Runner();
 		runner.run(FibonacciTest.class);
 		assertEquals(7, runner.getRunCount());

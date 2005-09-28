@@ -120,9 +120,8 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 		Class< ? extends Throwable> expected= expectedException(method);
 		try {
 			method.invoke(test);
-			if (expectsException(method)) {
+			if (expectsException(method))
 				addFailure(new TestFailure(test, method.getName(), new AssertionError("Expected exception: " + expected.getName())));
-			}
 		} catch (InvocationTargetException e) {
 			if (expected == null)
 				addFailure(new TestFailure(test, method.getName(), e.getTargetException()));

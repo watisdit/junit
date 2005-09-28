@@ -1,10 +1,10 @@
 package org.junit.runner;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -28,18 +28,26 @@ public class Runner implements TestNotifier {
 		List<RunnerStrategy> strategies= new ArrayList<RunnerStrategy>();
 		for (Class<? extends Object> each : testClasses)
 			strategies.add(getStrategy(each));
+		run(strategies);
+	}
+
+	public void run(junit.framework.Test test) { 
+		ArrayList<RunnerStrategy> strategies= new ArrayList<RunnerStrategy>();
+		strategies.add(new PreJUnit4RunnerStrategy(this, test));
+		run(strategies);
+	}
+	
+	private void run(List<RunnerStrategy> strategies) {
 		int count= 0;
 		for (RunnerStrategy each : strategies)
 			count+= each.testCount();
-		for (TestListener each : fListeners)
-			each.testRunStarted(count);
+		fireTestRunStarted(count);
 		long startTime= System.currentTimeMillis();
 		for (RunnerStrategy each : strategies)
 			each.run();
 		long endTime= System.currentTimeMillis();
 		fRunTime+= endTime - startTime;
-		for (TestListener each : fListeners)
-			each.testRunFinished(this);
+		fireTestRunFinished();
 	}
 	
 	// TODO: Support AllTests here
@@ -72,19 +80,6 @@ public class Runner implements TestNotifier {
 		return junit.framework.TestCase.class.isAssignableFrom(testClass);
 	}
 
-	//TODO: Get rid of this duplication
-	public void run(junit.framework.Test test) { 
-		PreJUnit4RunnerStrategy runnerStrategy= new PreJUnit4RunnerStrategy(this, test);
-		for (TestListener each : fListeners)
-			each.testRunStarted(runnerStrategy.testCount());
-		long startTime= System.currentTimeMillis();
-		runnerStrategy.run();
-		long endTime= System.currentTimeMillis();
-		fRunTime+= endTime - startTime;
-		for (TestListener each : fListeners)
-			each.testRunFinished(this);
-	}
-
 	public int getRunCount() {
 		return fCount;
 	}
@@ -109,35 +104,84 @@ public class Runner implements TestNotifier {
 		fListeners.add(listener);
 	}
 
+	public void removeListener(TestListener listener) {
+		fListeners.remove(listener);
+	}
+
 	public boolean wasSuccessful() {
 		return getFailureCount() == 0;
 	}
 
-	private List<TestListener> getListeners() {
-		return fListeners;
+	private abstract class SafeNotifier {
+		void run() {
+			for (Iterator<TestListener> all= fListeners.iterator(); all.hasNext();) {
+				try {
+					notifyListener(all.next());
+				} catch (Exception e) {
+					all.remove();
+					fireTestFailure(new Failure(e)); // Remove the offending listener first to avoid an infinite loop
+				}
+			}
+		}
+		
+		abstract protected void notifyListener(TestListener each) throws Exception;
 	}
-
-	public void fireTestStarted(Object test, String name) {
+	
+	private void fireTestRunStarted(final int testCount) {
+		new SafeNotifier() {
+			@Override
+			protected void notifyListener(TestListener each) throws Exception {
+				each.testRunStarted(testCount);
+			};
+		}.run();
+	}
+	
+	private void fireTestRunFinished() {
+		new SafeNotifier() {
+			@Override
+			protected void notifyListener(TestListener each) throws Exception {
+				each.testRunFinished(Runner.this);
+			};
+		}.run();
+	}
+	
+	public void fireTestStarted(final Object test, final String name) {
 		fCount++;
-		for (TestListener each : getListeners())
-			each.testStarted(test, name);
+		new SafeNotifier() {
+			@Override
+			protected void notifyListener(TestListener each) throws Exception {
+				each.testStarted(test, name);
+			};
+		}.run();
 	}
 
-	public void fireTestFailure(Failure failure) {
+	public void fireTestFailure(final Failure failure) {
 		fFailures.add(failure);
-		for (TestListener each : fListeners)
-			each.testFailure(failure);
+		new SafeNotifier() {
+			@Override
+			protected void notifyListener(TestListener each) throws Exception {
+				each.testFailure(failure);
+			};
+		}.run();
 	}
 
-	public void fireTestIgnored(Method method) {
+	public void fireTestIgnored(final Method method) {
 		fIgnoreCount++;
-		for (TestListener each : fListeners)
-			each.testIgnored(method);
+		new SafeNotifier() {
+			@Override
+			protected void notifyListener(TestListener each) throws Exception {
+				each.testIgnored(method);
+			};
+		}.run();
 	}
 
-	public void fireTestFinished(Object test, String name) {
-		for (TestListener each : getListeners())
-			each.testFinished(test, name);
+	public void fireTestFinished(final Object test, final String name) {
+		new SafeNotifier() {
+			@Override
+			protected void notifyListener(TestListener each) throws Exception {
+				each.testFinished(test, name);
+			};
+		}.run();
 	}
-
+	
 }

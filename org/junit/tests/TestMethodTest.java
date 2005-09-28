@@ -96,7 +96,7 @@ public class TestMethodTest {
 		new JUnit4TestAdapter(IgnoredTest.class).run(result);
 		assertEquals(1, result.runCount());
 	}
-
+	
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(TestMethodTest.class);
 	}

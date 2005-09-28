@@ -59,7 +59,7 @@ public class Assert {
 	static public void fail() {
 		fail(null);
 	}
-
+	
 	/**
 	 * Asserts that two objects are equal. If they are not an
 	 * AssertionFailedError is thrown with the given message.
