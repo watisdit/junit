@@ -3,6 +3,10 @@ Before first public release:
 * add  javadoc to API interfaces and Annotations
 * make sure TestListener is symmetric and meets needs of runner developers
 	* TestRunEvent
+* Event object for testListener.
+* Annotation for runner strategy
+* Parameterized test
+* Decide how we ship JUnit-- 1.5 only or hybrid
 
 Before next JUnit 4 release:
 * be able to run all tests simply from the command line
@@ -29,7 +33,3 @@ Before next JUnit 4 release:
 
 * support testing run once initialization code e.g. class Foo {{...}}
 
-
-  * Event object for testListener.
-  * Annotation for runner strategy
-  * Parameterized test
