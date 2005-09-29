@@ -7,6 +7,7 @@ Before first public release:
 * Annotation for runner strategy
 * Parameterized test
 * Decide how we ship JUnit-- 1.5 only or hybrid
+* Stopping a test run (there was support for this in 3.8 - TestResult.shouldStop())
 
 Before next JUnit 4 release:
 * be able to run all tests simply from the command line
