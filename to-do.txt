@@ -4,8 +4,6 @@ Before first public release:
 * make sure TestListener is symmetric and meets needs of runner developers
 	* TestRunEvent
 * Event object for testListener.
-* Annotation for runner strategy
-* Parameterized test
 * Decide how we ship JUnit-- 1.5 only or hybrid
 * Stopping a test run (there was support for this in 3.8 - TestResult.shouldStop())
 
@@ -33,4 +31,5 @@ Before next JUnit 4 release:
 * annotation for suite() method
 
 * support testing run once initialization code e.g. class Foo {{...}}
+
 
