@@ -1,18 +1,15 @@
 package org.junit.runner;
 
-import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.TestCase;
-import org.junit.Parameters;
+import org.junit.Factory;
 import org.junit.internal.runner.JUnit4RunnerStrategy;
-import org.junit.internal.runner.ParameterizedRunnerStrategy;
 import org.junit.internal.runner.PreJUnit4RunnerStrategy;
-import org.junit.internal.runner.RunnerStrategy;
 import org.junit.internal.runner.TestNotifier;
 
 
@@ -27,7 +24,11 @@ public class Runner implements TestNotifier {
 	public void run(Class... testClasses) {
 		List<RunnerStrategy> strategies= new ArrayList<RunnerStrategy>();
 		for (Class<? extends Object> each : testClasses)
-			strategies.add(getStrategy(each));
+			try {
+				strategies.add(getStrategy(each));
+			} catch (Exception e) {
+				fireTestFailure(new Failure(e));
+			}
 		run(strategies);
 	}
 
@@ -52,28 +53,15 @@ public class Runner implements TestNotifier {
 	
 	// TODO: Support AllTests here
 	@SuppressWarnings("unchecked") 
-	private RunnerStrategy getStrategy(Class<? extends Object> testClass) {
-		// TODO: RunnerStrategies statically know whether they apply to a class
-		if (isParameterizedTest(testClass))
-			return new ParameterizedRunnerStrategy(this, testClass);
-		else if (isPre4Test(testClass))
+	private RunnerStrategy getStrategy(Class<? extends Object> testClass) throws Exception {
+		Factory annotation= testClass.getAnnotation(Factory.class);
+		if (annotation != null) {
+			Constructor constructor= annotation.value().getConstructor(new Class[] {TestNotifier.class, Class.class}); //TODO test if no such constructor
+			return (RunnerStrategy) constructor.newInstance(new Object[] {this, testClass});
+		} else if (isPre4Test(testClass))
 			return new PreJUnit4RunnerStrategy(this, (Class< ? extends TestCase>) testClass); 
 		else
 			return new JUnit4RunnerStrategy(this, testClass);
-	}
-
-	private boolean isParameterizedTest(Class< ? extends Object> testClass) {
-	// TODO duplicated code with ParameterizedRunnerStrategy
-		for (Method each : testClass.getMethods()) { // TODO inherit @Parameters ???
-			if (Modifier.isStatic(each.getModifiers())) {
-				Annotation[] annotations= each.getAnnotations();
-				for (Annotation annotation : annotations) {
-					if (annotation.annotationType() == Parameters.class)
-						return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	private boolean isPre4Test(Class< ? extends Object> testClass) {

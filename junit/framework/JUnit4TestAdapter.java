@@ -3,6 +3,7 @@ package junit.framework;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.internal.runner.TestIntrospector;
@@ -22,6 +23,12 @@ public class JUnit4TestAdapter implements Test {
 	}
 
 	public void run(TestResult result) {
+		List<Exception> errors= new TestIntrospector(fNewTestClass).validateTestMethods();
+		if (!errors.isEmpty()) {
+			for (Throwable each : errors)
+				result.addError(null, each);
+			return;
+		}
 		try {
 			oneTimeSetUp();
 			try {

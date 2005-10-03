@@ -17,3 +17,5 @@
 * support the assert keyword and use AssertionError 
 * remove the old graphical runners
 * simplify: get rid of failures and errors distinction
+* Annotation for runner strategy
+* Parameterized test

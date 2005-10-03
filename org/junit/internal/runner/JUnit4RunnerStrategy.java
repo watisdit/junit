@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.Failure;
+import org.junit.runner.RunnerStrategy;
 
 public class JUnit4RunnerStrategy implements RunnerStrategy {
 	private final Class< ? extends Object> fTestClass;
@@ -56,7 +57,7 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 	}
 
 	private void addFailure(Failure failure) {
-		fNotifier.fireTestFailure(failure);
+      		fNotifier.fireTestFailure(failure);
 	}
 	
 	private void invokeTestMethod(Method method) throws Exception {

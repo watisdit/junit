@@ -14,7 +14,7 @@ public class Failure {
 	/**
 	 * Constructs a TestFailure with only the given exception.
 	 */
-	public Failure(Throwable thrownException) {
+ 	public Failure(Throwable thrownException) {
 		fThrownException= thrownException;
 	}
 	/**

@@ -1,25 +1,40 @@
-package org.junit.internal.runner;
+package org.junit.runner;
+
+import static org.junit.Assert.assertEquals;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
-import java.lang.reflect.Field;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import org.junit.Parameter;
 import org.junit.Parameters;
 import org.junit.Test;
+import org.junit.internal.runner.JUnit4RunnerStrategy;
+import org.junit.internal.runner.TestIntrospector;
+import org.junit.internal.runner.TestNotifier;
 
-public class ParameterizedRunnerStrategy implements RunnerStrategy {
+public class Parameterized implements RunnerStrategy {
 
 	private final Class< ? extends Object> fTestClass;
 	private final TestNotifier fNotifier;
 
-	public ParameterizedRunnerStrategy(TestNotifier notifier, Class< ? extends Object> testClass) {
+	public Parameterized(TestNotifier notifier, Class< ? extends Object> testClass) {
 		this.fNotifier= notifier;
 		this.fTestClass= testClass;
 	}
 
+	public int testCount() {
+		try {
+			Object object= getParametersList();
+			return Array.getLength(object);
+		} catch (Exception e) {
+			// TODO: what's right?
+			return 0;
+		}
+		// TODO: what if it's not an array?
+	}
+	
 	public void run() {
 		try {
 			Object parameters= getParametersList();
@@ -33,41 +48,22 @@ public class ParameterizedRunnerStrategy implements RunnerStrategy {
 
 	private void runParameter(Object parameters) throws Exception {
 		for (Method eachMethod : new TestIntrospector(fTestClass).getTestMethods(Test.class)) {			
-			Object test= fTestClass.newInstance();
-			setParameters(test, parameters);
+			Object test= createTest(parameters);
 			new JUnit4RunnerStrategy(fNotifier, fTestClass).invokeTestMethod(test, eachMethod);
 		}
 	}
 
-	private void setParameters(Object test, Object parameters) throws Exception {
-		// TODO: require non-static fields
-		for (Field each : fTestClass.getDeclaredFields()) {
-			Annotation[] annotations= each.getAnnotations();
-			for (Annotation annotation : annotations)
-				if (annotation.annotationType() == Parameter.class)
-					setParameter(test, (Parameter) annotation, each, parameters);
-		}
-	}
-	
-	private void setParameter(Object test, Parameter annotation, Field field, Object parameters) throws Exception {
-		int index= annotation.value();
-		if (field.getType() == int.class)
-			field.setInt(test, Array.getInt(parameters, index));
-		else
-			// TODO rest of the types
-			throw new Exception("Haven't handled this case");
-		// field.set(test, Array.get(parameters, index));
-	}
-
-	public int testCount() {
-		try {
-			Object object= getParametersList();
-			return Array.getLength(object);
-		} catch (Exception e) {
-			// TODO: what's right?
-			return 0;
-		}
-		// TODO: what if it's not an array?
+	private Object createTest(Object parameters) throws Exception {
+		// TODO I'd prefer to look at the runtime types of the parameters and find a matching constructor, but I can't figure out how to fetch the actual types
+		// Instead, this will only work with test classes that have a single constructor
+		Constructor[] constructors= fTestClass.getConstructors();
+		assertEquals(1, constructors.length);
+		Constructor constructor= constructors[0];
+		Object[] boxed= new Object[Array.getLength(parameters)];
+		for (int i= 0; i < Array.getLength(parameters); i++)
+			boxed[i]= Array.get(parameters, i);
+		Object test= constructor.newInstance(boxed);
+		return test;
 	}
 
 	private Object getParametersList() throws Exception {

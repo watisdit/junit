@@ -2,6 +2,7 @@ package org.junit.tests;
 
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
+import junit.framework.TestFailure;
 import junit.framework.TestResult;
 
 import org.junit.After;
@@ -119,5 +120,18 @@ public class ForwardCompatibilityTest extends TestCase {
 		junit.framework.Test adapter= new JUnit4TestAdapter(ExceptionInBeforeTest.class);
 		adapter.run(result);
 		assertEquals(1, result.errorCount());
+	}
+	
+	public static class InvalidMethodTest {
+		@BeforeClass public void shouldBeStatic() {}
+	}
+	
+	public void testInvalidMethod() {
+		TestResult result= new TestResult();
+		junit.framework.Test adapter= new JUnit4TestAdapter(InvalidMethodTest.class);
+		adapter.run(result);
+		assertEquals(1, result.errorCount());	
+		TestFailure failure= result.errors().nextElement();
+		assertTrue(failure.exceptionMessage().contains("Method shouldBeStatic() should be static"));
 	}
 }
