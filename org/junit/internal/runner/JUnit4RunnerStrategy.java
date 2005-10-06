@@ -41,25 +41,51 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 				addFailure(new Failure(each));
 			return;
 		}
+
+		try {
+			runBeforeClasses();
+			runTestMethods();
+		} catch (FailedSetUp e) {
+		} finally {
+			runAfterClasses();
+		}
+	}
+
+	private void runBeforeClasses() throws FailedSetUp {
 		try {
 			List<Method> beforeMethods= fTestIntrospector.getTestMethods(BeforeClass.class);
 			for (Method method : beforeMethods)
 				method.invoke(null);
-			List<Method> methods= fTestIntrospector.getTestMethods(Test.class);
-			for (Method method : methods)
-				invokeTestMethod(method);
-			List<Method> afterMethods= fTestIntrospector.getTestMethods(AfterClass.class);
-			for (Method method : afterMethods)
-				method.invoke(null);
 		} catch (Exception e) {
 			addFailure(new Failure(e));
+			throw new FailedSetUp();
 		}
 	}
 
-	private void addFailure(Failure failure) {
-      		fNotifier.fireTestFailure(failure);
+	private void runTestMethods() {
+		List<Method> methods= fTestIntrospector.getTestMethods(Test.class);
+		for (Method method : methods)
+			try {
+				invokeTestMethod(method);
+			} catch (Exception e) {
+				addFailure(new Failure(e));
+			}
 	}
 	
+	private void runAfterClasses() {
+		List<Method> afterMethods= fTestIntrospector.getTestMethods(AfterClass.class);
+		for (Method method : afterMethods)
+			try {
+				method.invoke(null);
+			} catch (Exception e) {
+				addFailure(new Failure(e));
+			}
+	}
+	
+	private void addFailure(Failure failure) {
+		fNotifier.fireTestFailure(failure);
+	}
+
 	private void invokeTestMethod(Method method) throws Exception {
 		Object test= fTestClass.getConstructor().newInstance();
 		invokeTestMethod(test, method);
@@ -73,7 +99,7 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 		Test annotation= method.getAnnotation(Test.class);
 		long timeout= annotation.timeout();
 		if (timeout <= 0) {
-			invoke(test, method);
+			invokeMethod(test, method);
 		} else {
 			invokeWithTimeout(test, method, timeout);
 		}
@@ -83,7 +109,7 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 		ExecutorService service= Executors.newSingleThreadExecutor();
 		Callable<Object> callable= new Callable<Object>() {
 			public Object call() throws Exception {
-				invoke(test, method);
+				invokeMethod(test, method);
 				return null;
 			}
 		};
@@ -95,10 +121,6 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 		result.get(timeout, TimeUnit.MILLISECONDS); // throws the exception if one occurred during the invocation
 	}
 
-	private void invoke(Object test, Method method) {
-		invokeMethod(test, method);
-	}
-
 	private void invokeMethod(Object test, Method method) {
 		fNotifier.fireTestStarted(test, method.getName());
 		try {
@@ -108,16 +130,21 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 		}
 	}
 
+	private class FailedSetUp extends Exception {
+		private static final long serialVersionUID= 1L;
+	}
+
 	private void quietlyInvokeMethod(Object test, Method method) {
 		try {
-			setUp(test);
-		} catch (InvocationTargetException e) {
-			addFailure(new TestFailure(test, method.getName(), e.getTargetException()));
-			return;
-		} catch (Throwable e) {
-			addFailure(new TestFailure(test, method.getName(), e)); // TODO:
-			return;
+			runBefores(test, method);
+			runTestMethod(test, method);
+		} catch (FailedSetUp e) {
+		} finally {
+			runAfters(test, method);
 		}
+	}
+
+	private void runTestMethod(Object test, Method method) {
 		Class< ? extends Throwable> expected= expectedException(method);
 		try {
 			method.invoke(test);
@@ -127,30 +154,39 @@ public class JUnit4RunnerStrategy implements RunnerStrategy {
 			if (expected == null)
 				addFailure(new TestFailure(test, method.getName(), e.getTargetException()));
 			else if (isUnexpected(e.getTargetException(), method))
-				addFailure(new TestFailure(test, method.getName(), new AssertionError("Unexpected exception, expected<" + expected.getName() + "> but was<" + e.getTargetException().getClass().getName() + ">")));
+				addFailure(new TestFailure(test, method.getName(), new AssertionError("Unexpected exception, expected<" + expected.getName() + "> but was<"
+						+ e.getTargetException().getClass().getName() + ">")));
 		} catch (Throwable e) {
 			addFailure(new TestFailure(test, method.getName(), e)); // TODO:
-		} finally {
+		}
+	}
+
+	// Stop after first failed setup
+	private void runBefores(Object test, Method method) throws FailedSetUp {
+		try {
+			List<Method> befores= fTestIntrospector.getTestMethods(Before.class);
+			for (Method before : befores)
+				before.invoke(test);
+		} catch (InvocationTargetException e) {
+			addFailure(new TestFailure(test, method.getName(), e.getTargetException()));
+			throw new FailedSetUp();
+		} catch (Throwable e) {
+			addFailure(new TestFailure(test, method.getName(), e)); // TODO:
+			throw new FailedSetUp();
+		}
+	}
+
+	// Try to run all tearDowns regardless
+	private void runAfters(Object test, Method method) {
+		List<Method> afters= fTestIntrospector.getTestMethods(After.class);
+		for (Method after : afters)
 			try {
-				tearDown(test);
+				after.invoke(test);
 			} catch (InvocationTargetException e) {
 				addFailure(new TestFailure(test, method.getName(), e.getTargetException()));
 			} catch (Throwable e) {
 				addFailure(new TestFailure(test, method.getName(), e)); // TODO:
 			}
-		}
-	}
-
-	private void setUp(Object test) throws Exception {
-		List<Method> befores= fTestIntrospector.getTestMethods(Before.class);
-		for (Method before : befores)
-			before.invoke(test);
-	}
-	
-	private void tearDown(Object test) throws Exception {
-		List<Method> afters= fTestIntrospector.getTestMethods(After.class);
-		for (Method after : afters)
-			after.invoke(test);
 	}
 
 	private boolean isUnexpected(Throwable exception, Method method) {

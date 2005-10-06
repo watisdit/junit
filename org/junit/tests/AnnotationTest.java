@@ -1,11 +1,10 @@
 package org.junit.tests;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -82,9 +81,6 @@ public class AnnotationTest extends TestCase {
 		@Test public void test() {
 			run= true;
 		}
-		@After public void after() {
-			run= true;
-		}
 	}
 	
 	public void testSetupFailure() throws Exception {
@@ -146,7 +142,7 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	static int count= 0;
-	static Set<Object> tests= new HashSet<Object>();
+	static Collection<Object> tests= new HashSet<Object>();
 	static public class TwoTests {
 		@Test public void one() {
 			count++;
@@ -279,9 +275,6 @@ public class AnnotationTest extends TestCase {
 		@Test public void test() {
 			run= true;
 		}
-		@AfterClass public static void after() {
-			run= true;
-		}
 	}
 	
 	public void testErrorInBeforeClass() throws Exception {
@@ -406,49 +399,97 @@ public class AnnotationTest extends TestCase {
 		assertFalse(log.contains("Super"));
 	}
 	
-//	static public class RunAllAfters {
-//		@Before public void good() {
-//		}
-//		@Before public void bad() {
-//			throw new Error();
-//		}
-//		@Test public void empty() {
-//		}
-//		@After public void one() {
-//			log+= "one";
-//		}
-//		@After public void  two() {
-//			log+= "two";
-//		}
-//	}
-//	
-//	public void testRunAllAfters() {
-//		log= "";
-//		Runner runner= new Runner();
-//		runner.run(RunAllAfters.class);
-//		assertTrue(log.contains("one"));
-//		assertTrue(log.contains("two"));
-//	}
-//	
-//	static public class RunAllAftersRegardless {
-//		@Test public void empty() {
-//		}
-//		@After public void one() {
-//			log+= "one";
-//			throw new Error();
-//		}
-//		@After public void  two() {
-//			log+= "two";
-//			throw new Error();
-//		}
-//	}
-//	
-//	public void testRunAllAftersRegardless() {
-//		log= "";
-//		Runner runner= new Runner();
-//		runner.run(RunAllAfters.class);
-//		assertTrue(log.contains("one"));
-//		assertTrue(log.contains("two"));
-//		assertEquals(2, runner.getFailureCount());
-//	}
+	static public class RunAllAfters {
+		@Before public void good() {
+		}
+		@Before public void bad() {
+			throw new Error();
+		}
+		@Test public void empty() {
+		}
+		@After public void one() {
+			log+= "one";
+		}
+		@After public void  two() {
+			log+= "two";
+		}
+	}
+	
+	public void testRunAllAfters() {
+		log= "";
+		Runner runner= new Runner();
+		runner.run(RunAllAfters.class);
+		assertTrue(log.contains("one"));
+		assertTrue(log.contains("two"));
+	}
+	
+	static public class RunAllAftersRegardless {
+		@Test public void empty() {
+		}
+		@After public void one() {
+			log+= "one";
+			throw new Error();
+		}
+		@After public void  two() {
+			log+= "two";
+			throw new Error();
+		}
+	}
+	
+	public void testRunAllAftersRegardless() {
+		log= "";
+		Runner runner= new Runner();
+		runner.run(RunAllAftersRegardless.class);
+		assertTrue(log.contains("one"));
+		assertTrue(log.contains("two"));
+		assertEquals(2, runner.getFailureCount());
+	}
+	
+	static public class RunAllAfterClasses {
+		@Before public void good() {
+		}
+		@BeforeClass public static void bad() {
+			throw new Error();
+		}
+		@Test public void empty() {
+		}
+		@AfterClass public static void one() {
+			log+= "one";
+		}
+		@AfterClass public static void  two() {
+			log+= "two";
+		}
+	}
+	
+	public void testRunAllAfterClasses() {
+		log= "";
+		Runner runner= new Runner();
+		runner.run(RunAllAfterClasses.class);
+		assertTrue(log.contains("one"));
+		assertTrue(log.contains("two"));
+	}
+	
+	static public class RunAllAfterClassesRegardless {
+		@Test public void empty() {
+		}
+		@AfterClass static public void one() {
+			log+= "one";
+			throw new Error();
+		}
+		@AfterClass static public void  two() {
+			log+= "two";
+			throw new Error();
+		}
+	}
+	
+	public void testRunAllAfterClassesRegardless() {
+		log= "";
+		Runner runner= new Runner();
+		runner.run(RunAllAfterClassesRegardless.class);
+		assertTrue(log.contains("one"));
+		assertTrue(log.contains("two"));
+		assertEquals(2, runner.getFailureCount());
+	}
+	
+
 }

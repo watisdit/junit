@@ -12,6 +12,7 @@ Before next JUnit 4 release:
 * get rid of JUnit4TestCaseAdapter (use JUnit4RunnerStrategy in JUnit4TestAdapter)
 * update the build process
     * automatically upload a new JAR
+    * update site for plug-in version?
 * dynamically generated test cases
 * make suites simpler for both the IDE providers and the users
 * class level test annotations?
@@ -20,7 +21,6 @@ Before next JUnit 4 release:
 * enable tighter and more flexible IDE integration
 	* enable test reordering/prioritization
 	* test categorization & filtering (<- seems like a runner issue) @Category(short, integration)  @Test(category=windowsOnly)
-* ParameterizedTest
 * Suite annotation example:
 	@Suite(tests={MoneyTest.class, SimpleTest.class})
 	or with filters

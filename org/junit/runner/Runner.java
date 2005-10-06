@@ -12,7 +12,7 @@ import org.junit.internal.runner.JUnit4RunnerStrategy;
 import org.junit.internal.runner.PreJUnit4RunnerStrategy;
 import org.junit.internal.runner.TestNotifier;
 
-
+// TODO Runner perhaps should move to internal.runner. JavaCore handles the API pretty well. Have to add listeners to JUnitCore, first, though.
 public class Runner implements TestNotifier {
 
 	private int fCount= 0;
@@ -51,7 +51,6 @@ public class Runner implements TestNotifier {
 		fireTestRunFinished();
 	}
 	
-	// TODO: Support AllTests here
 	@SuppressWarnings("unchecked") 
 	private RunnerStrategy getStrategy(Class<? extends Object> testClass) throws Exception {
 		Factory annotation= testClass.getAnnotation(Factory.class);
