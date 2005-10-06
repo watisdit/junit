@@ -2,7 +2,7 @@ package junit.framework;
 
 import java.lang.reflect.Method;
 
-import org.junit.internal.runner.JUnit4RunnerStrategy;
+import org.junit.internal.runner.TestMethodRunner;
 import org.junit.internal.runner.TestNotifier;
 import org.junit.runner.Failure;
 
@@ -19,8 +19,8 @@ public class JUnit4TestCaseAdapter extends TestCase {
 
 	@Override
 	protected void runTest() throws Throwable {
-			JUnit4RunnerStrategy strategy= new JUnit4RunnerStrategy(new CompatibilityNotifier(), fTest.getClass());
-			strategy.invokeTestMethod(fTest, fMethod);
+			CompatibilityNotifier notifier= new CompatibilityNotifier();
+			new TestMethodRunner(fTest, fMethod, notifier).run();
 			if (fException != null)
 				throw fException;
 	}

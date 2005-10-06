@@ -3,7 +3,6 @@ Before first public release:
 * add  javadoc to API interfaces and Annotations
 * make sure TestListener is symmetric and meets needs of runner developers
 	* TestRunEvent
-* Event object for testListener.
 * Decide how we ship JUnit-- 1.5 only or hybrid
 * Stopping a test run (there was support for this in 3.8 - TestResult.shouldStop())
 
@@ -13,7 +12,6 @@ Before next JUnit 4 release:
 * update the build process
     * automatically upload a new JAR
     * update site for plug-in version?
-* dynamically generated test cases
 * make suites simpler for both the IDE providers and the users
 * class level test annotations?
 * Ant
@@ -28,7 +26,6 @@ Before next JUnit 4 release:
 	@Suite(package="org.junit.test.*")
 
 	@Suite
-* annotation for suite() method
 
 * support testing run once initialization code e.g. class Foo {{...}}
 

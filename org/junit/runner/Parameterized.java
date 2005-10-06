@@ -10,8 +10,8 @@ import java.lang.reflect.Modifier;
 
 import org.junit.Parameters;
 import org.junit.Test;
-import org.junit.internal.runner.JUnit4RunnerStrategy;
 import org.junit.internal.runner.TestIntrospector;
+import org.junit.internal.runner.TestMethodRunner;
 import org.junit.internal.runner.TestNotifier;
 
 public class Parameterized implements RunnerStrategy {
@@ -47,9 +47,10 @@ public class Parameterized implements RunnerStrategy {
 	}
 
 	private void runParameter(Object parameters) throws Exception {
-		for (Method eachMethod : new TestIntrospector(fTestClass).getTestMethods(Test.class)) {			
+		TestIntrospector testIntrospector= new TestIntrospector(fTestClass);
+		for (Method eachMethod : testIntrospector.getTestMethods(Test.class)) {			
 			Object test= createTest(parameters);
-			new JUnit4RunnerStrategy(fNotifier, fTestClass).invokeTestMethod(test, eachMethod);
+			new TestMethodRunner(test, eachMethod, fNotifier).run();
 		}
 	}
 
@@ -62,8 +63,7 @@ public class Parameterized implements RunnerStrategy {
 		Object[] boxed= new Object[Array.getLength(parameters)];
 		for (int i= 0; i < Array.getLength(parameters); i++)
 			boxed[i]= Array.get(parameters, i);
-		Object test= constructor.newInstance(boxed);
-		return test;
+		return constructor.newInstance(boxed);
 	}
 
 	private Object getParametersList() throws Exception {

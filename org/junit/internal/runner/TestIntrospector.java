@@ -100,5 +100,11 @@ public class TestIntrospector {
 		}
 	}
 
+	long getTimeout(Method method) {
+		Test annotation= method.getAnnotation(Test.class);
+		long timeout= annotation.timeout();
+		return timeout;
+	}
+
 }
 

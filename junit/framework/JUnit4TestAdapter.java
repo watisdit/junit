@@ -23,7 +23,7 @@ public class JUnit4TestAdapter implements Test {
 	}
 
 	public void run(TestResult result) {
-		List<Exception> errors= new TestIntrospector(fNewTestClass).validateTestMethods();
+		List<Exception> errors= getTestIntrospector().validateTestMethods();
 		if (!errors.isEmpty()) {
 			for (Throwable each : errors)
 				result.addError(null, each);
