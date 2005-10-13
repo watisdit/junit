@@ -3,9 +3,9 @@ package org.junit.tests;
 import static org.junit.Assert.assertTrue;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.junit.Factory;
-import org.junit.extensions.AllTests;
-import org.junit.runner.Runner;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.RunWith;
+import org.junit.runner.extensions.AllTests;
 
 public class AllTestsTest {
 	
@@ -17,7 +17,7 @@ public class AllTestsTest {
 		}
 	}
 	
-	@Factory(AllTests.class)
+	@RunWith(AllTests.class)
 	public static class All {
 		static public junit.framework.Test suite() {
 			TestSuite suite= new TestSuite();
@@ -27,7 +27,7 @@ public class AllTestsTest {
 	}
 	
 	@org.junit.Test public void ensureTestIsRun() {
-		Runner runner= new Runner();
+		JUnitCore runner= new JUnitCore();
 		runner.run(All.class);
 		assertTrue(run);
 	}

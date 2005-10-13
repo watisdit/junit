@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.internal.runner.TestIntrospector;
+import org.junit.runner.internal.TestIntrospector;
 
 public class JUnit4TestAdapter implements Test {
 

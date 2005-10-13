@@ -1,13 +1,13 @@
-package org.junit.internal.runner;
+package org.junit.runner.internal;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
-import org.junit.runner.RunnerStrategy;
+import org.junit.runner.Runner;
 
-public class PreJUnit4RunnerStrategy implements junit.framework.TestListener,  RunnerStrategy {
+public class OldTestClassRunner implements junit.framework.TestListener,  Runner {
 	
 	private Test fTest;
 	private TestNotifier fNotifier;

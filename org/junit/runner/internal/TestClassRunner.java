@@ -1,4 +1,4 @@
-package org.junit.internal.runner;
+package org.junit.runner.internal;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -7,9 +7,9 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.Failure;
-import org.junit.runner.RunnerStrategy;
+import org.junit.runner.Runner;
 
-public class JUnit4RunnerStrategy implements RunnerStrategy {
+public class TestClassRunner implements Runner {
 	private Class< ? extends Object> fTestClass;
 	private TestIntrospector fTestIntrospector;
 	private TestNotifier fNotifier;

@@ -4,8 +4,9 @@ import java.lang.reflect.Method;
 
 import org.junit.Test;
 import org.junit.runner.Failure;
-import org.junit.runner.Runner;
-import org.junit.runner.TestListener;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.RunListener;
 
 import static org.junit.Assert.*;
 
@@ -22,15 +23,15 @@ public class PreJUnit4TestCaseRunnerTest {
 	}
 	
 	@Test public void testListener() throws Exception {
-		Runner runner= new Runner();
-		TestListener listener= new TestListener() {
+		JUnitCore runner= new JUnitCore();
+		RunListener listener= new RunListener() {
 
 			public void testStarted(Object test, String name) {
 				assertEquals("testOne", name);
 				count++;
 			}
 
-			public void testRunFinished(Runner r) {
+			public void testRunFinished(Result r) {
 			}
 
 			public void testFailure(Failure failure) {
@@ -48,9 +49,9 @@ public class PreJUnit4TestCaseRunnerTest {
 		
 		runner.addListener(listener);
 		count= 0;
-		runner.run(OneTest.class);
+		Result result= runner.run(OneTest.class);
 		assertEquals(1, count);
-		assertEquals(1, runner.getRunCount());
+		assertEquals(1, result.getRunCount());
 	}
 	
 	public static junit.framework.Test suite() {

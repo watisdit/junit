@@ -2,9 +2,9 @@ package junit.framework;
 
 import java.lang.reflect.Method;
 
-import org.junit.internal.runner.TestMethodRunner;
-import org.junit.internal.runner.TestNotifier;
 import org.junit.runner.Failure;
+import org.junit.runner.internal.TestMethodRunner;
+import org.junit.runner.internal.TestNotifier;
 
 public class JUnit4TestCaseAdapter extends TestCase {
 

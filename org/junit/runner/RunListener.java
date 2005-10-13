@@ -3,11 +3,13 @@ package org.junit.runner;
 import java.lang.reflect.Method;
 
 
-public interface TestListener {
+public interface RunListener {
 
+	// TODO Event-based interface instead?
+	
 	void testRunStarted(int testCount) throws Exception;
 	
-	void testRunFinished(Runner runner) throws Exception; //TODO: Something is wrong here... Should take an event anyway, also split Runner and Result
+	void testRunFinished(Result runner) throws Exception;
 	
 	void testStarted(Object test, String name) throws Exception;
 

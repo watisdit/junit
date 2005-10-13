@@ -1,4 +1,4 @@
-package org.junit.internal.runner;
+package org.junit.runner.internal;
 
 import org.junit.runner.Failure;
 

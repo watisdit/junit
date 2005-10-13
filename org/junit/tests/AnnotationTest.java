@@ -10,7 +10,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.Runner;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
 
 public class AnnotationTest extends TestCase {
 	static boolean run;
@@ -27,7 +28,7 @@ public class AnnotationTest extends TestCase {
 	}
 
 	public void testAnnotatedMethod() throws Exception {
-		Runner runner= new Runner();
+		JUnitCore runner= new JUnitCore();
 		runner.run(SimpleTest.class);
 		assertTrue(run);
 	}
@@ -41,7 +42,7 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	public void testSetup() throws Exception {
-		Runner runner= new Runner();
+		JUnitCore runner= new JUnitCore();
 		runner.run(SetupTest.class);
 		assertTrue(run);
 	}
@@ -55,7 +56,7 @@ public class AnnotationTest extends TestCase {
 	}
 
 	public void testTeardown() throws Exception {
-		Runner runner= new Runner();
+		JUnitCore runner= new JUnitCore();
 		runner.run(TeardownTest.class);
 		assertTrue(run);		
 	}
@@ -67,11 +68,11 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	public void testRunFailure() throws Exception {
-		Runner runner= new Runner();
-		runner.run(FailureTest.class);
-		assertEquals(1, runner.getRunCount());
-		assertEquals(1, runner.getFailureCount());
-		assertEquals(AssertionError.class, runner.getFailures().get(0).getException().getClass());
+		JUnitCore runner= new JUnitCore();
+		Result result= runner.run(FailureTest.class);
+		assertEquals(1, result.getRunCount());
+		assertEquals(1, result.getFailureCount());
+		assertEquals(AssertionError.class, result.getFailures().get(0).getException().getClass());
 	}
 	
 	static public class SetupFailureTest {
@@ -84,8 +85,8 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	public void testSetupFailure() throws Exception {
-		Runner runner= new Runner();
-		runner.run(SetupFailureTest.class);
+		JUnitCore core= new JUnitCore();
+		Result runner = core.run(SetupFailureTest.class);
 		assertEquals(1, runner.getRunCount());
 		assertEquals(1, runner.getFailureCount());
 		assertEquals(Error.class, runner.getFailures().get(0).getException().getClass());
@@ -101,8 +102,8 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	public void testTeardownFailure() throws Exception {
-		Runner runner= new Runner();
-		runner.run(TeardownFailureTest.class);
+		JUnitCore core= new JUnitCore();
+		Result runner = core.run(TeardownFailureTest.class);
 		assertEquals(1, runner.getRunCount());
 		assertEquals(1, runner.getFailureCount());
 		assertEquals(Error.class, runner.getFailures().get(0).getException().getClass());
@@ -118,8 +119,8 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	public void testTestAndTeardownFailure() throws Exception {
-		Runner runner= new Runner();
-		runner.run(TestAndTeardownFailureTest.class);
+		JUnitCore core= new JUnitCore();
+		Result runner = core.run(TestAndTeardownFailureTest.class);
 		assertEquals(1, runner.getRunCount());
 		assertEquals(2, runner.getFailureCount());
 		assertEquals(Exception.class, runner.getFailures().get(0).getException().getClass());
@@ -136,7 +137,7 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	public void testTeardownAfterFailure() throws Exception {
-		Runner runner= new Runner();
+		JUnitCore runner= new JUnitCore();
 		runner.run(TeardownAfterFailureTest.class);
 		assertTrue(run);
 	}
@@ -155,7 +156,7 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	public void testTwoTests() throws Exception {
-		Runner runner= new Runner();
+		JUnitCore runner= new JUnitCore();
 		runner.run(TwoTests.class);
 		assertEquals(2, count);
 		assertEquals(2, tests.size());
@@ -167,7 +168,7 @@ public class AnnotationTest extends TestCase {
 		}
 	}
 	public void testOldTest() throws Exception {
-		Runner runner= new Runner();
+		JUnitCore runner= new JUnitCore();
 		runner.run(OldTest.class);
 		assertTrue(run);
 	}
@@ -180,7 +181,7 @@ public class AnnotationTest extends TestCase {
 	
 	public void testOldSuiteTest() throws Exception {
 		TestSuite suite= new TestSuite(OldSuiteTest.class);
-		Runner runner= new Runner();
+		JUnitCore runner= new JUnitCore();
 		runner.run(suite);
 		assertTrue(run);
 	}
@@ -192,8 +193,8 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	public void testException() throws Exception {
-		Runner runner= new Runner();
-		runner.run(ExceptionTest.class);
+		JUnitCore core= new JUnitCore();
+		Result runner = core.run(ExceptionTest.class);
 		assertEquals(0, runner.getFailureCount());
 	}
 	
@@ -204,8 +205,8 @@ public class AnnotationTest extends TestCase {
 	}
 
 	public void testExceptionNotThrown() throws Exception {
-		Runner runner= new Runner();
-		runner.run(NoExceptionTest.class);
+		JUnitCore core= new JUnitCore();
+		Result runner = core.run(NoExceptionTest.class);
 		assertEquals(1, runner.getFailureCount());
 		assertEquals("Expected exception: java.lang.Error", runner.getFailures().get(0).getMessage());
 	}
@@ -220,7 +221,7 @@ public class AnnotationTest extends TestCase {
 	
 	public void testOneTimeSetup() throws Exception {
 		count= 0;
-		Runner runner= new Runner();
+		JUnitCore runner= new JUnitCore();
 		runner.run(OneTimeSetup.class);
 		assertEquals(1, count);
 	}
@@ -235,7 +236,7 @@ public class AnnotationTest extends TestCase {
 	
 	public void testOneTimeTeardown() throws Exception {
 		count= 0;
-		Runner runner= new Runner();
+		JUnitCore runner= new JUnitCore();
 		runner.run(OneTimeTeardown.class);
 		assertEquals(1, count);
 	}
@@ -252,7 +253,7 @@ public class AnnotationTest extends TestCase {
 	
 	public void testOrder() throws Exception {
 		log= "";
-		Runner runner= new Runner();
+		JUnitCore runner= new JUnitCore();
 		runner.run(OrderTest.class);
 		assertEquals("beforeClass before test after afterClass ", log);
 	}
@@ -263,8 +264,8 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	public void testNonStaticOneTimeSetup() throws Exception {
-		Runner runner= new Runner();
-		runner.run(NonStaticOneTimeSetup.class);
+		JUnitCore core= new JUnitCore();
+		Result runner = core.run(NonStaticOneTimeSetup.class);
 		assertEquals(1, runner.getFailureCount());
 	}
 	
@@ -278,9 +279,9 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	public void testErrorInBeforeClass() throws Exception {
-		run= false;
-		Runner runner= new Runner();
-		runner.run(ErrorInBeforeClass.class);
+		run= false;		
+		JUnitCore core= new JUnitCore();
+		Result runner = core.run(ErrorInBeforeClass.class);
 		assertFalse(run);
 		assertEquals(1, runner.getFailureCount());
 	}
@@ -296,8 +297,8 @@ public class AnnotationTest extends TestCase {
 	
 	public void testErrorInAfterClass() throws Exception {
 		run= false;
-		Runner runner= new Runner();
-		runner.run(ErrorInAfterClass.class);
+		JUnitCore core= new JUnitCore();
+		Result runner = core.run(ErrorInAfterClass.class);
 		assertTrue(run);
 		assertEquals(1, runner.getFailureCount());
 	}
@@ -337,7 +338,7 @@ public class AnnotationTest extends TestCase {
 	
 	public void testOrderingOfInheritance() throws Exception {
 		log= "";
-		Runner runner= new Runner();
+		JUnitCore runner= new JUnitCore();
 		runner.run(SubInheritance.class);
 		assertEquals("Before class super Before class sub Before super Before sub Test After sub After super After class sub After class super ", log);
 	}
@@ -367,7 +368,7 @@ public class AnnotationTest extends TestCase {
 	
 	public void testShadowing() throws Exception {
 		log= "";
-		Runner runner= new Runner();
+		JUnitCore runner= new JUnitCore();
 		runner.run(SubShadowing.class);
 		assertEquals("Before sub Test After sub ", log);
 	}
@@ -391,7 +392,7 @@ public class AnnotationTest extends TestCase {
 	
 	public void testTestInheritance() throws Exception {
 		log= "";
-		Runner runner= new Runner();
+		JUnitCore runner= new JUnitCore();
 		runner.run(SubTest.class);
 		// The order in which the test methods are called is unspecified
 		assertTrue(log.contains("Sub"));
@@ -417,7 +418,7 @@ public class AnnotationTest extends TestCase {
 	
 	public void testRunAllAfters() {
 		log= "";
-		Runner runner= new Runner();
+		JUnitCore runner= new JUnitCore();
 		runner.run(RunAllAfters.class);
 		assertTrue(log.contains("one"));
 		assertTrue(log.contains("two"));
@@ -438,8 +439,8 @@ public class AnnotationTest extends TestCase {
 	
 	public void testRunAllAftersRegardless() {
 		log= "";
-		Runner runner= new Runner();
-		runner.run(RunAllAftersRegardless.class);
+		JUnitCore core= new JUnitCore();
+		Result runner = core.run(RunAllAftersRegardless.class);
 		assertTrue(log.contains("one"));
 		assertTrue(log.contains("two"));
 		assertEquals(2, runner.getFailureCount());
@@ -463,7 +464,7 @@ public class AnnotationTest extends TestCase {
 	
 	public void testRunAllAfterClasses() {
 		log= "";
-		Runner runner= new Runner();
+		JUnitCore runner= new JUnitCore();
 		runner.run(RunAllAfterClasses.class);
 		assertTrue(log.contains("one"));
 		assertTrue(log.contains("two"));
@@ -484,8 +485,8 @@ public class AnnotationTest extends TestCase {
 	
 	public void testRunAllAfterClassesRegardless() {
 		log= "";
-		Runner runner= new Runner();
-		runner.run(RunAllAfterClassesRegardless.class);
+		JUnitCore core= new JUnitCore();
+		Result runner = core.run(RunAllAfterClassesRegardless.class);
 		assertTrue(log.contains("one"));
 		assertTrue(log.contains("two"));
 		assertEquals(2, runner.getFailureCount());

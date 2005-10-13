@@ -7,19 +7,20 @@ import java.lang.reflect.Method;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
 import org.junit.runner.Failure;
-import org.junit.runner.Runner;
-import org.junit.runner.TestListener;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.RunListener;
 
 public class TestListenerTest {
 	
 	int count;
 	
-	class ErrorListener implements TestListener {
+	class ErrorListener implements RunListener {
 		public void testRunStarted(int testCount) throws Exception {
 			throw new Error();
 		}
 
-		public void testRunFinished(Runner runner) {
+		public void testRunFinished(Result runner) {
 		}
 
 		public void testStarted(Object test, String name) {
@@ -40,7 +41,7 @@ public class TestListenerTest {
 	}
 	
 	@Test(expected=Error.class) public void failingListener() {
-		Runner runner= new Runner();
+		JUnitCore runner= new JUnitCore();
 		runner.addListener(new ErrorListener());
 		runner.run(OneTest.class);
 	}
@@ -54,13 +55,14 @@ public class TestListenerTest {
 	}
 	
 	@Test public void removeFailingListeners() {
-		Runner runner= new Runner();
+		JUnitCore runner= new JUnitCore();
 		runner.addListener(new ExceptionListener());
 		
+		// TODO: a fresh result each time?
 		count= 0;
-		runner.run(OneTest.class);
+		Result result= runner.run(OneTest.class);
 		assertEquals(1, count);
-		assertEquals(1, runner.getFailureCount());
+		assertEquals(1, result.getFailureCount());
 
 		count= 0;
 		runner.run(OneTest.class);

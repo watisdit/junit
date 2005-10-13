@@ -41,7 +41,7 @@ public class CommandLineTest {
 	
 	@Test public void runAClass() {
 		testWasRun= false;
-		JUnitCore.run(Example.class);
+		JUnitCore.runClasses(Example.class);
 		assertTrue(testWasRun);		
 	}
 
@@ -55,13 +55,13 @@ public class CommandLineTest {
 	
 	@Test public void runTwoClassesAsArray() {
 		fCount= 0;
-		JUnitCore.run(new Class[] {Count.class, Count.class});
+		JUnitCore.runClasses(new Class[] {Count.class, Count.class});
 		assertEquals(2, fCount);		
 	}
 
 	@Test public void runTwoClasses() {
 		fCount= 0;
-		JUnitCore.run(Count.class, Count.class);
+		JUnitCore.runClasses(Count.class, Count.class);
 		assertEquals(2, fCount);		
 	}
 

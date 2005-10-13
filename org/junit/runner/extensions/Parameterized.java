@@ -1,4 +1,4 @@
-package org.junit.runner;
+package org.junit.runner.extensions;
 
 import static org.junit.Assert.assertEquals;
 
@@ -8,13 +8,13 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import org.junit.Parameters;
 import org.junit.Test;
-import org.junit.internal.runner.TestIntrospector;
-import org.junit.internal.runner.TestMethodRunner;
-import org.junit.internal.runner.TestNotifier;
+import org.junit.runner.Runner;
+import org.junit.runner.internal.TestIntrospector;
+import org.junit.runner.internal.TestMethodRunner;
+import org.junit.runner.internal.TestNotifier;
 
-public class Parameterized implements RunnerStrategy {
+public class Parameterized implements Runner {
 
 	private Class< ? extends Object> fTestClass;
 	private TestNotifier fNotifier;
@@ -55,8 +55,6 @@ public class Parameterized implements RunnerStrategy {
 	}
 
 	private Object createTest(Object parameters) throws Exception {
-		// TODO I'd prefer to look at the runtime types of the parameters and find a matching constructor, but I can't figure out how to fetch the actual types
-		// Instead, this will only work with test classes that have a single constructor
 		Constructor[] constructors= fTestClass.getConstructors();
 		assertEquals(1, constructors.length);
 		Constructor constructor= constructors[0];

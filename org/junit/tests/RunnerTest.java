@@ -9,14 +9,15 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.Failure;
-import org.junit.runner.Runner;
-import org.junit.runner.TestListener;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.RunListener;
 
 public class RunnerTest {
 
 	private boolean wasRun;
 
-	public class MyListener implements TestListener {
+	public class MyListener implements RunListener {
 
 		int testCount;
 
@@ -24,7 +25,7 @@ public class RunnerTest {
 			this.testCount= testCount;
 		}
 
-		public void testRunFinished(Runner runner) {
+		public void testRunFinished(Result runner) {
 		}
 
 		public void testStarted(Object test, String name) {
@@ -47,7 +48,7 @@ public class RunnerTest {
 	}
 	
 	@Test public void newTestCount() {
-		Runner runner= new Runner();
+		JUnitCore runner= new JUnitCore();
 		MyListener listener= new MyListener();
 		runner.addListener(listener);
 		runner.run(Example.class);
@@ -60,7 +61,7 @@ public class RunnerTest {
 	}
 	
 	@Test public void oldTestCount() {
-		Runner runner= new Runner();
+		JUnitCore runner= new JUnitCore();
 		MyListener listener= new MyListener();
 		runner.addListener(listener);
 		runner.run(ExampleTest.class);
@@ -73,9 +74,9 @@ public class RunnerTest {
 	}
 	
 	@Test public void testFinished() {
-		Runner runner= new Runner();
+		JUnitCore runner= new JUnitCore();
 		wasRun= false;
-		TestListener listener= new MyListener() {
+		RunListener listener= new MyListener() {
 			@Override
 			public void testFinished(Object test, String name) {
 				wasRun= true;

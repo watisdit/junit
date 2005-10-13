@@ -7,18 +7,18 @@ import java.io.PrintStream;
 import junit.framework.TestCase;
 
 import org.junit.Test;
-import org.junit.internal.runner.TextListener;
-import org.junit.runner.Runner;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.internal.TextListener;
 
 public class TextListenerTest extends TestCase {
 	
-	private Runner runner;
+	private JUnitCore runner;
 	private OutputStream results;
 	private TextListener listener;
 
 	@Override
 	public void setUp() {
-		runner= new Runner();
+		runner= new JUnitCore();
 		results= new ByteArrayOutputStream();
 		PrintStream writer= new PrintStream(results);
 		listener= new TextListener(writer);

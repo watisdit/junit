@@ -1,18 +1,18 @@
 package org.junit.tests;
 
+import static org.junit.Assert.assertTrue;
 import junit.framework.JUnit4TestAdapter;
-import org.junit.Factory;
 import org.junit.Test;
-import org.junit.internal.runner.TestNotifier;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
-import org.junit.runner.RunnerStrategy;
-import static org.junit.Assert.*;
+import org.junit.runner.internal.TestNotifier;
 
-public class FactoryTest {
+public class RunWithTest {
 
 	private static String log;
 
-	public static class ExampleFactory implements RunnerStrategy {
+	public static class ExampleFactory implements Runner {
 		public void initialize(TestNotifier notifier, Class klass) {
 			log+= "initialize";
 		}
@@ -28,20 +28,20 @@ public class FactoryTest {
 		
 	}
 	
-	@Factory(ExampleFactory.class)
+	@RunWith(ExampleFactory.class)
 	public static class ExampleTest {
 	}
 	
 	@Test public void run() {
 		log= "";
-		Runner runner= new Runner();
-		runner.run(ExampleTest.class);
+
+		JUnitCore.runClasses(ExampleTest.class);
 		assertTrue(log.contains("count"));
 		assertTrue(log.contains("initialize"));
 		assertTrue(log.contains("run"));
 	}
 	
 	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(FactoryTest.class);
+		return new JUnit4TestAdapter(RunWithTest.class);
 	}
 }

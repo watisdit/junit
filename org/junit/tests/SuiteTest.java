@@ -3,7 +3,8 @@ package org.junit.tests;
 import static org.junit.Assert.assertEquals;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.Runner;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
 
 public class SuiteTest {
 	
@@ -26,8 +27,8 @@ public class SuiteTest {
 	}
 	
 	@Ignore @Test public void ensureTestIsRun() {
-		Runner runner= new Runner();
-		runner.run(All.class);
+		JUnitCore core= new JUnitCore();
+		Result runner= core.run(All.class);
 		assertEquals(2, runner.getRunCount());
 		assertEquals(1, runner.getFailureCount());
 	}

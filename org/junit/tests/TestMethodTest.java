@@ -13,8 +13,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.internal.runner.TestIntrospector;
-import org.junit.runner.Runner;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.internal.TestIntrospector;
 
 public class TestMethodTest {
 
@@ -86,9 +87,9 @@ public class TestMethodTest {
 	}
 
 	@Test public void ignoreRunner() {
-		Runner runner= new Runner();
-		runner.run(IgnoredTest.class);
-		assertEquals(2, runner.getIgnoreCount());
+		JUnitCore runner= new JUnitCore();
+		Result result= runner.run(IgnoredTest.class);
+		assertEquals(2, result.getIgnoreCount());
 	}
 
 	@Test public void compatibility() {

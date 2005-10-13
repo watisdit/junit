@@ -4,7 +4,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
-import org.junit.runner.Runner;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
 
 public class ExpectedTest {
 	
@@ -14,8 +15,8 @@ public class ExpectedTest {
 		}
 	}
 	@Test public void expected() {
-		Runner runner= new Runner();
-		runner.run(Expected.class);
+		JUnitCore core= new JUnitCore();
+		Result runner= core.run(Expected.class);
 		assertTrue(runner.wasSuccessful());
 	}
 	
@@ -25,8 +26,7 @@ public class ExpectedTest {
 		}
 	}
 	@Test public void unexpected() {
-		Runner runner= new Runner();
-		runner.run(Unexpected.class);
+		Result runner = JUnitCore.runClasses(Unexpected.class);
 		String message= runner.getFailures().get(0).getMessage();
 		assertTrue(message.contains("expected<java.lang.Exception> but was<java.lang.Error>"));
 	}
@@ -36,8 +36,8 @@ public class ExpectedTest {
 		}
 	}
 	@Test public void noneThrown() {
-		Runner runner= new Runner();
-		runner.run(NoneThrown.class);
+		JUnitCore core= new JUnitCore();
+		Result runner= core.run(NoneThrown.class);
 		assertFalse(runner.wasSuccessful());
 		String message= runner.getFailures().get(0).getMessage();
 		assertTrue(message.contains("Expected exception: java.lang.Exception"));

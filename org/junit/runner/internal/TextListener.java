@@ -1,14 +1,14 @@
-package org.junit.internal.runner;
+package org.junit.runner.internal;
 
 import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.text.NumberFormat;
 
 import org.junit.runner.Failure;
-import org.junit.runner.Runner;
-import org.junit.runner.TestListener;
+import org.junit.runner.Result;
+import org.junit.runner.RunListener;
 
-public class TextListener implements TestListener {
+public class TextListener implements RunListener {
 
 	private final PrintStream fWriter;
 
@@ -24,7 +24,7 @@ public class TextListener implements TestListener {
 	public void testRunStarted(int testCount) {
 	}
 
-	public void testRunFinished(Runner runner) {
+	public void testRunFinished(Result runner) {
 		printHeader(runner.getRunTime());
 		printFailures(runner);
 		printFooter(runner);
@@ -55,7 +55,7 @@ public class TextListener implements TestListener {
 		getWriter().println("Time: " + elapsedTimeAsString(runTime));
 	}
 
-	protected void printFailures(Runner result) {
+	protected void printFailures(Result result) {
 		if (result.getFailureCount() == 0)
 			return;
 		if (result.getFailureCount() == 1)
@@ -80,7 +80,7 @@ public class TextListener implements TestListener {
 		getWriter().print(failure.getTrace());
 	}
 
-	protected void printFooter(Runner result) {
+	protected void printFooter(Result result) {
 		if (result.wasSuccessful()) {
 			getWriter().println();
 			getWriter().print("OK");

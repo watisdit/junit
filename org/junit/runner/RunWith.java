@@ -1,4 +1,4 @@
-package org.junit;
+package org.junit.runner;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,6 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Parameters {
+@Target(ElementType.TYPE)
+public @interface RunWith {
+	Class<? extends Runner> value();
 }

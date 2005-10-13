@@ -1,19 +1,19 @@
-package org.junit.extensions;
+package org.junit.runner.extensions;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import org.junit.internal.runner.PreJUnit4RunnerStrategy;
-import org.junit.internal.runner.TestNotifier;
-import org.junit.runner.RunnerStrategy;
+import org.junit.runner.Runner;
+import org.junit.runner.internal.OldTestClassRunner;
+import org.junit.runner.internal.TestNotifier;
 
-public class AllTests implements RunnerStrategy {
+public class AllTests implements Runner {
 	
-	private PreJUnit4RunnerStrategy fStrategy;
+	private OldTestClassRunner fStrategy;
 
 	@SuppressWarnings("unchecked")
 	public void initialize(TestNotifier notifier, Class< ? extends Object> testClass) {
 		Test suite= new TestSuite((Class) testClass);
-		fStrategy= new PreJUnit4RunnerStrategy();
+		fStrategy= new OldTestClassRunner();
 		fStrategy.initialize(notifier, suite);
 	}
 
