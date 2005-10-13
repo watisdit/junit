@@ -10,11 +10,11 @@ import org.junit.runner.Failure;
 import org.junit.runner.RunnerStrategy;
 
 public class JUnit4RunnerStrategy implements RunnerStrategy {
-	private final Class< ? extends Object> fTestClass;
-	private final TestIntrospector fTestIntrospector;
+	private Class< ? extends Object> fTestClass;
+	private TestIntrospector fTestIntrospector;
 	private TestNotifier fNotifier;
 
-	public JUnit4RunnerStrategy(TestNotifier notifier, Class< ? extends Object> testClass) {
+	public void initialize(TestNotifier notifier, Class< ? extends Object> testClass) {
 		fNotifier= notifier;
 		fTestClass= testClass;
 		fTestIntrospector= new TestIntrospector(fTestClass);

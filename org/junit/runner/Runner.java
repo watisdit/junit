@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.TestCase;
 import org.junit.Factory;
 import org.junit.internal.runner.JUnit4RunnerStrategy;
 import org.junit.internal.runner.PreJUnit4RunnerStrategy;
@@ -34,11 +33,13 @@ public class Runner implements TestNotifier {
 
 	public void run(junit.framework.Test test) { 
 		ArrayList<RunnerStrategy> strategies= new ArrayList<RunnerStrategy>();
-		strategies.add(new PreJUnit4RunnerStrategy(this, test));
+		PreJUnit4RunnerStrategy strategy= new PreJUnit4RunnerStrategy();
+		strategy.initialize(this, test);
+		strategies.add(strategy);
 		run(strategies);
 	}
 	
-	private void run(List<RunnerStrategy> strategies) {
+	public void run(List<RunnerStrategy> strategies) {
 		int count= 0;
 		for (RunnerStrategy each : strategies)
 			count+= each.testCount();
@@ -51,16 +52,20 @@ public class Runner implements TestNotifier {
 		fireTestRunFinished();
 	}
 	
-	@SuppressWarnings("unchecked") 
 	private RunnerStrategy getStrategy(Class<? extends Object> testClass) throws Exception {
+		Class klass= null;
 		Factory annotation= testClass.getAnnotation(Factory.class);
 		if (annotation != null) {
-			Constructor constructor= annotation.value().getConstructor(new Class[] {TestNotifier.class, Class.class}); //TODO test if no such constructor
-			return (RunnerStrategy) constructor.newInstance(new Object[] {this, testClass});
-		} else if (isPre4Test(testClass))
-			return new PreJUnit4RunnerStrategy(this, (Class< ? extends TestCase>) testClass); 
-		else
-			return new JUnit4RunnerStrategy(this, testClass);
+			klass= annotation.value();
+		} else if (isPre4Test(testClass)) {
+			klass= PreJUnit4RunnerStrategy.class; 
+		} else {
+			klass= JUnit4RunnerStrategy.class;
+		}
+		Constructor constructor= klass.getConstructor();
+		RunnerStrategy result= (RunnerStrategy) constructor.newInstance(new Object[] {});
+		result.initialize(this, testClass);
+		return result;
 	}
 
 	private boolean isPre4Test(Class< ? extends Object> testClass) {

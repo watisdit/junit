@@ -7,7 +7,7 @@ public interface TestListener {
 
 	void testRunStarted(int testCount) throws Exception;
 	
-	void testRunFinished(Runner runner) throws Exception; //TODO: Something is wrong here... Should take an event anyway
+	void testRunFinished(Runner runner) throws Exception; //TODO: Something is wrong here... Should take an event anyway, also split Runner and Result
 	
 	void testStarted(Object test, String name) throws Exception;
 

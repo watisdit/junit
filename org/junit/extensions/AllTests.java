@@ -11,9 +11,10 @@ public class AllTests implements RunnerStrategy {
 	private PreJUnit4RunnerStrategy fStrategy;
 
 	@SuppressWarnings("unchecked")
-	public AllTests(TestNotifier notifier, Class< ? extends Object> testClass) {
+	public void initialize(TestNotifier notifier, Class< ? extends Object> testClass) {
 		Test suite= new TestSuite((Class) testClass);
-		fStrategy= new PreJUnit4RunnerStrategy(notifier, suite);
+		fStrategy= new PreJUnit4RunnerStrategy();
+		fStrategy.initialize(notifier, suite);
 	}
 
 	public void run() {

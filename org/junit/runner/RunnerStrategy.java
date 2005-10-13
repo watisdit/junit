@@ -1,15 +1,13 @@
 package org.junit.runner;
 
-
+import org.junit.internal.runner.TestNotifier;
 
 public interface RunnerStrategy {
 
-	// TODO is there a better way to express this?
-	// Runner strategies also need to implement a constructor RunnerStrategy(TestNotifier, Class)
-	// perhaps there should be an initialize(TestNotifier, Class)?
+	void initialize(TestNotifier notifier, Class< ? extends Object> klass);
 	
-	public void run();
+	void run();
 
-	public int testCount();
+	int testCount();
 
 }

@@ -16,10 +16,10 @@ import org.junit.internal.runner.TestNotifier;
 
 public class Parameterized implements RunnerStrategy {
 
-	private final Class< ? extends Object> fTestClass;
-	private final TestNotifier fNotifier;
+	private Class< ? extends Object> fTestClass;
+	private TestNotifier fNotifier;
 
-	public Parameterized(TestNotifier notifier, Class< ? extends Object> testClass) {
+	public void initialize(TestNotifier notifier, Class< ? extends Object> testClass) {
 		this.fNotifier= notifier;
 		this.fTestClass= testClass;
 	}
@@ -29,7 +29,7 @@ public class Parameterized implements RunnerStrategy {
 			Object object= getParametersList();
 			return Array.getLength(object);
 		} catch (Exception e) {
-			// TODO: what's right?
+			// TODO: what's right? add a Failure and return 0?
 			return 0;
 		}
 		// TODO: what if it's not an array?

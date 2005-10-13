@@ -12,17 +12,18 @@ public class PreJUnit4RunnerStrategy implements junit.framework.TestListener,  R
 	private Test fTest;
 	private TestNotifier fNotifier;
 
-	public PreJUnit4RunnerStrategy(TestNotifier notifier, Class<? extends TestCase> testClass) {
-		this(notifier);
-		fTest= new TestSuite(testClass);
+	@SuppressWarnings("unchecked")
+	public void initialize(TestNotifier notifier, Class<? extends Object> testClass) {
+		initialize(notifier);
+		fTest= new TestSuite((Class<? extends TestCase>) testClass);
 	}
 	
-	public PreJUnit4RunnerStrategy(TestNotifier notifier, Test test) {
-		this(notifier);
+	public void initialize(TestNotifier notifier, Test test) {
+		initialize(notifier);
 		fTest= test;
 	}
 	
-	private PreJUnit4RunnerStrategy(TestNotifier notifier) {
+	private void initialize(TestNotifier notifier) {
 		fNotifier= notifier;		
 	}
 	
