@@ -20,7 +20,7 @@ public class TestListenerTest {
 			throw new Error();
 		}
 
-		public void testRunFinished(Result runner) {
+		public void testRunFinished(Result result) {
 		}
 
 		public void testStarted(Object test, String name) {
@@ -55,17 +55,17 @@ public class TestListenerTest {
 	}
 	
 	@Test public void removeFailingListeners() {
-		JUnitCore runner= new JUnitCore();
-		runner.addListener(new ExceptionListener());
+		JUnitCore core= new JUnitCore();
+		core.addListener(new ExceptionListener());
 		
 		// TODO: a fresh result each time?
 		count= 0;
-		Result result= runner.run(OneTest.class);
+		Result result= core.run(OneTest.class);
 		assertEquals(1, count);
 		assertEquals(1, result.getFailureCount());
 
 		count= 0;
-		runner.run(OneTest.class);
+		core.run(OneTest.class);
 		assertEquals(0, count); // Doesn't change because listener was removed		
 	}
 	

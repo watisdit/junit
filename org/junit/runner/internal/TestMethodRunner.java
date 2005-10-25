@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 public class TestMethodRunner {
 
@@ -20,11 +19,11 @@ public class TestMethodRunner {
 	}
 
 	private final Object fTest;
-	private final Method fMethod;
-	private final TestNotifier fNotifier;
+	final Method fMethod;
+	private final RunNotifier fNotifier;
 	private final TestIntrospector fTestIntrospector;
 
-	public TestMethodRunner(Object test, Method method, TestNotifier notifier) {
+	public TestMethodRunner(Object test, Method method, RunNotifier notifier) {
 		fTest= test;
 		fMethod= method;
 		fNotifier= notifier;
@@ -94,7 +93,7 @@ public class TestMethodRunner {
 	}
 
 	private void runTestMethod() {
-		Class< ? extends Throwable> expected= expectedException();
+		Class< ? extends Throwable> expected= fTestIntrospector.expectedException(fMethod);
 		try {
 			invokeMethod();
 			if (expectsException())
@@ -127,20 +126,12 @@ public class TestMethodRunner {
 			}
 	}
 	
-	private Class< ? extends Throwable> expectedException() {
-		Test annotation= fMethod.getAnnotation(Test.class);
-		if (annotation.expected() == Test.None.class)
-			return null;
-		else
-			return annotation.expected();
-	}
-
 	private boolean expectsException() {
-		return expectedException() != null;
+		return fTestIntrospector.expectedException(fMethod) != null;
 	}
 
 	private boolean isUnexpected(Throwable exception) {
-		Class< ? extends Throwable> expected= expectedException();
+		Class< ? extends Throwable> expected= fTestIntrospector.expectedException(fMethod);
 		return ! exception.getClass().equals(expected);
 	}
 

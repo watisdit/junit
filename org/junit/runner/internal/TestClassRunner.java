@@ -12,9 +12,9 @@ import org.junit.runner.Runner;
 public class TestClassRunner implements Runner {
 	private Class< ? extends Object> fTestClass;
 	private TestIntrospector fTestIntrospector;
-	private TestNotifier fNotifier;
+	private RunNotifier fNotifier;
 
-	public void initialize(TestNotifier notifier, Class< ? extends Object> testClass) {
+	public void initialize(RunNotifier notifier, Class< ? extends Object> testClass) {
 		fNotifier= notifier;
 		fTestClass= testClass;
 		fTestIntrospector= new TestIntrospector(fTestClass);
@@ -80,7 +80,7 @@ public class TestClassRunner implements Runner {
 			}
 	}
 	
-	private void invokeTestMethod(Method method) throws Exception {
+	protected void invokeTestMethod(Method method) throws Exception {
 		Object test= fTestClass.getConstructor().newInstance();
 		new TestMethodRunner(test, method, fNotifier).run();
 	}

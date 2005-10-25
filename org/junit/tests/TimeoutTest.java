@@ -19,10 +19,10 @@ public class TimeoutTest {
 	
 	@Test public void failureWithTimeout() throws Exception {
 		JUnitCore core= new JUnitCore();
-		Result runner= core.run(FailureWithTimeoutTest.class);
-		assertEquals(1, runner.getRunCount());
-		assertEquals(1, runner.getFailureCount());
-		assertEquals(AssertionError.class, runner.getFailures().get(0).getException().getClass());
+		Result result= core.run(FailureWithTimeoutTest.class);
+		assertEquals(1, result.getRunCount());
+		assertEquals(1, result.getFailureCount());
+		assertEquals(AssertionError.class, result.getFailures().get(0).getException().getClass());
 	}
 
 	static public class FailureWithTimeoutRunTimeExceptionTest {
@@ -33,10 +33,10 @@ public class TimeoutTest {
 	
 	@Test public void failureWithTimeoutRunTimeException() throws Exception {
 		JUnitCore core= new JUnitCore();
-		Result runner= core.run(FailureWithTimeoutRunTimeExceptionTest.class);
-		assertEquals(1, runner.getRunCount());
-		assertEquals(1, runner.getFailureCount());
-		assertEquals(NullPointerException.class, runner.getFailures().get(0).getException().getClass());
+		Result result= core.run(FailureWithTimeoutRunTimeExceptionTest.class);
+		assertEquals(1, result.getRunCount());
+		assertEquals(1, result.getFailureCount());
+		assertEquals(NullPointerException.class, result.getFailures().get(0).getException().getClass());
 	}
 
 	static public class SuccessWithTimeoutTest {
@@ -46,9 +46,9 @@ public class TimeoutTest {
 		
 	@Test public void successWithTimeout() throws Exception {
 		JUnitCore core= new JUnitCore();
-		Result runner= core.run(SuccessWithTimeoutTest.class);
-		assertEquals(1, runner.getRunCount());
-		assertEquals(0, runner.getFailureCount());
+		Result result= core.run(SuccessWithTimeoutTest.class);
+		assertEquals(1, result.getRunCount());
+		assertEquals(0, result.getFailureCount());
 	}
 
 	static public class TimeoutFailureTest {
@@ -59,10 +59,10 @@ public class TimeoutTest {
 	
 	@Test public void timeoutFailure() throws Exception {
 		JUnitCore core= new JUnitCore();
-		Result runner= core.run(TimeoutFailureTest.class);
-		assertEquals(1, runner.getRunCount());
-		assertEquals(1, runner.getFailureCount());
-		assertEquals(InterruptedException.class, runner.getFailures().get(0).getException().getClass());
+		Result result= core.run(TimeoutFailureTest.class);
+		assertEquals(1, result.getRunCount());
+		assertEquals(1, result.getFailureCount());
+		assertEquals(InterruptedException.class, result.getFailures().get(0).getException().getClass());
 	}
 	
 	static public class InfiniteLoopTest {
@@ -73,10 +73,10 @@ public class TimeoutTest {
 	
 	@Test public void infiniteLoop() throws Exception {
 		JUnitCore core= new JUnitCore();
-		Result runner= core.run(InfiniteLoopTest.class);
-		assertEquals(1, runner.getRunCount());
-		assertEquals(1, runner.getFailureCount());
-		assertEquals(TimeoutException.class, runner.getFailures().get(0).getException().getClass());
+		Result result= core.run(InfiniteLoopTest.class);
+		assertEquals(1, result.getRunCount());
+		assertEquals(1, result.getFailureCount());
+		assertEquals(TimeoutException.class, result.getFailures().get(0).getException().getClass());
 	}
 
 	@Test public void compatibility() {

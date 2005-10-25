@@ -24,10 +24,10 @@ public class TextListener implements RunListener {
 	public void testRunStarted(int testCount) {
 	}
 
-	public void testRunFinished(Result runner) {
-		printHeader(runner.getRunTime());
-		printFailures(runner);
-		printFooter(runner);
+	public void testRunFinished(Result result) {
+		printHeader(result.getRunTime());
+		printFailures(result);
+		printFooter(result);
 	}
 
 	public void testStarted(Object test, String name) {

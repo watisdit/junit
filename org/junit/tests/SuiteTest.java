@@ -28,8 +28,8 @@ public class SuiteTest {
 	
 	@Ignore @Test public void ensureTestIsRun() {
 		JUnitCore core= new JUnitCore();
-		Result runner= core.run(All.class);
-		assertEquals(2, runner.getRunCount());
-		assertEquals(1, runner.getFailureCount());
+		Result result= core.run(All.class);
+		assertEquals(2, result.getRunCount());
+		assertEquals(1, result.getFailureCount());
 	}
 }

@@ -12,14 +12,14 @@ import org.junit.Test;
 import org.junit.runner.Runner;
 import org.junit.runner.internal.TestIntrospector;
 import org.junit.runner.internal.TestMethodRunner;
-import org.junit.runner.internal.TestNotifier;
+import org.junit.runner.internal.RunNotifier;
 
 public class Parameterized implements Runner {
 
 	private Class< ? extends Object> fTestClass;
-	private TestNotifier fNotifier;
+	private RunNotifier fNotifier;
 
-	public void initialize(TestNotifier notifier, Class< ? extends Object> testClass) {
+	public void initialize(RunNotifier notifier, Class< ? extends Object> testClass) {
 		this.fNotifier= notifier;
 		this.fTestClass= testClass;
 	}

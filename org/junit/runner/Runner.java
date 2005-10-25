@@ -1,10 +1,10 @@
 package org.junit.runner;
 
-import org.junit.runner.internal.TestNotifier;
+import org.junit.runner.internal.RunNotifier;
 
 public interface Runner {
 
-	void initialize(TestNotifier notifier, Class< ? extends Object> klass);
+	void initialize(RunNotifier notifier, Class< ? extends Object> klass);
 	
 	void run();
 

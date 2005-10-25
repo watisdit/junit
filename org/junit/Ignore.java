@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Ignore {
 	/**
-	 * The reason why a change is ignored
+	 * The reason why a test is ignored
 	 */
 	String value() default ""; 
 }

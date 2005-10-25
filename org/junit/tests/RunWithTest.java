@@ -6,14 +6,14 @@ import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
-import org.junit.runner.internal.TestNotifier;
+import org.junit.runner.internal.RunNotifier;
 
 public class RunWithTest {
 
 	private static String log;
 
 	public static class ExampleFactory implements Runner {
-		public void initialize(TestNotifier notifier, Class klass) {
+		public void initialize(RunNotifier notifier, Class klass) {
 			log+= "initialize";
 		}
 

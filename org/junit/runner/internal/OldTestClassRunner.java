@@ -10,20 +10,20 @@ import org.junit.runner.Runner;
 public class OldTestClassRunner implements junit.framework.TestListener,  Runner {
 	
 	private Test fTest;
-	private TestNotifier fNotifier;
+	private RunNotifier fNotifier;
 
 	@SuppressWarnings("unchecked")
-	public void initialize(TestNotifier notifier, Class<? extends Object> testClass) {
+	public void initialize(RunNotifier notifier, Class<? extends Object> testClass) {
 		initialize(notifier);
 		fTest= new TestSuite((Class<? extends TestCase>) testClass);
 	}
 	
-	public void initialize(TestNotifier notifier, Test test) {
+	public void initialize(RunNotifier notifier, Test test) {
 		initialize(notifier);
 		fTest= test;
 	}
 	
-	private void initialize(TestNotifier notifier) {
+	private void initialize(RunNotifier notifier) {
 		fNotifier= notifier;		
 	}
 	

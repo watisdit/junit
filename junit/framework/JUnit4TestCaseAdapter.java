@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 
 import org.junit.runner.Failure;
 import org.junit.runner.internal.TestMethodRunner;
-import org.junit.runner.internal.TestNotifier;
+import org.junit.runner.internal.RunNotifier;
 
 public class JUnit4TestCaseAdapter extends TestCase {
 
@@ -25,18 +25,10 @@ public class JUnit4TestCaseAdapter extends TestCase {
 				throw fException;
 	}
 
-	private final class CompatibilityNotifier implements TestNotifier {
+	private final class CompatibilityNotifier extends RunNotifier {
+		@Override
 		public void fireTestFailure(Failure failure) {
 			fException= failure.getException();
-		}
-		
-		public void fireTestIgnored(Method method) {
-		}
-		
-		public void fireTestStarted(Object test, String name) {
-		}
-
-		public void fireTestFinished(Object test, String name) {
 		}
 	}
 	

@@ -35,9 +35,9 @@ public class ParameterizedTestTest {
 	}
 
 	@Test public void count() {
-		Result runner = JUnitCore.runClasses(FibonacciTest.class);
-		assertEquals(7, runner.getRunCount());
-		assertEquals(6, runner.getFailureCount());
+		Result result = JUnitCore.runClasses(FibonacciTest.class);
+		assertEquals(7, result.getRunCount());
+		assertEquals(6, result.getFailureCount());
 	}
 	
 	static public junit.framework.Test suite() {

@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.Test.None;
 
 
 public class TestIntrospector {
@@ -104,6 +105,14 @@ public class TestIntrospector {
 		Test annotation= method.getAnnotation(Test.class);
 		long timeout= annotation.timeout();
 		return timeout;
+	}
+
+	Class< ? extends Throwable> expectedException(Method method) {
+		Test annotation= method.getAnnotation(Test.class);
+		if (annotation.expected() == None.class)
+			return null;
+		else
+			return annotation.expected();
 	}
 
 }

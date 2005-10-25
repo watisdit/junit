@@ -16,8 +16,8 @@ public class ExpectedTest {
 	}
 	@Test public void expected() {
 		JUnitCore core= new JUnitCore();
-		Result runner= core.run(Expected.class);
-		assertTrue(runner.wasSuccessful());
+		Result result= core.run(Expected.class);
+		assertTrue(result.wasSuccessful());
 	}
 	
 	public static class Unexpected {
@@ -26,8 +26,8 @@ public class ExpectedTest {
 		}
 	}
 	@Test public void unexpected() {
-		Result runner = JUnitCore.runClasses(Unexpected.class);
-		String message= runner.getFailures().get(0).getMessage();
+		Result result = JUnitCore.runClasses(Unexpected.class);
+		String message= result.getFailures().get(0).getMessage();
 		assertTrue(message.contains("expected<java.lang.Exception> but was<java.lang.Error>"));
 	}
 	
@@ -37,9 +37,9 @@ public class ExpectedTest {
 	}
 	@Test public void noneThrown() {
 		JUnitCore core= new JUnitCore();
-		Result runner= core.run(NoneThrown.class);
-		assertFalse(runner.wasSuccessful());
-		String message= runner.getFailures().get(0).getMessage();
+		Result result= core.run(NoneThrown.class);
+		assertFalse(result.wasSuccessful());
+		String message= result.getFailures().get(0).getMessage();
 		assertTrue(message.contains("Expected exception: java.lang.Exception"));
 	}
 	

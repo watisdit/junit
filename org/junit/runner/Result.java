@@ -1,13 +1,15 @@
 package org.junit.runner;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Result {
-	int fCount= 0;
-	int fIgnoreCount= 0;
-	List<Failure> fFailures= new ArrayList<Failure>();
-	long fRunTime;
+public class Result implements RunListener {
+	private int fCount= 0;
+	private int fIgnoreCount= 0;
+	private List<Failure> fFailures= new ArrayList<Failure>();
+	private long fRunTime= 0;
+	private long startTime;
 
 	public int getRunCount() {
 		return fCount;
@@ -31,5 +33,30 @@ public class Result {
 	
 	public boolean wasSuccessful() {
 		return getFailureCount() == 0;
+	}
+
+	// RunListener implementation, not for external use
+	public void testRunStarted(int testCount) throws Exception {
+		startTime= System.currentTimeMillis();
+	}
+
+	public void testRunFinished(Result result) throws Exception {
+		long endTime= System.currentTimeMillis();
+		fRunTime+= endTime - startTime;
+	}
+
+	public void testStarted(Object test, String name) throws Exception {
+		fCount++;
+	}
+
+	public void testFinished(Object test, String name) throws Exception {
+	}
+
+	public void testFailure(Failure failure) throws Exception {
+		fFailures.add(failure);
+	}
+
+	public void testIgnored(Method method) throws Exception {
+		fIgnoreCount++;
 	}
 }

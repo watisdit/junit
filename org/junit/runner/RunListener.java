@@ -9,7 +9,7 @@ public interface RunListener {
 	
 	void testRunStarted(int testCount) throws Exception;
 	
-	void testRunFinished(Result runner) throws Exception;
+	void testRunFinished(Result result) throws Exception;
 	
 	void testStarted(Object test, String name) throws Exception;
 

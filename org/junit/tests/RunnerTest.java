@@ -25,7 +25,7 @@ public class RunnerTest {
 			this.testCount= testCount;
 		}
 
-		public void testRunFinished(Result runner) {
+		public void testRunFinished(Result result) {
 		}
 
 		public void testStarted(Object test, String name) {
