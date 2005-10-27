@@ -19,3 +19,5 @@
 * simplify: get rid of failures and errors distinction
 * Annotation for runner strategy
 * Parameterized test
+* Should RunNotifier be API?
+* Runner should be abstract class.

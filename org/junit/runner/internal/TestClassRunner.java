@@ -6,20 +6,19 @@ import java.util.List;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.ClassRunner;
 import org.junit.runner.Failure;
-import org.junit.runner.Runner;
+import org.junit.runner.RunNotifier;
 
-public class TestClassRunner implements Runner {
-	private Class< ? extends Object> fTestClass;
+public class TestClassRunner extends ClassRunner {
 	private TestIntrospector fTestIntrospector;
-	private RunNotifier fNotifier;
 
-	public void initialize(RunNotifier notifier, Class< ? extends Object> testClass) {
-		fNotifier= notifier;
-		fTestClass= testClass;
-		fTestIntrospector= new TestIntrospector(fTestClass);
+	public TestClassRunner(RunNotifier notifier, Class<? extends Object> klass) {
+		super(notifier, klass);
+		fTestIntrospector= new TestIntrospector(getTestClass());
 	}
 
+	@Override
 	public int testCount() {
 		return fTestIntrospector.getTestMethods(Test.class).size();
 	}
@@ -28,6 +27,7 @@ public class TestClassRunner implements Runner {
 		private static final long serialVersionUID= 1L;
 	}
 	
+	@Override
 	public void run() {
 		List<Exception> errors= fTestIntrospector.validateTestMethods();
 		if (!errors.isEmpty()) {
@@ -46,7 +46,7 @@ public class TestClassRunner implements Runner {
 	}
 
 	private void addFailure(Throwable exception) {
-		fNotifier.fireTestFailure(new Failure(exception));
+		getNotifier().fireTestFailure(new Failure(exception));
 	}
 
 	private void runBeforeClasses() throws FailedBefore {
@@ -81,8 +81,8 @@ public class TestClassRunner implements Runner {
 	}
 	
 	protected void invokeTestMethod(Method method) throws Exception {
-		Object test= fTestClass.getConstructor().newInstance();
-		new TestMethodRunner(test, method, fNotifier).run();
+		Object test= getTestClass().getConstructor().newInstance();
+		new TestMethodRunner(test, method, getNotifier()).run();
 	}
 
 }

@@ -3,8 +3,8 @@ package junit.framework;
 import java.lang.reflect.Method;
 
 import org.junit.runner.Failure;
+import org.junit.runner.RunNotifier;
 import org.junit.runner.internal.TestMethodRunner;
-import org.junit.runner.internal.RunNotifier;
 
 public class JUnit4TestCaseAdapter extends TestCase {
 

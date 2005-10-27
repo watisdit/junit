@@ -7,7 +7,6 @@ import java.util.List;
 import junit.runner.Version;
 import org.junit.runner.internal.OldTestClassRunner;
 import org.junit.runner.internal.TestClassRunner;
-import org.junit.runner.internal.RunNotifier;
 import org.junit.runner.internal.TextListener;
 
 
@@ -19,19 +18,15 @@ public class JUnitCore {
 	public JUnitCore() {
 		fResult= new Result();
 		fNotifier= new RunNotifier();
-		addListener(fResult);
+		fResult.addListenerTo(fNotifier);
 	}
 
 	public static void main(String... args) {
 		new JUnitCore().runMain(args);
 	}
 	
-	// TODO: better name?  Needed?
 	public static Result runClasses(Class... classes) {
-		JUnitCore core= new JUnitCore();
-		RunListener listener= new TextListener();
-		core.addListener(listener);
-		return core.run(classes);
+		return new JUnitCore().run(classes);
 	}
 	
 	private void runMain(String... args) {
@@ -56,40 +51,38 @@ public class JUnitCore {
 	}
 	
 	public Result run(Class... testClasses) {
-		List<Runner> strategies= new ArrayList<Runner>();
+		List<Runner> runners= new ArrayList<Runner>();
 		for (Class<? extends Object> each : testClasses)
 			try {
-				strategies.add(getStrategy(each));
+				runners.add(getRunner(each));
 			} catch (Exception e) {
 				fNotifier.fireTestFailure(new Failure(e));
 			}
-		run(strategies);
+		run(runners);
 		return fResult;
 	}
 
 	public void run(junit.framework.Test test) { 
-		ArrayList<Runner> strategies= new ArrayList<Runner>();
-		OldTestClassRunner strategy= new OldTestClassRunner();
-		strategy.initialize(fNotifier, test);
-		strategies.add(strategy);
-		run(strategies);
+		ArrayList<Runner> runners= new ArrayList<Runner>();
+		OldTestClassRunner runner= new OldTestClassRunner(fNotifier, test);
+		runners.add(runner);
+		run(runners);
 	}
 	
-	public void run(List<Runner> strategies) {
+	public void run(List<Runner> runners) {
 		int count= 0;
-		for (Runner each : strategies)
+		for (Runner each : runners)
 			count+= each.testCount();
 		fNotifier.fireTestRunStarted(count);
-		for (Runner each : strategies)
+		for (Runner each : runners)
 			each.run();
 		fNotifier.fireTestRunFinished(fResult);
 	}
 	
-	private Runner getStrategy(Class<? extends Object> testClass) throws Exception {
+	private Runner getRunner(Class<? extends Object> testClass) throws Exception {
 		Class klass= getRunnerClass(testClass);
-		Constructor constructor= klass.getConstructor();
-		Runner result= (Runner) constructor.newInstance(new Object[] {});
-		result.initialize(fNotifier, testClass);
+		Constructor constructor= klass.getConstructor(RunNotifier.class, Class.class); // TODO good error message if no such constructor
+		Runner result= (Runner) constructor.newInstance(new Object[] {fNotifier, testClass});
 		return result;
 	}
 

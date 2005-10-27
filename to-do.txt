@@ -5,9 +5,19 @@ Before first public release:
 	* TestRunEvent
 * Decide how we ship JUnit-- 1.5 only or hybrid
 * Stopping a test run (there was support for this in 3.8 - TestResult.shouldStop())
+* Suite annotation example:
+	@Suite(tests={MoneyTest.class, SimpleTest.class})
+	or with filters
+	@Suite(pattern="*Test"}
+	@Suite(package="org.junit.test.*")
+	@Suite
+* be able to run all tests simply from the command line
+* review Ant scripts
+* Run single method with @BeforeClass and @AfterClass
+http://java.sun.com/j2se/javadoc/writingapispecs/index.html
+* Merge branch back into head
 
 Before next JUnit 4 release:
-* be able to run all tests simply from the command line
 * get rid of JUnit4TestCaseAdapter (use JUnit4RunnerStrategy in JUnit4TestAdapter)
 * update the build process
     * automatically upload a new JAR
@@ -19,14 +29,7 @@ Before next JUnit 4 release:
 * enable tighter and more flexible IDE integration
 	* enable test reordering/prioritization
 	* test categorization & filtering (<- seems like a runner issue) @Category(short, integration)  @Test(category=windowsOnly)
-* Suite annotation example:
-	@Suite(tests={MoneyTest.class, SimpleTest.class})
-	or with filters
-	@Suite(pattern="*Test"}
-	@Suite(package="org.junit.test.*")
-
-	@Suite
-
 * support testing run once initialization code e.g. class Foo {{...}}
+* Command-line plug-in architecture
 
 

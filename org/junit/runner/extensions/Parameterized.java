@@ -9,21 +9,18 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import org.junit.Test;
-import org.junit.runner.Runner;
+import org.junit.runner.ClassRunner;
+import org.junit.runner.RunNotifier;
 import org.junit.runner.internal.TestIntrospector;
 import org.junit.runner.internal.TestMethodRunner;
-import org.junit.runner.internal.RunNotifier;
 
-public class Parameterized implements Runner {
-
-	private Class< ? extends Object> fTestClass;
-	private RunNotifier fNotifier;
-
-	public void initialize(RunNotifier notifier, Class< ? extends Object> testClass) {
-		this.fNotifier= notifier;
-		this.fTestClass= testClass;
+public class Parameterized extends ClassRunner {
+	
+	public Parameterized(RunNotifier notifier, Class< ? extends Object> klass) {
+		super(notifier, klass);
 	}
 
+	@Override
 	public int testCount() {
 		try {
 			Object object= getParametersList();
@@ -35,6 +32,7 @@ public class Parameterized implements Runner {
 		// TODO: what if it's not an array?
 	}
 	
+	@Override
 	public void run() {
 		try {
 			Object parameters= getParametersList();
@@ -47,15 +45,15 @@ public class Parameterized implements Runner {
 	}
 
 	private void runParameter(Object parameters) throws Exception {
-		TestIntrospector testIntrospector= new TestIntrospector(fTestClass);
+		TestIntrospector testIntrospector= new TestIntrospector(getTestClass());
 		for (Method eachMethod : testIntrospector.getTestMethods(Test.class)) {			
 			Object test= createTest(parameters);
-			new TestMethodRunner(test, eachMethod, fNotifier).run();
+			new TestMethodRunner(test, eachMethod, getNotifier()).run();
 		}
 	}
 
 	private Object createTest(Object parameters) throws Exception {
-		Constructor[] constructors= fTestClass.getConstructors();
+		Constructor[] constructors= getTestClass().getConstructors();
 		assertEquals(1, constructors.length);
 		Constructor constructor= constructors[0];
 		Object[] boxed= new Object[Array.getLength(parameters)];
@@ -69,7 +67,7 @@ public class Parameterized implements Runner {
 	}
 
 	private Method getParametersMethod() throws Exception {
-		for (Method each : fTestClass.getMethods()) {
+		for (Method each : getTestClass().getMethods()) {
 			if (Modifier.isStatic(each.getModifiers())) {
 				Annotation[] annotations= each.getAnnotations();
 				for (Annotation annotation : annotations) {

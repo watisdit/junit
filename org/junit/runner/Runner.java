@@ -1,13 +1,20 @@
 package org.junit.runner;
 
-import org.junit.runner.internal.RunNotifier;
 
-public interface Runner {
+public abstract class Runner {
 
-	void initialize(RunNotifier notifier, Class< ? extends Object> klass);
+	private final RunNotifier fNotifier;
 	
-	void run();
+	public Runner(RunNotifier notifier) {
+		fNotifier= notifier;
+	}
 
-	int testCount();
+	public abstract void run();
+
+	public abstract int testCount();
+
+	protected RunNotifier getNotifier() {
+		return fNotifier;
+	}
 
 }

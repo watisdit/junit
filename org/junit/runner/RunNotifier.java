@@ -1,23 +1,20 @@
-package org.junit.runner.internal;
+package org.junit.runner;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.junit.runner.Failure;
-import org.junit.runner.Result;
-import org.junit.runner.RunListener;
 
 public class RunNotifier {
 
 	private List<RunListener> fListeners= new ArrayList<RunListener>();
 	
-	public void addListener(RunListener listener) {
+	void addListener(RunListener listener) {
 		fListeners.add(listener);
 	}
 
-	public void removeListener(RunListener listener) {
+	void removeListener(RunListener listener) {
 		fListeners.remove(listener);
 	}
 
@@ -36,7 +33,7 @@ public class RunNotifier {
 		abstract protected void notifyListener(RunListener each) throws Exception;
 	}
 	
-	public void fireTestRunStarted(final int testCount) {
+	void fireTestRunStarted(final int testCount) {
 		new SafeNotifier() {
 			@Override
 			protected void notifyListener(RunListener each) throws Exception {
@@ -45,7 +42,7 @@ public class RunNotifier {
 		}.run();
 	}
 	
-	public void fireTestRunFinished(final Result result) {
+	void fireTestRunFinished(final Result result) {
 		new SafeNotifier() {
 			@Override
 			protected void notifyListener(RunListener each) throws Exception {

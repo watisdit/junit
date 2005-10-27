@@ -3,24 +3,27 @@ package org.junit.tests;
 import static org.junit.Assert.assertTrue;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
+import org.junit.runner.ClassRunner;
 import org.junit.runner.JUnitCore;
+import org.junit.runner.RunNotifier;
 import org.junit.runner.RunWith;
-import org.junit.runner.Runner;
-import org.junit.runner.internal.RunNotifier;
 
 public class RunWithTest {
 
 	private static String log;
 
-	public static class ExampleFactory implements Runner {
-		public void initialize(RunNotifier notifier, Class klass) {
+	public static class ExampleRunner extends ClassRunner {
+		public ExampleRunner(RunNotifier notifier, Class<? extends Object> klass) {
+			super(notifier, klass);
 			log+= "initialize";
 		}
 
+		@Override
 		public void run() {
 			log+= "run";
 		}
 
+		@Override
 		public int testCount() {
 			log+= "count";
 			return 0;
@@ -28,7 +31,7 @@ public class RunWithTest {
 		
 	}
 	
-	@RunWith(ExampleFactory.class)
+	@RunWith(ExampleRunner.class)
 	public static class ExampleTest {
 	}
 	

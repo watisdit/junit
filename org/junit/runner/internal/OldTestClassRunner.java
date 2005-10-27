@@ -5,34 +5,35 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
+import org.junit.runner.RunNotifier;
 import org.junit.runner.Runner;
 
-public class OldTestClassRunner implements junit.framework.TestListener,  Runner {
+public class OldTestClassRunner extends Runner implements junit.framework.TestListener {
 	
-	private Test fTest;
-	private RunNotifier fNotifier;
-
 	@SuppressWarnings("unchecked")
-	public void initialize(RunNotifier notifier, Class<? extends Object> testClass) {
-		initialize(notifier);
-		fTest= new TestSuite((Class<? extends TestCase>) testClass);
+	public OldTestClassRunner(RunNotifier notifier, Class< ? extends Object> klass) {
+		this(notifier, new TestSuite((Class<? extends TestCase>) klass));
 	}
-	
-	public void initialize(RunNotifier notifier, Test test) {
-		initialize(notifier);
+
+	public OldTestClassRunner(RunNotifier notifier, Test test) {
+		super(notifier);
 		fTest= test;
 	}
+
+	private Test fTest;
 	
-	private void initialize(RunNotifier notifier) {
-		fNotifier= notifier;		
-	}
-	
+	@Override
 	public void run() {
 		TestResult result= new TestResult();
 		result.addListener(this);
 		fTest.run(result);
 	}
 
+	@Override
+	public int testCount() {
+		return fTest.countTestCases();
+	}
+	
 	// Implement junit.framework.TestListener
 	//TODO method not covered
 	public void addError(Test test, Throwable t) {
@@ -42,7 +43,7 @@ public class OldTestClassRunner implements junit.framework.TestListener,  Runner
 		else
 			name= test.toString();
 		TestFailure failure= new TestFailure(test, name, t);
-		fNotifier.fireTestFailure(failure);
+		getNotifier().fireTestFailure(failure);
 	}
 
 	//TODO method not covered
@@ -54,11 +55,7 @@ public class OldTestClassRunner implements junit.framework.TestListener,  Runner
 	}
 
 	public void startTest(Test test) {
-		fNotifier.fireTestStarted(test, ((TestCase) test).getName());
-	}
-
-	public int testCount() {
-		return fTest.countTestCases();
+		getNotifier().fireTestStarted(test, ((TestCase) test).getName());
 	}
 
 }
