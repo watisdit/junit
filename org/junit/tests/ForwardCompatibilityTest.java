@@ -4,12 +4,14 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 import junit.framework.TestFailure;
 import junit.framework.TestResult;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.ClassRunner;
+import org.junit.runner.RunNotifier;
+import org.junit.runner.RunWith;
 
 public class ForwardCompatibilityTest extends TestCase {
 	static String fLog;
@@ -133,5 +135,37 @@ public class ForwardCompatibilityTest extends TestCase {
 		assertEquals(1, result.errorCount());	
 		TestFailure failure= result.errors().nextElement();
 		assertTrue(failure.exceptionMessage().contains("Method shouldBeStatic() should be static"));
+	}
+	
+	private static boolean wasRun = false;
+	
+	public static class MarkerRunner extends ClassRunner {
+
+		public MarkerRunner(RunNotifier notifier, Class< ? extends Object> klass) {
+			super(notifier, klass);
+		}
+
+		@Override
+		public void run() {
+			wasRun= true;
+		}
+
+		@Override
+		public int testCount() {
+			return 0;
+		}
+		
+	}
+
+	@RunWith(MarkerRunner.class)
+	public static class NoTests {
+	}
+	
+	public void testRunWithClass() {
+		wasRun = false;
+		TestResult result= new TestResult();
+		junit.framework.Test adapter= new JUnit4TestAdapter(NoTests.class);
+		adapter.run(result);
+		assertTrue(wasRun);
 	}
 }

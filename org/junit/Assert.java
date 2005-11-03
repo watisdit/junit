@@ -6,6 +6,8 @@ import junit.framework.ComparisonFailure;
  * A set of assert methods. Messages are only displayed when an assert fails.
  */
 
+
+// TODO get rid of all the assertEquals(int, int)
 public class Assert {
 	/**
 	 * Protect constructor since it is a static only class

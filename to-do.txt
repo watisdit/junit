@@ -1,20 +1,16 @@
 Before first public release:
 * update documentation
+	* new cook's tour
+	* update Test Infected
 * add  javadoc to API interfaces and Annotations
+	http://java.sun.com/j2se/javadoc/writingapispecs/index.html
 * make sure TestListener is symmetric and meets needs of runner developers
 	* TestRunEvent
 * Decide how we ship JUnit-- 1.5 only or hybrid
 * Stopping a test run (there was support for this in 3.8 - TestResult.shouldStop())
-* Suite annotation example:
-	@Suite(tests={MoneyTest.class, SimpleTest.class})
-	or with filters
-	@Suite(pattern="*Test"}
-	@Suite(package="org.junit.test.*")
-	@Suite
 * be able to run all tests simply from the command line
 * review Ant scripts
 * Run single method with @BeforeClass and @AfterClass
-http://java.sun.com/j2se/javadoc/writingapispecs/index.html
 * Merge branch back into head
 
 Before next JUnit 4 release:

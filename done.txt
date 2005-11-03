@@ -21,3 +21,10 @@
 * Parameterized test
 * Should RunNotifier be API?
 * Runner should be abstract class.
+
+* Suite annotation example:
+	@Suite(tests={MoneyTest.class, SimpleTest.class})
+	or with filters
+	@Suite(pattern="*Test"}
+	@Suite(package="org.junit.test.*")
+	@Suite
