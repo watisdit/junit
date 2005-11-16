@@ -3,7 +3,6 @@ package org.junit.tests;
 import static org.junit.Assert.assertEquals;
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestResult;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
@@ -42,7 +41,7 @@ public class SuiteTest {
 		assertEquals(2, runner.testCount());
 	}
 	
-	@Ignore @Test public void ensureSuitesWorkWithForwardCompatibility() {
+	@Test public void ensureSuitesWorkWithForwardCompatibility() {
 		junit.framework.Test test= new JUnit4TestAdapter(All.class);
 		TestResult result= new TestResult();
 		test.run(result);
