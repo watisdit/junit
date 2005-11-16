@@ -145,7 +145,7 @@ public abstract class TestCase extends Assert implements Test {
 	 * @exception Throwable if any exception is thrown
 	 */
 	protected void runTest() throws Throwable {
-		assertNotNull(fName); // Some VMs crash when calling getMethod(null,null);
+		assertNotNull("TestCase.fName cannot be null", fName); // Some VMs crash when calling getMethod(null,null);
 		Method runMethod= null;
 		try {
 			// use getMethod to get all public inherited
