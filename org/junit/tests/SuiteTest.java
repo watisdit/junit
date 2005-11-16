@@ -2,6 +2,8 @@ package org.junit.tests;
 
 import static org.junit.Assert.assertEquals;
 import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestResult;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
@@ -14,7 +16,6 @@ public class SuiteTest {
 	
 	public static class TestA {
 		@Test public void pass() {
-			// fail();
 		}
 	}
 	
@@ -23,10 +24,6 @@ public class SuiteTest {
 			fail();
 		}
 	}	
-// TODO	
-//	@Factory(Suite.class)
-//	@SuiteClasses({TestA.class, TestB.class})
-	// @SuitePackage("org.junit.tests")
 	
 	@RunWith(Suite.class)
 	@SuiteClasses({TestA.class, TestB.class})
@@ -43,6 +40,13 @@ public class SuiteTest {
 	@Test public void suiteTestCountIsCorrect() {
 		Suite runner= new Suite(new RunNotifier(), All.class);
 		assertEquals(2, runner.testCount());
+	}
+	
+	@Ignore @Test public void ensureSuitesWorkWithForwardCompatibility() {
+		junit.framework.Test test= new JUnit4TestAdapter(All.class);
+		TestResult result= new TestResult();
+		test.run(result);
+		assertEquals(2, result.runCount());
 	}
 
 	public static junit.framework.Test suite() {
