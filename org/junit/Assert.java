@@ -3,11 +3,13 @@ package org.junit;
 import junit.framework.ComparisonFailure;
 
 /**
- * A set of assert methods. Messages are only displayed when an assert fails.
+ * A set of assert methods. Messages are only displayed when an assertion fails.
+ * These methods can be used directly: Assert.assertEquals(...). They
+ * read better if they are referenced through static import:
+ *   import static Assert.*;
+ *   ...assertEquals(...);
  */
 
-
-// TODO get rid of all the assertEquals(int, int)
 public class Assert {
 	/**
 	 * Protect constructor since it is a static only class
@@ -17,7 +19,7 @@ public class Assert {
 
 	/**
 	 * Asserts that a condition is true. If it isn't it throws an
-	 * AssertionFailedError with the given message.
+	 * AssertionError with the given message.
 	 */
 	static public void assertTrue(String message, boolean condition) {
 		if (!condition)
@@ -26,7 +28,7 @@ public class Assert {
 
 	/**
 	 * Asserts that a condition is true. If it isn't it throws an
-	 * AssertionFailedError.
+	 * AssertionError.
 	 */
 	static public void assertTrue(boolean condition) {
 		assertTrue(null, condition);
@@ -34,7 +36,7 @@ public class Assert {
 
 	/**
 	 * Asserts that a condition is false. If it isn't it throws an
-	 * AssertionFailedError with the given message.
+	 * AssertionError with the given message.
 	 */
 	static public void assertFalse(String message, boolean condition) {
 		assertTrue(message, !condition);
@@ -42,7 +44,7 @@ public class Assert {
 
 	/**
 	 * Asserts that a condition is false. If it isn't it throws an
-	 * AssertionFailedError.
+	 * AssertionError.
 	 */
 	static public void assertFalse(boolean condition) {
 		assertFalse(null, condition);
@@ -63,8 +65,8 @@ public class Assert {
 	}
 	
 	/**
-	 * Asserts that two objects are equal. If they are not an
-	 * AssertionFailedError is thrown with the given message.
+	 * Asserts that two objects are equal. If they are not, an
+	 * AssertionError is thrown with the given message.
 	 */
 	static public void assertEquals(String message, Object expected, Object actual) {
 		if (expected == null && actual == null)
@@ -75,16 +77,16 @@ public class Assert {
 	}
 
 	/**
-	 * Asserts that two objects are equal. If they are not an
-	 * AssertionFailedError is thrown.
+	 * Asserts that two objects are equal. If they are not, an
+	 * AssertionError is thrown.
 	 */
 	static public void assertEquals(Object expected, Object actual) {
 		assertEquals(null, expected, actual);
 	}
 
 	/**
-	 * Asserts that two object arrays are equal. If they are not an
-	 * AssertionFailedError is thrown with the given message.
+	 * Asserts that two object arrays are equal. If they are not, an
+	 * AssertionError is thrown with the given message.
 	 */
 	public static void assertEquals(String message, Object[] expected, Object[] actual) {
 		if (expected == actual)
@@ -105,15 +107,16 @@ public class Assert {
 	}
 
 	/**
-	 * Asserts that two object arrays are equal. If they are not an
-	 * AssertionFailedError is thrown.
+	 * Asserts that two object arrays are equal. If they are not, an
+	 * AssertionError is thrown.
 	 */
 	public static void assertEquals(Object[] objects1, Object[] objects2) {
 		assertEquals(null, objects1, objects2);
 	}
 
 	/**
-	 * Asserts that two Strings are equal.
+	 * Asserts that two Strings are equal. If they are not, an
+	 * AssertionError is thrown with the given message.
 	 */
 	static public void assertEquals(String message, String expected, String actual) {
 		if (expected == null && actual == null)
@@ -124,16 +127,19 @@ public class Assert {
 	}
 
 	/**
-	 * Asserts that two Strings are equal.
+	 * Asserts that two Strings are equal. If they are not, an
+	 * AssertionError is thrown.
 	 */
 	static public void assertEquals(String expected, String actual) {
 		assertEquals(null, expected, actual);
 	}
 
 	/**
-	 * Asserts that two doubles are equal concerning a positive delta. If they
-	 * are not an AssertionFailedError is thrown with the given message. If the
-	 * expected value is infinity then the delta value is ignored.
+	 * Asserts that two doubles are equal to within a positive delta. If they
+	 * are not, an AssertionError is thrown with the given message. If the
+	 * expected value is infinity then the delta value is ignored. NaNs are
+	 * considered equal:
+	 *   assertEquals(Double.NaN, Double.NaN, *) passes
 	 */
 	static public void assertEquals(String message, double expected, double actual, double delta) {
 		if (Double.compare(expected, actual) == 0)
@@ -143,17 +149,22 @@ public class Assert {
 	}
 
 	/**
-	 * Asserts that two doubles are equal concerning a positive delta. If the
-	 * expected value is infinity then the delta value is ignored.
+	 * Asserts that two doubles are equal to within a positive delta. If they
+	 * are not, an AssertionError is thrown. If the
+	 * expected value is infinity then the delta value is ignored.NaNs are
+	 * considered equal:
+	 *   assertEquals(Double.NaN, Double.NaN, *) passes
 	 */
 	static public void assertEquals(double expected, double actual, double delta) {
 		assertEquals(null, expected, actual, delta);
 	}
 
 	/**
-	 * Asserts that two floats are equal concerning a positive delta. If they
-	 * are not an AssertionFailedError is thrown with the given message. If the
-	 * expected value is infinity then the delta value is ignored.
+	 * Asserts that two floats are equal to within a positive delta. If they
+	 * are not, an AssertionError is thrown with the given message. If the
+	 * expected value is infinity then the delta value is ignored.NaNs are
+	 * considered equal:
+	 *   assertEquals(Float.NaN, Float.NaN, *) passes
 	 */
 	static public void assertEquals(String message, float expected, float actual, float delta) {
 		if (Float.compare(expected, actual) == 0)
@@ -163,112 +174,18 @@ public class Assert {
 	}
 
 	/**
-	 * Asserts that two floats are equal concerning a positive delta. If the
-	 * expected value is infinity then the delta value is ignored.
+	 * Asserts that two floats are equal to within a positive delta. If they
+	 * are not, an AssertionError is thrown. If the
+	 * expected value is infinity then the delta value is ignored.NaNs are
+	 * considered equal:
+	 *   assertEquals(Float.NaN, Float.NaN, *) passes
 	 */
 	static public void assertEquals(float expected, float actual, float delta) {
 		assertEquals(null, expected, actual, delta);
 	}
 
 	/**
-	 * Asserts that two longs are equal. If they are not an AssertionFailedError
-	 * is thrown with the given message.
-	 */
-	static public void assertEquals(String message, long expected, long actual) {
-		assertEquals(message, new Long(expected), new Long(actual));
-	}
-
-	/**
-	 * Asserts that two longs are equal.
-	 */
-	static public void assertEquals(long expected, long actual) {
-		assertEquals(null, expected, actual);
-	}
-
-	/**
-	 * Asserts that two booleans are equal. If they are not an
-	 * AssertionFailedError is thrown with the given message.
-	 */
-	static public void assertEquals(String message, boolean expected, boolean actual) {
-		assertEquals(message, Boolean.valueOf(expected), Boolean.valueOf(actual));
-	}
-
-	/**
-	 * Asserts that two booleans are equal.
-	 */
-	static public void assertEquals(boolean expected, boolean actual) {
-		assertEquals(null, expected, actual);
-	}
-
-	/**
-	 * Asserts that two bytes are equal. If they are not an AssertionFailedError
-	 * is thrown with the given message.
-	 */
-	static public void assertEquals(String message, byte expected, byte actual) {
-		assertEquals(message, new Byte(expected), new Byte(actual));
-	}
-
-	/**
-	 * Asserts that two bytes are equal.
-	 */
-	static public void assertEquals(byte expected, byte actual) {
-		assertEquals(null, expected, actual);
-	}
-
-	/**
-	 * Asserts that two chars are equal. If they are not an AssertionFailedError
-	 * is thrown with the given message.
-	 */
-	static public void assertEquals(String message, char expected, char actual) {
-		assertEquals(message, new Character(expected), new Character(actual));
-	}
-
-	/**
-	 * Asserts that two chars are equal.
-	 */
-	static public void assertEquals(char expected, char actual) {
-		assertEquals(null, expected, actual);
-	}
-
-	/**
-	 * Asserts that two shorts are equal. If they are not an
-	 * AssertionFailedError is thrown with the given message.
-	 */
-	static public void assertEquals(String message, short expected, short actual) {
-		assertEquals(message, new Short(expected), new Short(actual));
-	}
-
-	/**
-	 * Asserts that two shorts are equal.
-	 */
-	static public void assertEquals(short expected, short actual) {
-		assertEquals(null, expected, actual);
-	}
-
-	/**
-	 * Asserts that two ints are equal. If they are not an AssertionFailedError
-	 * is thrown with the given message.
-	 */
-	static public void assertEquals(String message, int expected, int actual) {
-		assertEquals(message, new Integer(expected), new Integer(actual));
-	}
-
-	/**
-	 * Asserts that two ints are equal.
-	 */
-	static public void assertEquals(int expected, int actual) {
-		assertEquals(null, expected, actual);
-	}
-
-	/**
-	 * Asserts that an object isn't null.
-	 */
-	static public void assertNotNull(Object object) {
-		assertNotNull(null, object);
-	}
-
-	/**
-	 * Asserts that an object isn't null. If it is an AssertionFailedError is
+	 * Asserts that an object isn't null. If it is an AssertionError is
 	 * thrown with the given message.
 	 */
 	static public void assertNotNull(String message, Object object) {
@@ -276,14 +193,15 @@ public class Assert {
 	}
 
 	/**
-	 * Asserts that an object is null.
+	 * Asserts that an object isn't null. If it is an AssertionError is
+	 * thrown.
 	 */
-	static public void assertNull(Object object) {
-		assertNull(null, object);
+	static public void assertNotNull(Object object) {
+		assertNotNull(null, object);
 	}
-
+	
 	/**
-	 * Asserts that an object is null. If it is not an AssertionFailedError is
+	 * Asserts that an object is null. If it is not, an AssertionError is
 	 * thrown with the given message.
 	 */
 	static public void assertNull(String message, Object object) {
@@ -291,8 +209,16 @@ public class Assert {
 	}
 
 	/**
-	 * Asserts that two objects refer to the same object. If they are not an
-	 * AssertionFailedError is thrown with the given message.
+	 * Asserts that an object is null. If it isn't an AssertionError is
+	 * thrown.
+	 */
+	static public void assertNull(Object object) {
+		assertNull(null, object);
+	}
+	
+	/**
+	 * Asserts that two objects refer to the same object. If they are not, an
+	 * AssertionError is thrown with the given message.
 	 */
 	static public void assertSame(String message, Object expected, Object actual) {
 		if (expected == actual)
@@ -302,7 +228,7 @@ public class Assert {
 
 	/**
 	 * Asserts that two objects refer to the same object. If they are not the
-	 * same an AssertionFailedError is thrown.
+	 * same, an AssertionError is thrown.
 	 */
 	static public void assertSame(Object expected, Object actual) {
 		assertSame(null, expected, actual);
@@ -310,7 +236,7 @@ public class Assert {
 
 	/**
 	 * Asserts that two objects do not refer to the same object. If they do
-	 * refer to the same object an AssertionFailedError is thrown with the given
+	 * refer to the same object, an AssertionError is thrown with the given
 	 * message.
 	 */
 	static public void assertNotSame(String message, Object expected, Object actual) {
@@ -320,7 +246,7 @@ public class Assert {
 
 	/**
 	 * Asserts that two objects do not refer to the same object. If they do
-	 * refer to the same object an AssertionFailedError is thrown.
+	 * refer to the same object, an AssertionError is thrown.
 	 */
 	static public void assertNotSame(Object expected, Object actual) {
 		assertNotSame(null, expected, actual);
