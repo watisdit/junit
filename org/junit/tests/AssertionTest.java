@@ -1,8 +1,9 @@
 package org.junit.tests;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import junit.framework.ComparisonFailure;
 import junit.framework.JUnit4TestAdapter;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class AssertionTest {
@@ -14,7 +15,7 @@ public class AssertionTest {
 //	}
 	
 	@Test(expected= AssertionError.class) public void fails() {
-		fail();
+		Assert.fail();
 	}
 	
 	@Test(expected= AssertionError.class) public void arraysNotEqual() {
@@ -80,6 +81,69 @@ public class AssertionTest {
 		Object[] objects2= new Object[] {element};
 		assertEquals("equal", objects1, objects2);
 	}
+	
+	@Test public void equals() {
+		Object o= new Object();
+		assertEquals(o, o);
+		assertEquals("abc", "abc");
+		assertEquals(true, true);
+		assertEquals((byte) 1, (byte) 1);
+		assertEquals('a', 'a');
+		assertEquals((short) 1, (short) 1);
+		assertEquals(1, 1); // int by default, cast is unnecessary
+		assertEquals(1l, 1l);
+		assertEquals(1.0, 1.0, 0.0);
+		assertEquals(1.0d, 1.0d, 0.0d);
+	}
+	
+	@Test(expected= AssertionError.class) public void objectsNotEquals() {
+		assertEquals(new Object(), new Object());
+	}
+	
+	//TODO should expected pass if you get a subclass of the expected exception?
+	//TODO does ComparisonFailure need to be API and/or migrated to org.junit?
+	@Test(expected= ComparisonFailure.class) public void stringsNotEqual() {
+		assertEquals("abc", "def");
+	}
+	
+	@Test(expected= AssertionError.class) public void booleansNotEqual() {
+		assertEquals(true, false);
+	}
+	
+	@Test(expected= AssertionError.class) public void bytesNotEqual() {
+		assertEquals((byte) 1, (byte) 2);
+	}
+	
+	@Test(expected= AssertionError.class) public void charsNotEqual() {
+		assertEquals('a', 'b');
+	}
+	
+	@Test(expected= AssertionError.class) public void shortsNotEqual() {
+		assertEquals((short) 1, (short) 2);
+	}
+	
+	@Test(expected= AssertionError.class) public void intsNotEqual() {
+		assertEquals(1, 2);
+	}
+	
+	@Test(expected= AssertionError.class) public void longsNotEqual() {
+		assertEquals(1l, 2l);
+	}
+	
+	@Test(expected= AssertionError.class) public void floatsNotEqual() {
+		assertEquals(1.0, 2.0, 0.9);
+	}
+	
+	@Test(expected= AssertionError.class) public void doublesNotEqual() {
+		assertEquals(1.0d, 2.0d, 0.9d);
+	}
+	
+	@Test public void naNsAreEqual() {
+		assertEquals(Float.NaN, Float.NaN, Float.POSITIVE_INFINITY);
+		assertEquals(Double.NaN, Double.NaN, Double.POSITIVE_INFINITY);
+	}
+	
+	//TODO tests for the other flavors of assertions
 	
 	static public junit.framework.Test suite() {
 		return new JUnit4TestAdapter(AssertionTest.class);
