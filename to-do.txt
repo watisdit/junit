@@ -2,6 +2,7 @@ Before first public release:
 * update documentation
 	* new cook's tour
 	* update Test Infected
+	* README.html
 * add  javadoc to API interfaces and Annotations
 	http://java.sun.com/j2se/javadoc/writingapispecs/index.html
 * make sure TestListener is symmetric and meets needs of runner developers
