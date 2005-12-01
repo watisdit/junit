@@ -2,6 +2,8 @@ package org.junit.tests;
 
 import static org.junit.Assert.assertEquals;
 import junit.framework.JUnit4TestAdapter;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
@@ -38,6 +40,23 @@ public class ParameterizedTestTest {
 		Result result = JUnitCore.runClasses(FibonacciTest.class);
 		assertEquals(7, result.getRunCount());
 		assertEquals(6, result.getFailureCount());
+	}
+	
+	private static String fLog;
+	@RunWith(Parameterized.class)
+	static public class EmptyTest {
+		@BeforeClass public static void before() {
+			fLog+= "before ";
+		}
+		@AfterClass public static void after() {
+			fLog+= "after ";
+		}
+	}
+	
+	@Test public void beforeAndAfterClassAreRun() {
+		fLog= "";
+		JUnitCore.runClasses(EmptyTest.class);
+		assertEquals("before after ", fLog);
 	}
 	
 	static public junit.framework.Test suite() {

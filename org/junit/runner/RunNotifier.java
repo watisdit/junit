@@ -10,7 +10,7 @@ public class RunNotifier {
 
 	private List<RunListener> fListeners= new ArrayList<RunListener>();
 	
-	void addListener(RunListener listener) {
+	public void addListener(RunListener listener) {
 		fListeners.add(listener);
 	}
 

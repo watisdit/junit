@@ -29,7 +29,7 @@ public class TestClassRunner extends ClassRunner {
 	
 	@Override
 	public void run() {
-		List<Exception> errors= fTestIntrospector.validateTestMethods();
+		List<Exception> errors= validateClass();
 		if (!errors.isEmpty()) {
 			for (Throwable each : errors)
 				addFailure(each);
@@ -45,11 +45,15 @@ public class TestClassRunner extends ClassRunner {
 		}
 	}
 
+	protected List<Exception> validateClass() {
+		return fTestIntrospector.validateTestMethods();
+	}
+
 	private void addFailure(Throwable exception) {
 		getNotifier().fireTestFailure(new Failure(exception));
 	}
 
-	private void runBeforeClasses() throws FailedBefore {
+	public void runBeforeClasses() throws FailedBefore {
 		try {
 			List<Method> beforeMethods= fTestIntrospector.getTestMethods(BeforeClass.class);
 			for (Method method : beforeMethods)
@@ -60,7 +64,7 @@ public class TestClassRunner extends ClassRunner {
 		}
 	}
 
-	private void runTestMethods() {
+	protected void runTestMethods() {
 		List<Method> methods= fTestIntrospector.getTestMethods(Test.class);
 		for (Method method : methods)
 			try {
