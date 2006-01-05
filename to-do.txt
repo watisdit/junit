@@ -9,7 +9,6 @@ Before first public release:
 	* TestRunEvent
 * Decide how we ship JUnit-- 1.5 only or hybrid
 * Stopping a test run (there was support for this in 3.8 - TestResult.shouldStop())
-* be able to run all tests simply from the command line
 * review Ant scripts
 * Run single method with @BeforeClass and @AfterClass
 * Merge branch back into head

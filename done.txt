@@ -28,3 +28,6 @@
 	@Suite(pattern="*Test"}
 	@Suite(package="org.junit.test.*")
 	@Suite
+	
+	* be able to run all tests simply from the command line
+	
