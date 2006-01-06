@@ -1,12 +1,14 @@
 package org.junit.runner;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.junit.runner.plan.LeafPlan;
+import org.junit.runner.plan.Plan;
 
-public class RunNotifier {
+
+public class RunNotifier implements InitializationErrorListener {
 
 	private List<RunListener> fListeners= new ArrayList<RunListener>();
 	
@@ -25,7 +27,7 @@ public class RunNotifier {
 					notifyListener(all.next());
 				} catch (Exception e) {
 					all.remove();
-					fireTestFailure(new Failure(e)); // Remove the offending listener first to avoid an infinite loop
+					fireNonTestFailure(e); // Remove the offending listener first to avoid an infinite loop
 				}
 			}
 		}
@@ -33,11 +35,11 @@ public class RunNotifier {
 		abstract protected void notifyListener(RunListener each) throws Exception;
 	}
 	
-	void fireTestRunStarted(final int testCount) {
+	void fireTestRunStarted(final Plan plan) {
 		new SafeNotifier() {
 			@Override
 			protected void notifyListener(RunListener each) throws Exception {
-				each.testRunStarted(testCount);
+				each.testRunStarted(plan);
 			};
 		}.run();
 	}
@@ -51,11 +53,11 @@ public class RunNotifier {
 		}.run();
 	}
 	
-	public void fireTestStarted(final Object test, final String name) {
+	public void fireTestStarted(final LeafPlan plan) {
 		new SafeNotifier() {
 			@Override
 			protected void notifyListener(RunListener each) throws Exception {
-				each.testStarted(test, name);
+				each.testStarted(plan);
 			};
 		}.run();
 	}
@@ -69,22 +71,29 @@ public class RunNotifier {
 		}.run();
 	}
 
-	public void fireTestIgnored(final Method method) {
+	public void fireTestIgnored(final LeafPlan plan) {
 		new SafeNotifier() {
 			@Override
 			protected void notifyListener(RunListener each) throws Exception {
-				each.testIgnored(method);
+				each.testIgnored(plan);
 			};
 		}.run();
 	}
 
-	public void fireTestFinished(final Object test, final String name) {
+	public void fireTestFinished(final LeafPlan plan) {
 		new SafeNotifier() {
 			@Override
 			protected void notifyListener(RunListener each) throws Exception {
-				each.testFinished(test, name);
+				each.testFinished(plan);
 			};
 		}.run();
 	}
 
+	public void initializationError(Throwable e) {
+		fireNonTestFailure(e);
+	}
+
+	public void fireNonTestFailure(Throwable exception) {
+		fireTestFailure(new Failure(exception));
+	}
 }

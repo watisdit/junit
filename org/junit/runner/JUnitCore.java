@@ -1,9 +1,11 @@
 package org.junit.runner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import junit.runner.Version;
+import org.junit.runner.extensions.CompositeRunner;
 import org.junit.runner.internal.OldTestClassRunner;
 import org.junit.runner.internal.RunnerFactory;
 import org.junit.runner.internal.TextListener;
@@ -50,27 +52,21 @@ public class JUnitCore {
 	}
 	
 	public Result run(Class... testClasses) {
-		RunNotifier notifier= fNotifier;
-		List<Runner> runners= new RunnerFactory().getRunners(notifier, testClasses);
-		run(runners);
-		return fResult;
+		return run(new RunnerFactory().getRunners(fNotifier, testClasses));
 	}
 
 	public void run(junit.framework.Test test) { 
-		ArrayList<Runner> runners= new ArrayList<Runner>();
-		OldTestClassRunner runner= new OldTestClassRunner(fNotifier, test);
-		runners.add(runner);
-		run(runners);
+		run(Arrays.asList(new OldTestClassRunner(test)));
 	}
 	
-	public void run(List<Runner> runners) {
-		int count= 0;
-		for (Runner each : runners)
-			count+= each.testCount();
-		fNotifier.fireTestRunStarted(count);
-		for (Runner each : runners)
-			each.run();
+	public Result run(List<? extends Runner> runners) {
+		CompositeRunner runner = new CompositeRunner("All");
+		runner.addAll(runners);
+							
+		fNotifier.fireTestRunStarted(runner.getPlan());
+		runner.run(fNotifier);
 		fNotifier.fireTestRunFinished(fResult);
+		return fResult;
 	}
 	
 	public void addListener(RunListener listener) {

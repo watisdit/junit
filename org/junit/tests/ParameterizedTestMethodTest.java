@@ -1,23 +1,24 @@
 package org.junit.tests;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import junit.framework.JUnit4TestAdapter;
-import junit.framework.TestResult;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
+import org.junit.runner.RunWith;
+import org.junit.runner.extensions.Parameterized;
+import org.junit.runner.extensions.Parameters;
 import org.junit.runner.internal.TestIntrospector;
 
-public class TestMethodTest {
+@RunWith(Parameterized.class)
+public class ParameterizedTestMethodTest {
 
 	@SuppressWarnings("all")  
 	public static class EverythingWrong {
@@ -48,12 +49,9 @@ public class TestMethodTest {
 		@Test public void argumentsT(int i) {}
 		@Test public void fineT() {}
 	}
-	
-	@Test public void testFailures() throws Exception {
-		List<Exception> problems= new TestIntrospector(EverythingWrong.class).validateAllMethods();
-		int errorCount= 1 + 4 * 5; // missing constructor plus four invalid methods for each annotation */
-		assertEquals(errorCount, problems.size());
-	}
+
+	private Class<? extends Object> fClass;
+	private int fErrorCount;
 
 	static public class SuperWrong {
 		@Test void notPublic() {
@@ -65,41 +63,29 @@ public class TestMethodTest {
 		}
 	}
 
-	@Test public void validateInheritedMethods() throws Exception {
-		List<Exception> problems= new TestIntrospector(SubWrong.class).validateAllMethods();
-		assertEquals(1, problems.size());
-	}
-
 	static public class SubShadows extends SuperWrong {
 		@Override
 		@Test public void notPublic() {
 		}
 	}
 
-	@Test public void dontValidateShadowedMethods() throws Exception {
-		List<Exception> problems= new TestIntrospector(SubShadows.class).validateAllMethods();
-		assertTrue(problems.isEmpty());
-	}
-
-	static public class IgnoredTest {
-		@Test public void valid() {}
-		@Ignore @Test public void ignored() {}
-		@Ignore("For testing purposes") @Test public void withReason() {}
-	}
-
-	@Test public void ignoreRunner() {
-		JUnitCore runner= new JUnitCore();
-		Result result= runner.run(IgnoredTest.class);
-		assertEquals(2, result.getIgnoreCount());
-	}
-
-	@Test public void compatibility() {
-		TestResult result= new TestResult();
-		new JUnit4TestAdapter(IgnoredTest.class).run(result);
-		assertEquals(1, result.runCount());
+	public ParameterizedTestMethodTest(Class<? extends Object> class1, int errorCount) {
+		fClass = class1;
+		fErrorCount = errorCount;
 	}
 	
+	@Parameters
+	public static Collection<Object[]> params() {
+		return Arrays.asList(new Object[][] {
+				{ EverythingWrong.class, 1 + 4 * 5 }, { SubWrong.class, 1 },
+				{ SubShadows.class, 0 } });
+	}
+
+	@Test public void testFailures() throws Exception {
+		List<Exception> problems= new TestIntrospector(fClass).validateAllMethods();
+		assertEquals(fErrorCount, problems.size());
+	}
 	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(TestMethodTest.class);
+		return new JUnit4TestAdapter(ParameterizedTestMethodTest.class);
 	}
 }

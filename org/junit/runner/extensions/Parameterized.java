@@ -3,89 +3,105 @@ package org.junit.runner.extensions;
 import static org.junit.Assert.assertEquals;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Collections;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
 
-import org.junit.Test;
-import org.junit.runner.Failure;
-import org.junit.runner.RunNotifier;
+import org.junit.runner.InitializationErrorListener;
+import org.junit.runner.Runner;
+import org.junit.runner.internal.TestClassMethodsRunner;
 import org.junit.runner.internal.TestClassRunner;
-import org.junit.runner.internal.TestIntrospector;
-import org.junit.runner.internal.TestMethodRunner;
 
-public class Parameterized extends TestClassRunner {
-	
-	public Parameterized(RunNotifier notifier, Class< ? extends Object> klass) {
-		super(notifier, klass);
-	}
-
-	@Override
-	public int testCount() {
-		try {
-			Object object= getParametersList();
-			return Array.getLength(object);
-		} catch (Exception e) {
-			getNotifier().fireTestFailure(new Failure(e));
-			return 0;
+public class Parameterized extends TestClassRunner implements Filterable {
+	public static Collection<Object[]> eachOne(Object... params) {
+		ArrayList<Object[]> returnThis = new ArrayList<Object[]>();
+		for (Object param : params) {
+			returnThis.add(new Object[] { param });
 		}
-		// TODO: what if it's not an array?
+		return returnThis;
 	}
 	
-	@Override
-	protected List<Exception> validateClass() {
-		// TODO: do more?
-		return Collections.emptyList();
+	private static class TestClassRunnerForParameters extends TestClassMethodsRunner {
+		private final Object[] fParameters;
+
+		private final int fParameterSetNumber;
+
+		private final Constructor fConstructor;
+
+		private TestClassRunnerForParameters(Class<? extends Object> klass, Object[] parameters, int i) {
+			super(klass);
+			fParameters = parameters;
+			fParameterSetNumber = i;
+			fConstructor = getOnlyConstructor();
+		}
+
+		@Override
+		protected Object createTest() throws Exception {
+			return fConstructor.newInstance(fParameters);
+		}
+		
+		@Override
+		protected String getName() {
+			return String.format("[%s]", fParameterSetNumber);
+		}
+		
+		@Override
+		protected String testName(final Method method) {
+			return String.format("%s[%s]", method.getName(), fParameterSetNumber);
+		}
+
+		private Constructor getOnlyConstructor() {
+			Constructor[] constructors = getTestClass().getConstructors();
+			assertEquals(1, constructors.length);
+			return constructors[0];
+		}
 	}
 	
-	@Override
-	protected void runTestMethods() {
-		try {
-			Object parameters= getParametersList();
-			for (int i= 0; i < Array.getLength(parameters); i++)
-				runParameter(Array.get(parameters, i));
-		} catch (Exception e) {
-			e.printStackTrace();
-			// TODO: what to do? Create a Failure
-		}
-	}
+	public static class RunAllParameterMethods extends CompositeRunner {
+		private final Class<? extends Object> fKlass;
 
-	private void runParameter(Object parameters) throws Exception {
-		TestIntrospector testIntrospector= new TestIntrospector(getTestClass());
-		for (Method eachMethod : testIntrospector.getTestMethods(Test.class)) {			
-			Object test= createTest(parameters);
-			new TestMethodRunner(test, eachMethod, getNotifier()).run();
-		}
-	}
-
-	private Object createTest(Object parameters) throws Exception {
-		Constructor[] constructors= getTestClass().getConstructors();
-		assertEquals(1, constructors.length);
-		Constructor constructor= constructors[0];
-		Object[] boxed= new Object[Array.getLength(parameters)];
-		for (int i= 0; i < Array.getLength(parameters); i++)
-			boxed[i]= Array.get(parameters, i);
-		return constructor.newInstance(boxed);
-	}
-
-	private Object getParametersList() throws Exception {
-		return getParametersMethod().invoke(null, new Object[0]);
-	}
-
-	private Method getParametersMethod() throws Exception {
-		for (Method each : getTestClass().getMethods()) {
-			if (Modifier.isStatic(each.getModifiers())) {
-				Annotation[] annotations= each.getAnnotations();
-				for (Annotation annotation : annotations) {
-					if (annotation.annotationType() == Parameters.class)
-						return each;
-				}
+		public RunAllParameterMethods(Class<? extends Object> klass) throws Exception {
+			super(klass.getName());
+			fKlass = klass;
+			int i = 0;
+			for (final Object[] parameters : getParametersList()) {
+				super.add(new TestClassRunnerForParameters(klass, parameters, i++));
 			}
 		}
-		throw new Exception("No parameters method");
-	}
+		
+		@Override
+		public boolean canRun(InitializationErrorListener notifier) {
+			for (Runner runner : getRunners()) {
+				if (!runner.canRun(notifier))
+					return false;
+			}
+			return true;
+		}
 
+		@SuppressWarnings("unchecked")
+		private Collection<Object[]> getParametersList() throws IllegalAccessException, InvocationTargetException, Exception {
+			return (Collection) getParametersMethod().invoke(null);
+		}
+		
+		private Method getParametersMethod() throws Exception {
+			for (Method each : fKlass.getMethods()) {
+				if (Modifier.isStatic(each.getModifiers())) {
+					Annotation[] annotations = each.getAnnotations();
+					for (Annotation annotation : annotations) {
+						if (annotation.annotationType() == Parameters.class)
+							return each;
+					}
+				}
+			}
+			throw new Exception("No public static parameters method on class "
+					+ getName());
+		}
+	}
+	
+	public Parameterized(final Class<? extends Object> klass) throws Exception {
+		super(klass, new RunAllParameterMethods(klass));
+	}
 }

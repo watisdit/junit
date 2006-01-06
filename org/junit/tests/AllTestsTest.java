@@ -1,6 +1,7 @@
 package org.junit.tests;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -32,6 +33,11 @@ public class AllTestsTest {
 		run= false; // Have to explicitly set run here because the runner might independently run OneTest above
 		runner.run(All.class);
 		assertTrue(run);
+	}
+	
+	@org.junit.Test public void correctTestCount() throws Throwable {
+		AllTests tests = new AllTests(All.class);
+		assertEquals(1, tests.testCount());
 	}
 	
 	static public junit.framework.Test suite() {

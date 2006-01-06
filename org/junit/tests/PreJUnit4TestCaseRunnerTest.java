@@ -1,12 +1,13 @@
 package org.junit.tests;
 
-import java.lang.reflect.Method;
 
 import org.junit.Test;
 import org.junit.runner.Failure;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.RunListener;
+import org.junit.runner.plan.LeafPlan;
+import org.junit.runner.plan.Plan;
 
 import static org.junit.Assert.*;
 
@@ -26,8 +27,8 @@ public class PreJUnit4TestCaseRunnerTest {
 		JUnitCore runner= new JUnitCore();
 		RunListener listener= new RunListener() {
 
-			public void testStarted(Object test, String name) {
-				assertEquals("testOne", name);
+			public void testStarted(LeafPlan plan) {
+				assertEquals("testOne", plan.getName());
 				count++;
 			}
 
@@ -37,13 +38,13 @@ public class PreJUnit4TestCaseRunnerTest {
 			public void testFailure(Failure failure) {
 			}
 
-			public void testRunStarted(int testCount) {
+			public void testRunStarted(Plan plan) {
 			}
 
-			public void testIgnored(Method method) {
+			public void testIgnored(LeafPlan plan) {
 			}
 
-			public void testFinished(Object test, String name) {
+			public void testFinished(LeafPlan plan) {
 			}
 		};
 		

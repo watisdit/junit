@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -25,23 +24,31 @@ public class TestIntrospector {
 		fTestClass= testClass;
 	}
 
-	public List<Exception> validateTestMethods() {
+	public List<Exception> validateAllMethods() {
 		List<Exception> results= new ArrayList<Exception>();
+		validateNoArgConstructor(results);
+		validateStaticMethods(results);
+		validateInstanceMethods(results);
+		return results;
+	}
+
+	public void validateInstanceMethods(List<Exception> results) {
+		validateTestMethods(After.class, false, results);
+		validateTestMethods(Before.class, false, results);
+		validateTestMethods(Test.class, false, results);
+	}
+
+	public void validateStaticMethods(List<Exception> results) {
+		validateTestMethods(BeforeClass.class, true, results);
+		validateTestMethods(AfterClass.class, true, results);
+	}
+
+	public void validateNoArgConstructor(List<Exception> results) {
 		try {
 			fTestClass.getConstructor();
 		} catch (Exception e) {
 			results.add(new Exception("Test class should have public zero-argument constructor", e));
 		}
-		try {
-			validateTestMethods(BeforeClass.class, true, results);
-			validateTestMethods(AfterClass.class, true, results);
-			validateTestMethods(After.class, false, results);
-			validateTestMethods(Before.class, false, results);
-			validateTestMethods(Test.class, false, results);
-		} catch (Exception e) {
-			results.add(e);
-		}
-		return results;
 	}
 
 	public List<Method> getTestMethods(Class<? extends Annotation> annotationClass) {
@@ -85,7 +92,7 @@ public class TestIntrospector {
 		return results;
 	}
 
-	private void validateTestMethods(Class<? extends Annotation> annotation, boolean isStatic, List<Exception> results) throws Exception {
+	public void validateTestMethods(Class<? extends Annotation> annotation, boolean isStatic, List<Exception> results) {
 		List<Method> methods= getTestMethods(annotation);
 		for (Method each : methods) {
 			if (Modifier.isStatic(each.getModifiers()) != isStatic) {

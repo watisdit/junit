@@ -1,20 +1,30 @@
 package org.junit.runner;
 
+import java.util.ArrayList;
+
+import org.junit.runner.plan.Plan;
+
+
 
 public abstract class Runner {
+	public abstract Plan getPlan();
 
-	private final RunNotifier fNotifier;
+	public abstract void run(RunNotifier notifier);
 	
-	public Runner(RunNotifier notifier) {
-		fNotifier= notifier;
+	public boolean canRun(InitializationErrorListener notifier) {
+		ArrayList<Exception> fatalErrors = new ArrayList<Exception>();
+		addFatalErrors(fatalErrors);
+		for (Exception exception : fatalErrors) {
+			notifier.initializationError(exception);
+		}
+		return fatalErrors.isEmpty();
 	}
 
-	public abstract void run();
-
-	public abstract int testCount();
-
-	protected RunNotifier getNotifier() {
-		return fNotifier;
+	protected void addFatalErrors(ArrayList<Exception> fatalErrors) {
+		// add nothing
 	}
 
+	public int testCount() {
+		return getPlan().testCount();
+	}
 }

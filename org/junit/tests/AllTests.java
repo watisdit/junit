@@ -22,7 +22,12 @@ import org.junit.runner.extensions.SuiteClasses;
 		TestListenerTest.class,
 		TestMethodTest.class,
 		TextListenerTest.class,
-		TimeoutTest.class
+		TimeoutTest.class,
+		EnclosedTest.class,
+		ParameterizedTestMethodTest.class,
+		InitializationErrorForwardCompatibilityTest.class,
+		SingleMethodTest.class,
+		ValidationTest.class
 })
 public class AllTests {	
 	public static junit.framework.Test suite() {

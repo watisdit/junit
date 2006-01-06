@@ -2,7 +2,6 @@ package org.junit.runner.internal;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -12,28 +11,27 @@ import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunNotifier;
+import org.junit.runner.plan.LeafPlan;
 
-public class TestMethodRunner {
-
-	private class FailedBefore extends Exception {
-		private static final long serialVersionUID= 1L;
-	}
-
+public class TestMethodRunner extends BeforeAndAfterRunner {
 	private final Object fTest;
-	final Method fMethod;
+	private final Method fMethod;
 	private final RunNotifier fNotifier;
 	private final TestIntrospector fTestIntrospector;
+	private final LeafPlan fPlan;
 
-	public TestMethodRunner(Object test, Method method, RunNotifier notifier) {
+	public TestMethodRunner(Object test, Method method, RunNotifier notifier, LeafPlan plan) {
+		super(test.getClass(), Before.class, After.class);
 		fTest= test;
 		fMethod= method;
 		fNotifier= notifier;
 		fTestIntrospector= new TestIntrospector(test.getClass());
+		fPlan = plan;
 	}
 
 	public void run() throws Exception {
 		if (fTestIntrospector.isIgnored(fMethod)) {
-			fNotifier.fireTestIgnored(fMethod);
+			fNotifier.fireTestIgnored(fPlan);
 			return;
 		}
 		long timeout= fTestIntrospector.getTimeout(fMethod);
@@ -60,84 +58,51 @@ public class TestMethodRunner {
 	}
 	
 	private void runMethod() {
-		fNotifier.fireTestStarted(fTest, fMethod.getName());
+		fNotifier.fireTestStarted(fPlan);
 		try {
-			quietlyRunMethod();
+			runProtected();
 		} finally {
-			fNotifier.fireTestFinished(fTest, fMethod.getName());
-		}
-	}
-
-	private void quietlyRunMethod() {
-		try {
-			runBefores();
-			runTestMethod();
-		} catch (FailedBefore e) {
-		} finally {
-			runAfters();
+			fNotifier.fireTestFinished(fPlan);
 		}
 	}
 	
-	// Stop after first failed @Before
-	private void runBefores() throws FailedBefore {
+	@Override
+	protected void runUnprotected() {
 		try {
-			List<Method> befores= fTestIntrospector.getTestMethods(Before.class);
-			for (Method before : befores)
-				before.invoke(fTest);
-		} catch (InvocationTargetException e) {
-			addFailure(e.getTargetException());
-			throw new FailedBefore();
-		} catch (Throwable e) {
-			addFailure(e);
-			throw new FailedBefore();
-		}
-	}
-
-	private void runTestMethod() {
-		Class< ? extends Throwable> expected= fTestIntrospector.expectedException(fMethod);
-		try {
-			invokeMethod();
+			fMethod.invoke(fTest);
 			if (expectsException())
-				addFailure(new AssertionError("Expected exception: " + expected.getName()));
+				addFailure(new AssertionError("Expected exception: " + expectedException().getName()));
 		} catch (InvocationTargetException e) {
 			if (!expectsException())
 				addFailure(e.getTargetException());
 			else if (isUnexpected(e.getTargetException()))
-				addFailure(new AssertionError("Unexpected exception, expected<" + expected.getName() + "> but was<"
+				addFailure(new AssertionError("Unexpected exception, expected<" + expectedException().getName() + "> but was<"
 						+ e.getTargetException().getClass().getName() + ">"));
 		} catch (Throwable e) {
 			addFailure(e);
 		}
 	}
 
-	protected void invokeMethod() throws Exception {
-		fMethod.invoke(fTest);
+	@Override
+	protected void invokeMethod(Method method) throws Exception {
+		method.invoke(fTest);
 	}
-
-	// Try to run all @Afters regardless
-	private void runAfters() {
-		List<Method> afters= fTestIntrospector.getTestMethods(After.class);
-		for (Method after : afters)
-			try {
-				after.invoke(fTest);
-			} catch (InvocationTargetException e) {
-				addFailure(e.getTargetException());
-			} catch (Throwable e) {
-				addFailure(e); // TODO:
-			}
+	
+	@Override
+	protected void addFailure(Throwable e) {
+		fNotifier.fireTestFailure(new TestFailure(fPlan, e));
 	}
 	
 	private boolean expectsException() {
-		return fTestIntrospector.expectedException(fMethod) != null;
+		return expectedException() != null;
+	}
+
+	private Class<? extends Throwable> expectedException() {
+		return fTestIntrospector.expectedException(fMethod);
 	}
 
 	private boolean isUnexpected(Throwable exception) {
-		Class< ? extends Throwable> expected= fTestIntrospector.expectedException(fMethod);
-		return ! exception.getClass().equals(expected);
-	}
-
-	private void addFailure(Throwable e) {
-		fNotifier.fireTestFailure(new TestFailure(fTest, fMethod.getName(), e));
+		return ! exception.getClass().equals(expectedException());
 	}
 }
 

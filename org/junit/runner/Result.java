@@ -1,8 +1,10 @@
 package org.junit.runner;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.runner.plan.LeafPlan;
+import org.junit.runner.plan.Plan;
 
 public class Result {
 	private int fCount= 0;
@@ -36,7 +38,7 @@ public class Result {
 	}
 
 	private class Listener implements RunListener {
-		public void testRunStarted(int testCount) throws Exception {
+		public void testRunStarted(Plan plan) throws Exception {
 			fStartTime= System.currentTimeMillis();
 		}
 
@@ -45,23 +47,23 @@ public class Result {
 			fRunTime+= endTime - fStartTime;
 		}
 
-		public void testStarted(Object test, String name) throws Exception {
+		public void testStarted(LeafPlan plan) throws Exception {
 			fCount++;
 		}
 
-		public void testFinished(Object test, String name) throws Exception {
+		public void testFinished(LeafPlan plan) throws Exception {
 		}
 
 		public void testFailure(Failure failure) throws Exception {
 			fFailures.add(failure);
 		}
 
-		public void testIgnored(Method method) throws Exception {
+		public void testIgnored(LeafPlan plan) throws Exception {
 			fIgnoreCount++;
 		}
 	}
 
-	void addListenerTo(RunNotifier notifier) {
+	public void addListenerTo(RunNotifier notifier) {
 		notifier.addListener(new Listener());
 	}
 }

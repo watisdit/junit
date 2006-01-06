@@ -2,7 +2,6 @@ package org.junit.tests;
 
 import static org.junit.Assert.assertEquals;
 
-import java.lang.reflect.Method;
 
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
@@ -10,29 +9,31 @@ import org.junit.runner.Failure;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.RunListener;
+import org.junit.runner.plan.LeafPlan;
+import org.junit.runner.plan.Plan;
 
 public class TestListenerTest {
 	
 	int count;
 	
 	class ErrorListener implements RunListener {
-		public void testRunStarted(int testCount) throws Exception {
+		public void testRunStarted(Plan plan) throws Exception {
 			throw new Error();
 		}
 
 		public void testRunFinished(Result result) {
 		}
 
-		public void testStarted(Object test, String name) {
+		public void testStarted(LeafPlan plan) {
 		}
 
-		public void testFinished(Object test, String name) {
+		public void testFinished(LeafPlan plan) {
 		}
 
 		public void testFailure(Failure failure) {
 		}
 
-		public void testIgnored(Method method) {
+		public void testIgnored(LeafPlan plan) {
 		}
 	}
 	
@@ -48,7 +49,7 @@ public class TestListenerTest {
 	
 	class ExceptionListener extends ErrorListener {
 		@Override
-		public void testRunStarted(int testCount) throws Exception {
+		public void testRunStarted(Plan plan) throws Exception {
 			count++;
 			throw new Exception();
 		}

@@ -1,92 +1,74 @@
 package org.junit.runner.internal;
 
 import java.lang.reflect.Method;
-import java.util.List;
-
+import java.util.ArrayList;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.junit.runner.ClassRunner;
-import org.junit.runner.Failure;
+import org.junit.runner.InitializationErrorListener;
 import org.junit.runner.RunNotifier;
+import org.junit.runner.Runner;
+import org.junit.runner.extensions.Filter;
+import org.junit.runner.extensions.Filterable;
+import org.junit.runner.plan.Plan;
 
-public class TestClassRunner extends ClassRunner {
+public class TestClassRunner extends ClassRunner implements Filterable {
 	private TestIntrospector fTestIntrospector;
+	protected final Runner fEnclosedRunner;
 
-	public TestClassRunner(RunNotifier notifier, Class<? extends Object> klass) {
-		super(notifier, klass);
-		fTestIntrospector= new TestIntrospector(getTestClass());
+	public TestClassRunner(Class<? extends Object> klass) {
+		this(klass, new TestClassMethodsRunner(klass));
+	}
+	
+	public TestClassRunner(Class<? extends Object> klass, Runner runner) {
+		super(klass);
+		fEnclosedRunner = runner;
+		fTestIntrospector = new TestIntrospector(getTestClass());
 	}
 
 	@Override
-	public int testCount() {
-		return fTestIntrospector.getTestMethods(Test.class).size();
-	}
-
-	private class FailedBefore extends Exception {
-		private static final long serialVersionUID= 1L;
+	protected void addFatalErrors(ArrayList<Exception> fatalErrors) {
+		fTestIntrospector.validateStaticMethods(fatalErrors);
 	}
 	
 	@Override
-	public void run() {
-		List<Exception> errors= validateClass();
-		if (!errors.isEmpty()) {
-			for (Throwable each : errors)
-				addFailure(each);
-			return;
-		}
-
-		try {
-			runBeforeClasses();
-			runTestMethods();
-		} catch (FailedBefore e) {
-		} finally {
-			runAfterClasses();
-		}
+	public boolean canRun(InitializationErrorListener notifier) {
+		return super.canRun(notifier) & fEnclosedRunner.canRun(notifier);
 	}
 
-	protected List<Exception> validateClass() {
-		return fTestIntrospector.validateTestMethods();
+	public static class FailedBefore extends Exception {
+		private static final long serialVersionUID = 1L;
 	}
 
-	private void addFailure(Throwable exception) {
-		getNotifier().fireTestFailure(new Failure(exception));
-	}
-
-	public void runBeforeClasses() throws FailedBefore {
-		try {
-			List<Method> beforeMethods= fTestIntrospector.getTestMethods(BeforeClass.class);
-			for (Method method : beforeMethods)
-				method.invoke(null);
-		} catch (Exception e) {
-			addFailure(e);
-			throw new FailedBefore();
-		}
-	}
-
-	protected void runTestMethods() {
-		List<Method> methods= fTestIntrospector.getTestMethods(Test.class);
-		for (Method method : methods)
-			try {
-				invokeTestMethod(method);
-			} catch (Exception e) {
-				addFailure(e);
+	@Override
+	public void run(final RunNotifier notifier) {
+		BeforeAndAfterRunner runner = new BeforeAndAfterRunner(getTestClass(), BeforeClass.class, AfterClass.class) {		
+			@Override
+			protected void runUnprotected() {
+				fEnclosedRunner.run(notifier);
 			}
-	}
-	
-	private void runAfterClasses() {
-		List<Method> afterMethods= fTestIntrospector.getTestMethods(AfterClass.class);
-		for (Method method : afterMethods)
-			try {
+		
+			@Override
+			protected void invokeMethod(Method method) throws Exception {
 				method.invoke(null);
-			} catch (Exception e) {
-				addFailure(e);
 			}
-	}
-	
-	protected void invokeTestMethod(Method method) throws Exception {
-		Object test= getTestClass().getConstructor().newInstance();
-		new TestMethodRunner(test, method, getNotifier()).run();
+		
+			@Override
+			protected void addFailure(Throwable targetException) {
+				notifier.fireNonTestFailure(targetException);
+			}
+		
+		};
+		
+		runner.runProtected();
 	}
 
+	@Override
+	public Plan getPlan() {
+		return fEnclosedRunner.getPlan();
+	}
+
+	public void filter(Filter filter) {
+		filter.apply(fEnclosedRunner);
+	}
 }

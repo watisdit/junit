@@ -1,22 +1,24 @@
 package org.junit.runner;
 
-import java.lang.reflect.Method;
+import org.junit.runner.plan.LeafPlan;
+import org.junit.runner.plan.Plan;
+
 
 
 public interface RunListener {
 
 	// TODO Event-based interface instead?
 	
-	void testRunStarted(int testCount) throws Exception;
+	void testRunStarted(Plan plan) throws Exception;
 	
 	void testRunFinished(Result result) throws Exception;
 	
-	void testStarted(Object test, String name) throws Exception;
+	void testStarted(LeafPlan plan) throws Exception;
 
-	void testFinished(Object test, String name) throws Exception;
+	void testFinished(LeafPlan plan) throws Exception;
 
 	void testFailure(Failure failure) throws Exception;
 
-	void testIgnored(Method method) throws Exception;
+	void testIgnored(LeafPlan plan) throws Exception;
 
 }

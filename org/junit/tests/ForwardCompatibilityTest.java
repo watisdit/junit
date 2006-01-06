@@ -1,8 +1,10 @@
 package org.junit.tests;
 
+import junit.framework.AssertionFailedError;
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 import junit.framework.TestFailure;
+import junit.framework.TestListener;
 import junit.framework.TestResult;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -12,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.ClassRunner;
 import org.junit.runner.RunNotifier;
 import org.junit.runner.RunWith;
+import org.junit.runner.plan.Plan;
 
 public class ForwardCompatibilityTest extends TestCase {
 	static String fLog;
@@ -36,6 +39,12 @@ public class ForwardCompatibilityTest extends TestCase {
 		assertEquals("before test after ", fLog);
 	}
 	
+	public void testToString() {
+		JUnit4TestAdapter adapter = new JUnit4TestAdapter(NewTest.class);
+		junit.framework.Test test = adapter.getTests().get(0);
+		assertEquals(String.format("test(%s)", NewTest.class.getName()), test.toString());
+	}
+	
 	static Exception exception= new Exception();
 	
 	public static class ErrorTest {
@@ -49,6 +58,34 @@ public class ForwardCompatibilityTest extends TestCase {
 		adapter.run(result);
 		assertEquals(exception, result.errors().nextElement().thrownException());
 	}
+	
+	public void testNotifyResult() {
+		JUnit4TestAdapter adapter = new JUnit4TestAdapter(ErrorTest.class);
+		TestResult result = new TestResult();
+		final StringBuffer log = new StringBuffer();
+		result.addListener(new TestListener() {
+		
+			public void startTest(junit.framework.Test test) {
+				log.append(" start " + test);
+			}
+		
+			public void endTest(junit.framework.Test test) {
+				log.append(" end " + test);
+			}
+		
+			public void addFailure(junit.framework.Test test, AssertionFailedError t) {
+				log.append(" failure " + test);		
+			}
+		
+			public void addError(junit.framework.Test test, Throwable t) {
+				log.append(" error " + test);		
+			}
+		});
+		adapter.run(result);
+		String testName = String.format("error(%s)", ErrorTest.class.getName());
+		assertEquals(String.format(" start %s error %s end %s", testName, testName, testName), log.toString());
+	}
+
 	
 	public static class NoExceptionTest {
 		@Test(expected=Exception.class) public void succeed() throws Exception {
@@ -140,13 +177,12 @@ public class ForwardCompatibilityTest extends TestCase {
 	private static boolean wasRun = false;
 	
 	public static class MarkerRunner extends ClassRunner {
-
-		public MarkerRunner(RunNotifier notifier, Class< ? extends Object> klass) {
-			super(notifier, klass);
+		public MarkerRunner(Class< ? extends Object> klass) {
+			super(klass);
 		}
 
 		@Override
-		public void run() {
+		public void run(RunNotifier notifier) {
 			wasRun= true;
 		}
 
@@ -154,7 +190,11 @@ public class ForwardCompatibilityTest extends TestCase {
 		public int testCount() {
 			return 0;
 		}
-		
+
+		@Override
+		public Plan getPlan() {
+			return null;
+		}
 	}
 
 	@RunWith(MarkerRunner.class)
@@ -167,5 +207,10 @@ public class ForwardCompatibilityTest extends TestCase {
 		junit.framework.Test adapter= new JUnit4TestAdapter(NoTests.class);
 		adapter.run(result);
 		assertTrue(wasRun);
+	}
+	
+	public void testToStringSuite() {
+		junit.framework.Test adapter= new JUnit4TestAdapter(NoTests.class);
+		assertEquals(NoTests.class.getName(), adapter.toString());
 	}
 }

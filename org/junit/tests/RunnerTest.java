@@ -3,7 +3,6 @@ package org.junit.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.lang.reflect.Method;
 
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
@@ -12,6 +11,8 @@ import org.junit.runner.Failure;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.RunListener;
+import org.junit.runner.plan.LeafPlan;
+import org.junit.runner.plan.Plan;
 
 public class RunnerTest {
 
@@ -21,23 +22,23 @@ public class RunnerTest {
 
 		int testCount;
 
-		public void testRunStarted(int testCount) {
-			this.testCount= testCount;
+		public void testRunStarted(Plan plan) {
+			this.testCount= plan.testCount();
 		}
 
 		public void testRunFinished(Result result) {
 		}
 
-		public void testStarted(Object test, String name) {
+		public void testStarted(LeafPlan plan) {
 		}
 
 		public void testFailure(Failure failure) {
 		}
 
-		public void testIgnored(Method method) {
+		public void testIgnored(LeafPlan plan) {
 		}
 
-		public void testFinished(Object test, String name) {
+		public void testFinished(LeafPlan plan) {
 		}
 		
 	}
@@ -78,7 +79,7 @@ public class RunnerTest {
 		wasRun= false;
 		RunListener listener= new MyListener() {
 			@Override
-			public void testFinished(Object test, String name) {
+			public void testFinished(LeafPlan plan) {
 				wasRun= true;
 			}
 		};

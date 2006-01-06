@@ -1,12 +1,13 @@
 package org.junit.runner.internal;
 
 import java.io.PrintStream;
-import java.lang.reflect.Method;
 import java.text.NumberFormat;
 
 import org.junit.runner.Failure;
 import org.junit.runner.Result;
 import org.junit.runner.RunListener;
+import org.junit.runner.plan.LeafPlan;
+import org.junit.runner.plan.Plan;
 
 public class TextListener implements RunListener {
 
@@ -21,7 +22,7 @@ public class TextListener implements RunListener {
 	}
 
 	// TestListener implementation
-	public void testRunStarted(int testCount) {
+	public void testRunStarted(Plan plan) {
 	}
 
 	public void testRunFinished(Result result) {
@@ -30,7 +31,7 @@ public class TextListener implements RunListener {
 		printFooter(result);
 	}
 
-	public void testStarted(Object test, String name) {
+	public void testStarted(LeafPlan plan) {
 		fWriter.append('.');
 	}
 
@@ -38,7 +39,7 @@ public class TextListener implements RunListener {
 		fWriter.append('E');
 	}
 	
-	public void testIgnored(Method method) {
+	public void testIgnored(LeafPlan plan) {
 		fWriter.append('I');
 	}
 	
@@ -102,7 +103,7 @@ public class TextListener implements RunListener {
 		return NumberFormat.getInstance().format((double) runTime / 1000);
 	}
 
-	public void testFinished(Object test, String name) {
+	public void testFinished(LeafPlan plan) {
 	}
 
 
