@@ -11,12 +11,12 @@ import org.junit.runner.Result;
 import org.junit.runner.RunListener;
 import org.junit.runner.RunNotifier;
 import org.junit.runner.Runner;
-import org.junit.runner.internal.RunnerFactory;
 import org.junit.runner.internal.TestFailure;
 import org.junit.runner.plan.CompositePlan;
 import org.junit.runner.plan.LeafPlan;
 import org.junit.runner.plan.Plan;
 import org.junit.runner.plan.Plan.Visitor;
+import org.junit.runner.request.Request;
 
 public class JUnit4TestAdapter implements Test {
 	// cache because runners (like Eclipse) expect to see the same Test object
@@ -161,8 +161,7 @@ public class JUnit4TestAdapter implements Test {
 			PlanCache cache) {
 		fCache = cache;
 		fNewTestClass = newTestClass;
-			fRunner = new RunnerFactory().getRunner(failureListener(),
-					newTestClass);
+		fRunner = Request.aClass(newTestClass).getRunner(failureListener());
 		if (fRunner == null)
 			fRunner = new Runner() {
 				@Override

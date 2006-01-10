@@ -1,14 +1,13 @@
 package org.junit.tests;
 
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.junit.runner.extensions.Enclosed;
-import org.junit.runner.internal.RunnerFactory;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.runner.request.Request;
 
 public class EnclosedTest {
 	@RunWith(Enclosed.class)
@@ -25,7 +24,7 @@ public class EnclosedTest {
 	}
 	
 	@Test public void enclosedRunnerPlansEnclosedClasses() throws Exception {
-		Runner runner = new RunnerFactory().getRunner(null, Enclosing.class);
+		Runner runner = Request.aClass(Enclosing.class).getRunner();
 		assertEquals(5, runner.testCount());
 	}
 	

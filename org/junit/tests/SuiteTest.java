@@ -14,10 +14,9 @@ import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.junit.runner.extensions.Suite;
 import org.junit.runner.extensions.SuiteClasses;
-import org.junit.runner.internal.RunnerFactory;
+import org.junit.runner.request.Request;
 
 public class SuiteTest {
-	
 	public static class TestA {
 		@Test public void pass() {
 		}
@@ -42,7 +41,7 @@ public class SuiteTest {
 	}
 	
 	@Test public void suiteTestCountIsCorrect() throws Exception {
-		Runner runner= new RunnerFactory().getRunner(null, All.class);
+		Runner runner= Request.aClass(All.class).getRunner();
 		assertEquals(2, runner.testCount());
 	}
 	

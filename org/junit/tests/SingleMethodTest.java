@@ -14,9 +14,9 @@ import org.junit.runner.extensions.Parameterized;
 import org.junit.runner.extensions.Parameters;
 import org.junit.runner.extensions.Suite;
 import org.junit.runner.extensions.SuiteClasses;
-import org.junit.runner.internal.RunnerFactory;
 import org.junit.runner.plan.CompositePlan;
 import org.junit.runner.plan.LeafPlan;
+import org.junit.runner.request.Request;
 
 public class SingleMethodTest {
 	public static int count;
@@ -39,9 +39,7 @@ public class SingleMethodTest {
 	@Test
 	public void oneTimeSetup() throws Exception {
 		count = 0;
-
-		Runner runner = new RunnerFactory().getRunner(null, OneTimeSetup.class,
-				new LeafPlan(OneTimeSetup.class, "one"));
+		Runner runner = Request.aMethod(OneTimeSetup.class, "one").getRunner();
 		Result result = run(runner);
 		
 		assertEquals(1, count);
@@ -72,9 +70,7 @@ public class SingleMethodTest {
 	@Test
 	public void parameterizedOneTimeSetup() throws Exception {
 		count = 0;
-
-		Runner runner = new RunnerFactory().getRunner(null,
-				ParameterizedOneTimeSetup.class, new LeafPlan(ParameterizedOneTimeSetup.class, "one[0]"));
+		Runner runner = Request.aMethod(ParameterizedOneTimeSetup.class, "one[0]").getRunner();
 		Result result = run(runner);
 
 		assertEquals(1, count);
@@ -82,10 +78,8 @@ public class SingleMethodTest {
 	}
 
 	@Test
-	public void filteringAffectsPlan() {
-		// TODO: weird API
-		Runner runner = new RunnerFactory().getRunner(null, OneTimeSetup.class,
-				new LeafPlan(OneTimeSetup.class, "one"));
+	public void filteringAffectsPlan() throws Exception {
+		Runner runner = Request.aMethod(OneTimeSetup.class, "one").getRunner();
 		assertEquals(1, runner.testCount());
 	}
 
@@ -104,9 +98,8 @@ public class SingleMethodTest {
 	public static class OneTwoSuite {} 
 
 	@Test
-	public void eliminateUnnecessaryTreeBranches() {
-		Runner runner = new RunnerFactory().getRunner(null, OneTwoSuite.class,
-				new LeafPlan(TestOne.class, "a"));
+	public void eliminateUnnecessaryTreeBranches() throws Exception {
+		Runner runner = Request.aClass(OneTwoSuite.class).filterWith(new LeafPlan(TestOne.class, "a")).getRunner();
 		CompositePlan plan = (CompositePlan) runner.getPlan();
 		assertEquals(1, plan.getChildren().size());
 	}

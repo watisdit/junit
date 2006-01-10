@@ -17,8 +17,8 @@ import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.junit.runner.extensions.Parameterized;
 import org.junit.runner.extensions.Parameters;
-import org.junit.runner.internal.RunnerFactory;
 import org.junit.runner.plan.CompositePlan;
+import org.junit.runner.request.Request;
 
 public class ParameterizedTestTest {
 	@RunWith(Parameterized.class)
@@ -65,15 +65,13 @@ public class ParameterizedTestTest {
 
 	@Test
 	public void countBeforeRun() throws Exception {
-		Runner runner = new RunnerFactory()
-				.getRunner(null, FibonacciTest.class);
+		Runner runner = Request.aClass(FibonacciTest.class).getRunner();
 		assertEquals(7, runner.testCount());
 	}
 
 	@Test
 	public void plansNamedCorrectly() throws Exception {
-		Runner runner = new RunnerFactory()
-				.getRunner(null, FibonacciTest.class);
+		Runner runner = Request.aClass(FibonacciTest.class).getRunner();
 		CompositePlan plan = (CompositePlan) runner.getPlan();
 		assertEquals("[0]", plan.getChildren().get(0).getName());
 	}
@@ -138,8 +136,7 @@ public class ParameterizedTestTest {
 
 	@Test
 	public void failuresAddedForBadTestMethod() throws Exception {
-		Runner runner = new RunnerFactory().getRunner(new RunNotifier(),
-				IncorrectTest.class);
+		Runner runner = Request.aClass(IncorrectTest.class).getRunner(new RunNotifier());
 		assertEquals(null, runner);
 	}
 
