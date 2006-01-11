@@ -11,6 +11,7 @@ import org.junit.runner.Result;
 import org.junit.runner.RunListener;
 import org.junit.runner.RunNotifier;
 import org.junit.runner.Runner;
+import org.junit.runner.StoppedByUserException;
 import org.junit.runner.internal.TestFailure;
 import org.junit.runner.plan.CompositePlan;
 import org.junit.runner.plan.LeafPlan;
@@ -185,7 +186,11 @@ public class JUnit4TestAdapter implements Test {
 		for (InitializationError e : fInitializationErrors) {
 			e.addError(result);
 		}
-		fRunner.run(fCache.getNotifier(result, this));
+		try {
+			fRunner.run(fCache.getNotifier(result, this));
+		} catch (StoppedByUserException e1) {
+			result.stop();
+		}
 	}
 
 	private InitializationErrorListener failureListener() {

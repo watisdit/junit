@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.ClassRunner;
 import org.junit.runner.RunNotifier;
+import org.junit.runner.StoppedByUserException;
 import org.junit.runner.extensions.Filter;
 import org.junit.runner.extensions.Filterable;
 import org.junit.runner.plan.CompositePlan;
@@ -34,6 +35,8 @@ public class TestClassMethodsRunner extends ClassRunner implements Filterable {
 				if (shouldRun(method))
 					try {
 						invokeTestMethod(method, notifier);
+					} catch (StoppedByUserException e) {
+						throw e;
 					} catch (Exception e) {
 						notifier.fireNonTestFailure(e);
 					}

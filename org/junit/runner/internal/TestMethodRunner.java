@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunNotifier;
+import org.junit.runner.StoppedByUserException;
 import org.junit.runner.plan.LeafPlan;
 
 public class TestMethodRunner extends BeforeAndAfterRunner {
@@ -29,19 +30,24 @@ public class TestMethodRunner extends BeforeAndAfterRunner {
 		fPlan = plan;
 	}
 
-	public void run() throws Exception {
+	public void run() throws StoppedByUserException {
 		if (fTestIntrospector.isIgnored(fMethod)) {
 			fNotifier.fireTestIgnored(fPlan);
 			return;
 		}
-		long timeout= fTestIntrospector.getTimeout(fMethod);
-		if (timeout > 0)
-			runWithTimeout(timeout);
-		else
-			runMethod();
+		fNotifier.fireTestStarted(fPlan);
+		try {
+			long timeout= fTestIntrospector.getTimeout(fMethod);
+			if (timeout > 0)
+				runWithTimeout(timeout);
+			else
+				runMethod();
+		} finally {
+			fNotifier.fireTestFinished(fPlan);
+		}
 	}
 
-	private void runWithTimeout(long timeout) throws Exception {
+	private void runWithTimeout(long timeout) {
 		ExecutorService service= Executors.newSingleThreadExecutor();
 		Callable<Object> callable= new Callable<Object>() {
 			public Object call() throws Exception {
@@ -51,19 +57,19 @@ public class TestMethodRunner extends BeforeAndAfterRunner {
 		};
 		Future<Object> result= service.submit(callable);
 		service.shutdown();
-		boolean terminated= service.awaitTermination(timeout, TimeUnit.MILLISECONDS);
-		if (!terminated)
-			service.shutdownNow();
-		result.get(timeout, TimeUnit.MILLISECONDS); // throws the exception if one occurred during the invocation
+		try {
+			boolean terminated = service.awaitTermination(timeout,
+					TimeUnit.MILLISECONDS);
+			if (!terminated)
+				service.shutdownNow();
+			result.get(timeout, TimeUnit.MILLISECONDS); // throws the exception if one occurred during the invocation
+		} catch (Exception e) {
+			addFailure(e);
+		}		
 	}
 	
 	private void runMethod() {
-		fNotifier.fireTestStarted(fPlan);
-		try {
-			runProtected();
-		} finally {
-			fNotifier.fireTestFinished(fPlan);
-		}
+		runProtected();
 	}
 	
 	@Override

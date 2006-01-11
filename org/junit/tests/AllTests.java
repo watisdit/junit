@@ -27,7 +27,8 @@ import org.junit.runner.extensions.SuiteClasses;
 		ParameterizedTestMethodTest.class,
 		InitializationErrorForwardCompatibilityTest.class,
 		SingleMethodTest.class,
-		ValidationTest.class
+		ValidationTest.class,
+		UserStopTest.class
 })
 public class AllTests {	
 	public static junit.framework.Test suite() {

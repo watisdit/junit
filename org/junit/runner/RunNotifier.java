@@ -11,6 +11,7 @@ import org.junit.runner.plan.Plan;
 public class RunNotifier implements InitializationErrorListener {
 
 	private List<RunListener> fListeners= new ArrayList<RunListener>();
+	private boolean fPleaseStop = false;
 	
 	public void addListener(RunListener listener) {
 		fListeners.add(listener);
@@ -53,7 +54,9 @@ public class RunNotifier implements InitializationErrorListener {
 		}.run();
 	}
 	
-	public void fireTestStarted(final LeafPlan plan) {
+	public void fireTestStarted(final LeafPlan plan) throws StoppedByUserException {
+		if (fPleaseStop)
+			throw new StoppedByUserException();
 		new SafeNotifier() {
 			@Override
 			protected void notifyListener(RunListener each) throws Exception {
@@ -95,5 +98,9 @@ public class RunNotifier implements InitializationErrorListener {
 
 	public void fireNonTestFailure(Throwable exception) {
 		fireTestFailure(new Failure(exception));
+	}
+
+	public void pleaseStop() {
+		fPleaseStop = true;
 	}
 }
