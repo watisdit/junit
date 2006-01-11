@@ -1,6 +1,10 @@
 package junit.tests.runner;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 import junit.framework.TestCase;
+import junit.textui.ResultPrinter;
 import junit.textui.TestRunner;
 
 /**
@@ -21,6 +25,7 @@ public class TextRunnerSingleMethodTest extends TestCase {
 
 	public void testSingle() throws Exception {
 		TestRunner t= new TestRunner();
+		t.setPrinter(new ResultPrinter(new PrintStream(new ByteArrayOutputStream())));
 		String[] args= {
 				"-m", "junit.tests.runner.TextRunnerSingleMethodTest$InvocationTest.testWasInvoked"
 		};
