@@ -1,4 +1,4 @@
-package org.junit.runner.extensions;
+package org.junit.runner.internal;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.junit.runner.RunNotifier;
 import org.junit.runner.Runner;
+import org.junit.runner.extensions.Filter;
+import org.junit.runner.extensions.Filterable;
 import org.junit.runner.plan.CompositePlan;
 import org.junit.runner.plan.Plan;
 

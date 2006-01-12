@@ -12,6 +12,7 @@ import java.util.Collection;
 
 import org.junit.runner.InitializationErrorListener;
 import org.junit.runner.Runner;
+import org.junit.runner.internal.CompositeRunner;
 import org.junit.runner.internal.TestClassMethodsRunner;
 import org.junit.runner.internal.TestClassRunner;
 

@@ -21,6 +21,8 @@
 * Parameterized test
 * Should RunNotifier be API?
 * Runner should be abstract class.
+* Run single method with @BeforeClass and @AfterClass
+* Stopping a test run (there was support for this in 3.8 - TestResult.shouldStop())
 
 * Suite annotation example:
 	@Suite(tests={MoneyTest.class, SimpleTest.class})

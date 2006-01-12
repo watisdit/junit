@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunNotifier;
-import org.junit.runner.StoppedByUserException;
 import org.junit.runner.plan.LeafPlan;
 
 public class TestMethodRunner extends BeforeAndAfterRunner {
@@ -30,7 +29,7 @@ public class TestMethodRunner extends BeforeAndAfterRunner {
 		fPlan = plan;
 	}
 
-	public void run() throws StoppedByUserException {
+	public void run() {
 		if (fTestIntrospector.isIgnored(fMethod)) {
 			fNotifier.fireTestIgnored(fPlan);
 			return;

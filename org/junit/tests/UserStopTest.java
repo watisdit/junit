@@ -16,13 +16,13 @@ public class UserStopTest {
 		fNotifier.pleaseStop();		
 	}
 	
-	@Test(expected=StoppedByUserException.class) public void userStop() throws StoppedByUserException {
+	@Test(expected=StoppedByUserException.class) public void userStop() {
 		fNotifier.fireTestStarted(null);
 	}
 
 	@Test(expected=StoppedByUserException.class) public void stopMethodRunner() throws Exception {
-		new TestMethodRunner(this, getClass().getMethod("userStop"), fNotifier,
-				new LeafPlan(getClass(), "userStop")).run();
+		new TestMethodRunner(this, OneTest.class.getMethod("foo"), fNotifier,
+				new LeafPlan(OneTest.class, "foo")).run();
 	}
 	
 	public static class OneTest {

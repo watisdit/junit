@@ -5,7 +5,7 @@ package org.junit.runner.request;
 
 import org.junit.runner.InitializationErrorListener;
 import org.junit.runner.Runner;
-import org.junit.runner.extensions.CompositeRunner;
+import org.junit.runner.internal.CompositeRunner;
 
 public class ClassesRequest extends Request {
 	private final Class[] fClasses;

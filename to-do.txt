@@ -8,9 +8,7 @@ Before first public release:
 * make sure TestListener is symmetric and meets needs of runner developers
 	* TestRunEvent
 * Decide how we ship JUnit-- 1.5 only or hybrid
-* Stopping a test run (there was support for this in 3.8 - TestResult.shouldStop())
 * review Ant scripts
-* Run single method with @BeforeClass and @AfterClass
 * Merge branch back into head
 
 Before next JUnit 4 release:

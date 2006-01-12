@@ -22,13 +22,7 @@ public class JUnitCore {
 
 	public static void main(String... args) {
 		new JUnitCore().runMain(args);
-		if (thisIsMain())
-			killAllThreads();
-	}
-
-	private static boolean thisIsMain() {
-		int frames = Thread.currentThread().getStackTrace().length;
-		return frames <= 4;
+		killAllThreads();
 	}
 
 	private static void killAllThreads() {
@@ -40,22 +34,21 @@ public class JUnitCore {
 		return new JUnitCore().run(classes);
 	}
 	
-	private void runMain(String... args) {
+	// only public for testing
+	public void runMain(String... args) {
 		System.out.println("JUnit version " + Version.id());
-		int i= 0;
 		// TODO some kind of plugin mechanism here?
 		List<Class> classes= new ArrayList<Class>();
-		for (; i < args.length; i++) {
+		for (String each : args)
 			try {
-				classes.add(Class.forName(args[i]));
+				classes.add(Class.forName(each));
 			} catch (ClassNotFoundException e) {
-				System.out.println("Could not find class: " + args[i]);
+				System.out.println("Could not find class: " + each);
 			}
-		}
-			RunListener listener= new TextListener();
-			addListener(listener);
+		RunListener listener= new TextListener();
+		addListener(listener);
 		run(classes.toArray(new Class[0]));
-		}
+	}
 
 	public String getVersion() {
 		return Version.id();
