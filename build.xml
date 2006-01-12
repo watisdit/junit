@@ -65,15 +65,7 @@
 		<copy file="cpl-v10.html" tofile="${dist}/cpl-v10.html" />
 		
 		<java classname="org.junit.runner.JUnitCore" fork="yes">
-		    <!--There must be a more intelligent way to do this-->
-			<arg value="org.junit.tests.AnnotationTest"/>
-			<arg value="org.junit.tests.AssertionTest"/>
-			<arg value="org.junit.tests.CommandLineTest"/>
-			<arg value="org.junit.tests.ForwardCompatibilityTest"/>
-			<arg value="org.junit.tests.OldTests"/>
-			<arg value="org.junit.tests.PreJUnit4TestCaseRunnerTest"/>
-			<arg value="org.junit.tests.TestMethodTest"/>
-			<arg value="org.junit.tests.TextListenerTest"/>
+			<arg value="org.junit.tests.AllTests"/>
 			<classpath>
 				<pathelement location="${dist}" />
 				<pathelement location="${dist}/junit.jar" />
