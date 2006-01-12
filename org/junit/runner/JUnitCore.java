@@ -22,6 +22,18 @@ public class JUnitCore {
 
 	public static void main(String... args) {
 		new JUnitCore().runMain(args);
+		if (thisIsMain())
+			killAllThreads();
+	}
+
+	private static boolean thisIsMain() {
+		int frames = Thread.currentThread().getStackTrace().length;
+		return frames <= 4;
+	}
+
+	private static void killAllThreads() {
+		// TODO: should we exit with status 1 on test failure?
+		System.exit(0);
 	}
 	
 	public static Result runClasses(Class... classes) {
@@ -40,10 +52,10 @@ public class JUnitCore {
 				System.out.println("Could not find class: " + args[i]);
 			}
 		}
-		RunListener listener= new TextListener();
-		addListener(listener);
+			RunListener listener= new TextListener();
+			addListener(listener);
 		run(classes.toArray(new Class[0]));
-	}
+		}
 
 	public String getVersion() {
 		return Version.id();
