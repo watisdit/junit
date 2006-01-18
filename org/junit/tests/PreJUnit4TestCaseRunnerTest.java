@@ -1,18 +1,16 @@
 package org.junit.tests;
 
 
-import org.junit.Test;
-import org.junit.runner.Failure;
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
-import org.junit.runner.RunListener;
-import org.junit.runner.plan.LeafPlan;
-import org.junit.runner.plan.Plan;
-
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.notify.Failure;
+import org.junit.notify.RunListener;
+import org.junit.plan.LeafPlan;
+import org.junit.plan.Plan;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
 
 public class PreJUnit4TestCaseRunnerTest {
 

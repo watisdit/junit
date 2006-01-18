@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.junit.runner.RunNotifier;
+import org.junit.notify.RunNotifier;
+import org.junit.plan.CompositePlan;
+import org.junit.plan.Plan;
 import org.junit.runner.Runner;
 import org.junit.runner.extensions.Filter;
 import org.junit.runner.extensions.Filterable;
-import org.junit.runner.plan.CompositePlan;
-import org.junit.runner.plan.Plan;
 
 public class CompositeRunner extends Runner implements Filterable {
 	private final List<Runner> fRunners = new ArrayList<Runner>();

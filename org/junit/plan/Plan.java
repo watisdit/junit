@@ -1,4 +1,4 @@
-package org.junit.runner.plan;
+package org.junit.plan;
 
 public abstract class Plan {
 	public interface Visitor<T> {

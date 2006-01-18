@@ -3,7 +3,7 @@ package org.junit.tests;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.runner.RunWith;
 import org.junit.runner.extensions.Suite;
-import org.junit.runner.extensions.SuiteClasses;
+import org.junit.runner.extensions.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({

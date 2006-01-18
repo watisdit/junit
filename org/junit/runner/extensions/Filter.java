@@ -1,7 +1,7 @@
 package org.junit.runner.extensions;
 
+import org.junit.plan.Plan;
 import org.junit.runner.Runner;
-import org.junit.runner.plan.Plan;
 
 public abstract class Filter {
 	public static Filter ALWAYS = new Filter() {

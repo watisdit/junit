@@ -1,7 +1,7 @@
 package org.junit.tests;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;

@@ -1,7 +1,8 @@
-package org.junit.runner;
+package org.junit.notify;
 
-import org.junit.runner.plan.LeafPlan;
-import org.junit.runner.plan.Plan;
+import org.junit.plan.LeafPlan;
+import org.junit.plan.Plan;
+import org.junit.runner.Result;
 
 
 

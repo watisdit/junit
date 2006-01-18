@@ -1,15 +1,15 @@
-package org.junit.runner;
+package org.junit.notify;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.junit.runner.plan.LeafPlan;
-import org.junit.runner.plan.Plan;
+import org.junit.plan.LeafPlan;
+import org.junit.plan.Plan;
+import org.junit.runner.Result;
 
 
-public class RunNotifier implements InitializationErrorListener {
-
+public class RunNotifier {
 	private List<RunListener> fListeners= new ArrayList<RunListener>();
 	private boolean fPleaseStop = false;
 	
@@ -17,7 +17,7 @@ public class RunNotifier implements InitializationErrorListener {
 		fListeners.add(listener);
 	}
 
-	void removeListener(RunListener listener) {
+	public void removeListener(RunListener listener) {
 		fListeners.remove(listener);
 	}
 
@@ -36,7 +36,7 @@ public class RunNotifier implements InitializationErrorListener {
 		abstract protected void notifyListener(RunListener each) throws Exception;
 	}
 	
-	void fireTestRunStarted(final Plan plan) {
+	public void fireTestRunStarted(final Plan plan) {
 		new SafeNotifier() {
 			@Override
 			protected void notifyListener(RunListener each) throws Exception {
@@ -45,7 +45,7 @@ public class RunNotifier implements InitializationErrorListener {
 		}.run();
 	}
 	
-	void fireTestRunFinished(final Result result) {
+	public void fireTestRunFinished(final Result result) {
 		new SafeNotifier() {
 			@Override
 			protected void notifyListener(RunListener each) throws Exception {
@@ -90,10 +90,6 @@ public class RunNotifier implements InitializationErrorListener {
 				each.testFinished(plan);
 			};
 		}.run();
-	}
-
-	public void initializationError(Throwable e) {
-		fireNonTestFailure(e);
 	}
 
 	public void fireNonTestFailure(Throwable exception) {

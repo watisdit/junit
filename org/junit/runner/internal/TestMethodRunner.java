@@ -10,8 +10,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.runner.RunNotifier;
-import org.junit.runner.plan.LeafPlan;
+import org.junit.notify.RunNotifier;
+import org.junit.plan.LeafPlan;
 
 public class TestMethodRunner extends BeforeAndAfterRunner {
 	private final Object fTest;

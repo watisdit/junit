@@ -1,27 +1,24 @@
 /**
  * 
  */
-package junit.framework.compatibility;
+package junit.framework;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestResult;
-import junit.framework.TestSuite;
-import org.junit.runner.Failure;
+import org.junit.notify.Failure;
+import org.junit.notify.RunListener;
+import org.junit.notify.RunNotifier;
+import org.junit.plan.CompositePlan;
+import org.junit.plan.LeafPlan;
+import org.junit.plan.Plan;
+import org.junit.plan.Plan.Visitor;
 import org.junit.runner.Result;
-import org.junit.runner.RunListener;
-import org.junit.runner.RunNotifier;
 import org.junit.runner.internal.TestFailure;
-import org.junit.runner.plan.CompositePlan;
-import org.junit.runner.plan.LeafPlan;
-import org.junit.runner.plan.Plan;
-import org.junit.runner.plan.Plan.Visitor;
 
-public class TestCache extends HashMap<LeafPlan, Test> {
+public class JUnit4TestAdapterCache extends HashMap<LeafPlan, Test> {
 	private static final long serialVersionUID = 1L;
 
 	public Test asTest(Plan plan) {
@@ -71,7 +68,7 @@ public class TestCache extends HashMap<LeafPlan, Test> {
 		});
 	}
 
-	RunNotifier getNotifier(final TestResult result,
+	public RunNotifier getNotifier(final TestResult result,
 			final JUnit4TestAdapter adapter) {
 		RunNotifier notifier = new RunNotifier();
 		notifier.addListener(new RunListener() {
@@ -110,7 +107,7 @@ public class TestCache extends HashMap<LeafPlan, Test> {
 		return notifier;
 	}
 
-	List<Test> asTestList(Plan plan) {
+	public List<Test> asTestList(Plan plan) {
 		return plan.accept(new Visitor<List<Test>>() {
 			public List<Test> visitComposite(CompositePlan plan) {
 				List<Test> returnThis = new ArrayList<Test>();

@@ -7,7 +7,6 @@ import junit.framework.JUnit4TestAdapter;
 import junit.samples.money.IMoney;
 import junit.samples.money.Money;
 import junit.samples.money.MoneyBag;
-
 import org.junit.Before;
 import org.junit.Test;
 

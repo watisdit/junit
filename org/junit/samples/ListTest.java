@@ -1,8 +1,10 @@
 package org.junit.samples;
 
 import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Before;
 import org.junit.BeforeClass;

@@ -1,9 +1,9 @@
 /**
  * 
  */
-package org.junit.runner.request;
+package org.junit.runner.internal.request;
 
-import org.junit.runner.InitializationErrorListener;
+import org.junit.runner.Request;
 import org.junit.runner.Runner;
 import org.junit.runner.internal.CompositeRunner;
 
@@ -17,10 +17,10 @@ public class ClassesRequest extends Request {
 	}
 
 	@Override
-	public Runner getRunner(InitializationErrorListener notifier) {
+	public Runner getRunner() {
 		CompositeRunner runner = new CompositeRunner(fName);
 		for (Class<? extends Object> each : fClasses) {
-			Runner childRunner = Request.aClass(each).getRunner(notifier);
+			Runner childRunner = Request.aClass(each).getRunner();
 			if (childRunner != null)
 				runner.add(childRunner);
 		}

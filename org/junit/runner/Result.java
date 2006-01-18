@@ -3,8 +3,11 @@ package org.junit.runner;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.runner.plan.LeafPlan;
-import org.junit.runner.plan.Plan;
+import org.junit.notify.Failure;
+import org.junit.notify.RunListener;
+import org.junit.notify.RunNotifier;
+import org.junit.plan.LeafPlan;
+import org.junit.plan.Plan;
 
 public class Result {
 	private int fCount= 0;

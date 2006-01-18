@@ -11,10 +11,10 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.ClassRunner;
-import org.junit.runner.RunNotifier;
+import org.junit.notify.RunNotifier;
+import org.junit.plan.Plan;
 import org.junit.runner.RunWith;
-import org.junit.runner.plan.Plan;
+import org.junit.runner.internal.ClassRunner;
 
 public class ForwardCompatibilityTest extends TestCase {
 	static String fLog;

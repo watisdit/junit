@@ -1,4 +1,4 @@
-package org.junit.runner;
+package org.junit.notify;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

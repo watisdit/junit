@@ -1,14 +1,16 @@
-package org.junit.runner.request;
+package org.junit.runner;
 
 import java.util.ArrayList;
 
-import org.junit.runner.InitializationErrorListener;
-import org.junit.runner.Runner;
+import org.junit.plan.CompositePlan;
+import org.junit.plan.LeafPlan;
+import org.junit.plan.Plan;
+import org.junit.plan.Plan.Visitor;
 import org.junit.runner.extensions.Filter;
-import org.junit.runner.plan.CompositePlan;
-import org.junit.runner.plan.LeafPlan;
-import org.junit.runner.plan.Plan;
-import org.junit.runner.plan.Plan.Visitor;
+import org.junit.runner.internal.request.ClassRequest;
+import org.junit.runner.internal.request.ClassesRequest;
+import org.junit.runner.internal.request.ErrorReportingRequest;
+import org.junit.runner.internal.request.FilterRequest;
 
 public abstract class Request {
 	public static Request aMethod(Class<?> clazz, String methodName) {
@@ -24,16 +26,12 @@ public abstract class Request {
 		return new ClassesRequest(name, classes);
 	}
 
-	public abstract Runner getRunner(InitializationErrorListener notifier);
-
-	public Runner getRunner() throws Exception {
-		// convenience for testing: don't use in general
-		return getRunner(new InitializationErrorListener() {
-			public void initializationError(Throwable throwable) {
-				throw new RuntimeException(throwable);
-			}
-		});
+	public static Request anErrorReport(Class<?> klass, Throwable cause) {
+		return new ErrorReportingRequest(klass, cause);
 	}
+	
+	
+	public abstract Runner getRunner();
 
 	public Request filterWith(Filter filter) {
 		return new FilterRequest(this, filter);
@@ -59,5 +57,9 @@ public abstract class Request {
 				});
 			}
 		});
+	}
+
+	static Request classes(Class... testClasses) {
+		return classes("All", testClasses);
 	}
 }

@@ -1,13 +1,15 @@
 package org.junit.tests;
 
-import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.Result;
-import org.junit.runner.RunNotifier;
+import org.junit.notify.RunNotifier;
+import org.junit.plan.Plan;
+import org.junit.runner.Request;
 import org.junit.runner.Runner;
+import org.junit.runner.internal.InitializationError;
 import org.junit.runner.internal.TestClassRunner;
-import org.junit.runner.plan.Plan;
+
+import static org.junit.Assert.assertEquals;
 
 public class ValidationTest {
 	public static class WrongBeforeClass {
@@ -17,9 +19,9 @@ public class ValidationTest {
 		}
 	}
 
-	@Test
-	public void testClassRunnerHandlesBeforeClassAndAfterClassValidation() {
-		TestClassRunner runner = new TestClassRunner(WrongBeforeClass.class, new Runner() {
+	@Test(expected=InitializationError.class)
+	public void testClassRunnerHandlesBeforeClassAndAfterClassValidation() throws InitializationError {
+		new TestClassRunner(WrongBeforeClass.class, new Runner() {
 			@Override
 			public Plan getPlan() {
 				return null;
@@ -30,10 +32,10 @@ public class ValidationTest {
 				// do nothing
 			}
 		});
-		RunNotifier notifier = new RunNotifier();
-		Result result = new Result();
-		result.addListenerTo(notifier);
-		runner.canRun(notifier);
-		assertTrue(result.getFailureCount() > 0);
+	}
+	
+	@Test
+	public void initializationErrorIsOnCorrectClass() {
+		assertEquals(WrongBeforeClass.class.getName(), Request.aClass(WrongBeforeClass.class).getRunner().getPlan().getName());
 	}
 }

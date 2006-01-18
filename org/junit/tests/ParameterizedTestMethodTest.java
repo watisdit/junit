@@ -14,8 +14,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runner.extensions.Parameterized;
-import org.junit.runner.extensions.Parameters;
-import org.junit.runner.internal.TestIntrospector;
+import org.junit.runner.extensions.Parameterized.Parameters;
+import org.junit.runner.internal.MethodValidator;
 
 @RunWith(Parameterized.class)
 public class ParameterizedTestMethodTest {
@@ -82,7 +82,7 @@ public class ParameterizedTestMethodTest {
 	}
 
 	@Test public void testFailures() throws Exception {
-		List<Exception> problems= new TestIntrospector(fClass).validateAllMethods();
+		List<Throwable> problems= new MethodValidator(fClass).validateAllMethods();
 		assertEquals(fErrorCount, problems.size());
 	}
 	public static junit.framework.Test suite() {

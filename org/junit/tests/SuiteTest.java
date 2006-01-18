@@ -9,12 +9,12 @@ import junit.framework.TestResult;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
+import org.junit.runner.Request;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.junit.runner.extensions.Suite;
-import org.junit.runner.extensions.SuiteClasses;
-import org.junit.runner.request.Request;
+import org.junit.runner.extensions.Suite.SuiteClasses;
 
 public class SuiteTest {
 	public static class TestA {

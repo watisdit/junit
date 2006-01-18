@@ -2,17 +2,15 @@ package org.junit.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
-
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 import org.junit.Test;
-import org.junit.runner.Failure;
+import org.junit.notify.Failure;
+import org.junit.notify.RunListener;
+import org.junit.plan.LeafPlan;
+import org.junit.plan.Plan;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
-import org.junit.runner.RunListener;
-import org.junit.runner.plan.LeafPlan;
-import org.junit.runner.plan.Plan;
 
 public class RunnerTest {
 

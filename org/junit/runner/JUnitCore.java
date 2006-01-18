@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import junit.runner.Version;
+import org.junit.notify.RunListener;
+import org.junit.notify.RunNotifier;
 import org.junit.runner.internal.OldTestClassRunner;
 import org.junit.runner.internal.TextListener;
-import org.junit.runner.request.Request;
 
 
 public class JUnitCore {
@@ -55,11 +56,11 @@ public class JUnitCore {
 	}
 	
 	public Result run(Class... testClasses) {
-		return run(Request.classes("All", testClasses));
+		return run(Request.classes(testClasses));
 	}
 
 	private Result run(Request request) {
-		return run(request.getRunner(fNotifier));
+		return run(request.getRunner());
 	}
 
 	public void run(junit.framework.Test test) { 

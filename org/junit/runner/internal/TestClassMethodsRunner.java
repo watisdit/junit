@@ -1,31 +1,25 @@
 package org.junit.runner.internal;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
-import org.junit.runner.ClassRunner;
-import org.junit.runner.RunNotifier;
-import org.junit.runner.StoppedByUserException;
+import org.junit.notify.RunNotifier;
+import org.junit.notify.StoppedByUserException;
+import org.junit.plan.CompositePlan;
+import org.junit.plan.LeafPlan;
+import org.junit.plan.Plan;
 import org.junit.runner.extensions.Filter;
 import org.junit.runner.extensions.Filterable;
-import org.junit.runner.plan.CompositePlan;
-import org.junit.runner.plan.LeafPlan;
-import org.junit.runner.plan.Plan;
 
 public class TestClassMethodsRunner extends ClassRunner implements Filterable {
 	private Filter fFilter = Filter.ALWAYS;
-	private final TestIntrospector fTestIntrospector;
-
-	public TestClassMethodsRunner(Class<? extends Object> klass) {
+	
+	public TestClassMethodsRunner(Class<? extends Object> klass) throws InitializationError {
 		super(klass);
-		fTestIntrospector = new TestIntrospector(klass);
-	}
-
-	@Override
-	protected void addFatalErrors(ArrayList<Exception> fatalErrors) {
-		fTestIntrospector.validateInstanceMethods(fatalErrors);
+		MethodValidator validator = new MethodValidator(klass);
+		validator.validateInstanceMethods();
+		validator.assertValid();
 	}
 	
 	@Override
@@ -71,7 +65,7 @@ public class TestClassMethodsRunner extends ClassRunner implements Filterable {
 	}
 
 	private List<Method> getTestMethods() {
-		return fTestIntrospector.getTestMethods(Test.class);
+		return new TestIntrospector(getTestClass()).getTestMethods(Test.class);
 	}
 	
 	private LeafPlan methodPlan(Method method) {

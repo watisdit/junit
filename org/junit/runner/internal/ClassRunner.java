@@ -1,4 +1,6 @@
-package org.junit.runner;
+package org.junit.runner.internal;
+
+import org.junit.runner.Runner;
 
 
 public abstract class ClassRunner extends Runner {

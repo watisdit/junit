@@ -10,15 +10,14 @@ import junit.framework.JUnit4TestAdapter;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.plan.CompositePlan;
 import org.junit.runner.JUnitCore;
+import org.junit.runner.Request;
 import org.junit.runner.Result;
-import org.junit.runner.RunNotifier;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.junit.runner.extensions.Parameterized;
-import org.junit.runner.extensions.Parameters;
-import org.junit.runner.plan.CompositePlan;
-import org.junit.runner.request.Request;
+import org.junit.runner.extensions.Parameterized.Parameters;
 
 public class ParameterizedTestTest {
 	@RunWith(Parameterized.class)
@@ -130,14 +129,14 @@ public class ParameterizedTestTest {
 
 		@Parameters
 		public static Collection<Object[]> data() {
-			return Parameterized.eachOne(1, 2);
+			return Parameterized.eachOne(1);
 		}
 	}
 
 	@Test
 	public void failuresAddedForBadTestMethod() throws Exception {
-		Runner runner = Request.aClass(IncorrectTest.class).getRunner(new RunNotifier());
-		assertEquals(null, runner);
+		Result result = JUnitCore.runClasses(IncorrectTest.class);
+		assertEquals(1, result.getFailureCount());
 	}
 
 	@RunWith(Parameterized.class)

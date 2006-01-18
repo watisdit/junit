@@ -15,7 +15,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
-import org.junit.runner.internal.TestIntrospector;
+import org.junit.runner.internal.MethodValidator;
 
 public class TestMethodTest {
 
@@ -50,7 +50,7 @@ public class TestMethodTest {
 	}
 	
 	@Test public void testFailures() throws Exception {
-		List<Exception> problems= new TestIntrospector(EverythingWrong.class).validateAllMethods();
+		List<Throwable> problems= new MethodValidator(EverythingWrong.class).validateAllMethods();
 		int errorCount= 1 + 4 * 5; // missing constructor plus four invalid methods for each annotation */
 		assertEquals(errorCount, problems.size());
 	}
@@ -66,7 +66,7 @@ public class TestMethodTest {
 	}
 
 	@Test public void validateInheritedMethods() throws Exception {
-		List<Exception> problems= new TestIntrospector(SubWrong.class).validateAllMethods();
+		List<Throwable> problems= new MethodValidator(SubWrong.class).validateAllMethods();
 		assertEquals(1, problems.size());
 	}
 
@@ -77,7 +77,7 @@ public class TestMethodTest {
 	}
 
 	@Test public void dontValidateShadowedMethods() throws Exception {
-		List<Exception> problems= new TestIntrospector(SubShadows.class).validateAllMethods();
+		List<Throwable> problems= new MethodValidator(SubShadows.class).validateAllMethods();
 		assertTrue(problems.isEmpty());
 	}
 

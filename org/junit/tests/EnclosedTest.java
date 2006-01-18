@@ -3,11 +3,11 @@ package org.junit.tests;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
+import org.junit.runner.Request;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.junit.runner.extensions.Enclosed;
-import org.junit.runner.request.Request;
 
 public class EnclosedTest {
 	@RunWith(Enclosed.class)

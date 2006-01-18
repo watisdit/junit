@@ -1,10 +1,10 @@
 /**
  * 
  */
-package org.junit.runner.request;
+package org.junit.runner.internal.request;
 
 
-import org.junit.runner.InitializationErrorListener;
+import org.junit.runner.Request;
 import org.junit.runner.Runner;
 import org.junit.runner.extensions.Filter;
 
@@ -13,13 +13,13 @@ public final class FilterRequest extends Request {
 
 	private final Filter fFilter;
 
-	FilterRequest(Request classRequest, Filter filter) {
+	public FilterRequest(Request classRequest, Filter filter) {
 		fRequest = classRequest;
 		fFilter = filter;
 	}
 
 	@Override
-	public Runner getRunner(InitializationErrorListener notifier) {
-		return fFilter.apply(fRequest.getRunner(notifier));
+	public Runner getRunner() {
+		return fFilter.apply(fRequest.getRunner());
 	}
 }

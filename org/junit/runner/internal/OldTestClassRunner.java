@@ -6,11 +6,11 @@ import junit.framework.TestCase;
 import junit.framework.TestListener;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
-import org.junit.runner.RunNotifier;
+import org.junit.notify.RunNotifier;
+import org.junit.plan.CompositePlan;
+import org.junit.plan.LeafPlan;
+import org.junit.plan.Plan;
 import org.junit.runner.Runner;
-import org.junit.runner.plan.CompositePlan;
-import org.junit.runner.plan.LeafPlan;
-import org.junit.runner.plan.Plan;
 
 public class OldTestClassRunner extends Runner {
 	

@@ -3,11 +3,11 @@ package org.junit.runner.internal;
 import java.io.PrintStream;
 import java.text.NumberFormat;
 
-import org.junit.runner.Failure;
+import org.junit.notify.Failure;
+import org.junit.notify.RunListener;
+import org.junit.plan.LeafPlan;
+import org.junit.plan.Plan;
 import org.junit.runner.Result;
-import org.junit.runner.RunListener;
-import org.junit.runner.plan.LeafPlan;
-import org.junit.runner.plan.Plan;
 
 public class TextListener implements RunListener {
 

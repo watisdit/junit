@@ -3,12 +3,12 @@ package org.junit.tests;
 import static org.junit.Assert.assertTrue;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
-import org.junit.runner.ClassRunner;
+import org.junit.notify.RunNotifier;
+import org.junit.plan.CompositePlan;
+import org.junit.plan.Plan;
 import org.junit.runner.JUnitCore;
-import org.junit.runner.RunNotifier;
 import org.junit.runner.RunWith;
-import org.junit.runner.plan.CompositePlan;
-import org.junit.runner.plan.Plan;
+import org.junit.runner.internal.ClassRunner;
 
 public class RunWithTest {
 

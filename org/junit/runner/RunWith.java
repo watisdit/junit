@@ -8,5 +8,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface RunWith {
+	/**
+	 * @return a Runner class (must have a constructor that takes a single Class to run)
+	 */
 	Class<? extends Runner> value();
 }

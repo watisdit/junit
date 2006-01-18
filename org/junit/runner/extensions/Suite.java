@@ -1,24 +1,29 @@
 package org.junit.runner.extensions;
 
 
-import org.junit.runner.ClassRunner;
-import org.junit.runner.InitializationErrorListener;
-import org.junit.runner.RunNotifier;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import org.junit.notify.RunNotifier;
+import org.junit.plan.Plan;
+import org.junit.runner.Request;
 import org.junit.runner.Runner;
-import org.junit.runner.plan.Plan;
-import org.junit.runner.request.Request;
+import org.junit.runner.internal.ClassRunner;
 
 public class Suite extends ClassRunner implements Filterable {
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
+	public @interface SuiteClasses {
+		public Class[] value();
+	}
+	
 	private Runner fComposite;
 
 	public Suite(Class< ? extends Object> klass) {
 		super(klass);
-	}
-
-	@Override
-	public boolean canRun(InitializationErrorListener notifier) {
-		fComposite = Request.classes("All", getTestClasses()).getRunner(notifier);
-		return fComposite.testCount() > 0;
+		fComposite = Request.classes("All", getTestClasses()).getRunner();
 	}
 	
 	protected Class[] getTestClasses() {

@@ -3,6 +3,10 @@ package org.junit.runner.extensions;
 import static org.junit.Assert.assertEquals;
 
 import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -10,13 +14,17 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.junit.runner.InitializationErrorListener;
-import org.junit.runner.Runner;
 import org.junit.runner.internal.CompositeRunner;
+import org.junit.runner.internal.InitializationError;
 import org.junit.runner.internal.TestClassMethodsRunner;
 import org.junit.runner.internal.TestClassRunner;
 
 public class Parameterized extends TestClassRunner implements Filterable {
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.METHOD)
+	public static @interface Parameters {
+	}
+
 	public static Collection<Object[]> eachOne(Object... params) {
 		ArrayList<Object[]> returnThis = new ArrayList<Object[]>();
 		for (Object param : params) {
@@ -32,7 +40,7 @@ public class Parameterized extends TestClassRunner implements Filterable {
 
 		private final Constructor fConstructor;
 
-		private TestClassRunnerForParameters(Class<? extends Object> klass, Object[] parameters, int i) {
+		private TestClassRunnerForParameters(Class<? extends Object> klass, Object[] parameters, int i) throws InitializationError {
 			super(klass);
 			fParameters = parameters;
 			fParameterSetNumber = i;
@@ -71,15 +79,6 @@ public class Parameterized extends TestClassRunner implements Filterable {
 			for (final Object[] parameters : getParametersList()) {
 				super.add(new TestClassRunnerForParameters(klass, parameters, i++));
 			}
-		}
-		
-		@Override
-		public boolean canRun(InitializationErrorListener notifier) {
-			for (Runner runner : getRunners()) {
-				if (!runner.canRun(notifier))
-					return false;
-			}
-			return true;
 		}
 
 		@SuppressWarnings("unchecked")

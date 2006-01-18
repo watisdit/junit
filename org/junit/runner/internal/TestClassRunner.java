@@ -1,43 +1,28 @@
 package org.junit.runner.internal;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.runner.ClassRunner;
-import org.junit.runner.InitializationErrorListener;
-import org.junit.runner.RunNotifier;
+import org.junit.notify.RunNotifier;
+import org.junit.plan.Plan;
 import org.junit.runner.Runner;
 import org.junit.runner.extensions.Filter;
 import org.junit.runner.extensions.Filterable;
-import org.junit.runner.plan.Plan;
 
 public class TestClassRunner extends ClassRunner implements Filterable {
-	private TestIntrospector fTestIntrospector;
 	protected final Runner fEnclosedRunner;
 
-	public TestClassRunner(Class<? extends Object> klass) {
+	public TestClassRunner(Class<? extends Object> klass) throws InitializationError {
 		this(klass, new TestClassMethodsRunner(klass));
 	}
 	
-	public TestClassRunner(Class<? extends Object> klass, Runner runner) {
+	public TestClassRunner(Class<? extends Object> klass, Runner runner) throws InitializationError {
 		super(klass);
 		fEnclosedRunner = runner;
-		fTestIntrospector = new TestIntrospector(getTestClass());
-	}
-
-	@Override
-	protected void addFatalErrors(ArrayList<Exception> fatalErrors) {
-		fTestIntrospector.validateStaticMethods(fatalErrors);
-	}
-	
-	@Override
-	public boolean canRun(InitializationErrorListener notifier) {
-		return super.canRun(notifier) & fEnclosedRunner.canRun(notifier);
-	}
-
-	public static class FailedBefore extends Exception {
-		private static final long serialVersionUID = 1L;
+		MethodValidator methodValidator = new MethodValidator(klass);
+		methodValidator.validateStaticMethods();
+		methodValidator.assertValid();
 	}
 
 	@Override

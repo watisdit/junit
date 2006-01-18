@@ -1,19 +1,19 @@
 package org.junit.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import junit.framework.AssertionFailedError;
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestListener;
 import junit.framework.TestResult;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.ClassRunner;
-import org.junit.runner.InitializationErrorListener;
-import org.junit.runner.RunNotifier;
+import org.junit.notify.RunNotifier;
+import org.junit.plan.Plan;
 import org.junit.runner.RunWith;
+import org.junit.runner.internal.ClassRunner;
 import org.junit.runner.internal.TestClassRunner;
-import org.junit.runner.plan.Plan;
-
-import static org.junit.Assert.*;
 
 public class InitializationErrorForwardCompatibilityTest {
 	public static class CantInitialize extends ClassRunner {
@@ -98,24 +98,9 @@ public class InitializationErrorForwardCompatibilityTest {
 	}
 	
 	public static class InitializesWithError extends TestClassRunner {
-		public InitializesWithError(Class<? extends Object> klass) {
+		public InitializesWithError(Class<? extends Object> klass) throws Exception {
 			super(klass);
+			throw new Exception();
 		}
-		
-		@Override
-		public boolean canRun(InitializationErrorListener notifier) {
-			notifier.initializationError(new Exception());
-			return super.canRun(notifier);
-		}
-	}
-	
-	@RunWith(InitializesWithError.class)
-	public static class CantInitializeWithATest {
-		@Test public void foo() {}
-	}
-	
-	@Test public void initializationErrorsAreAtTheBeginning() {
-		JUnit4TestAdapter adapter = new JUnit4TestAdapter(CantInitializeWithATest.class);
-		assertEquals(JUnit4TestAdapter.InitializationError.class, adapter.getTests().get(0).getClass());
 	}
 }

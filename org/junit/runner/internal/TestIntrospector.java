@@ -2,13 +2,10 @@ package org.junit.runner.internal;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -17,38 +14,10 @@ import org.junit.Test.None;
 
 
 public class TestIntrospector {
-	
 	private final Class< ? extends Object> fTestClass;
 	
 	public TestIntrospector(Class<? extends Object> testClass) {
 		fTestClass= testClass;
-	}
-
-	public List<Exception> validateAllMethods() {
-		List<Exception> results= new ArrayList<Exception>();
-		validateNoArgConstructor(results);
-		validateStaticMethods(results);
-		validateInstanceMethods(results);
-		return results;
-	}
-
-	public void validateInstanceMethods(List<Exception> results) {
-		validateTestMethods(After.class, false, results);
-		validateTestMethods(Before.class, false, results);
-		validateTestMethods(Test.class, false, results);
-	}
-
-	public void validateStaticMethods(List<Exception> results) {
-		validateTestMethods(BeforeClass.class, true, results);
-		validateTestMethods(AfterClass.class, true, results);
-	}
-
-	public void validateNoArgConstructor(List<Exception> results) {
-		try {
-			fTestClass.getConstructor();
-		} catch (Exception e) {
-			results.add(new Exception("Test class should have public zero-argument constructor", e));
-		}
 	}
 
 	public List<Method> getTestMethods(Class<? extends Annotation> annotationClass) {
@@ -90,22 +59,6 @@ public class TestIntrospector {
 			current= current.getSuperclass();
 		}
 		return results;
-	}
-
-	public void validateTestMethods(Class<? extends Annotation> annotation, boolean isStatic, List<Exception> results) {
-		List<Method> methods= getTestMethods(annotation);
-		for (Method each : methods) {
-			if (Modifier.isStatic(each.getModifiers()) != isStatic) {
-				String state= isStatic ? "should" : "should not";
-				results.add(new Exception("Method " + each.getName() + "() " + state + " be static"));
-			}
-			if (!Modifier.isPublic(each.getModifiers()))
-				results.add(new Exception("Method " + each.getName() + " should be public"));
-			if (each.getReturnType() != Void.TYPE)
-				results.add(new Exception("Method " + each.getName() + " should be void"));
-			if (each.getParameterTypes().length != 0)
-				results.add(new Exception("Method " + each.getName() + " should have no parameters"));
-		}
 	}
 
 	long getTimeout(Method method) {

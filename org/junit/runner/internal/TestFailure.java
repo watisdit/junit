@@ -1,7 +1,7 @@
 package org.junit.runner.internal;
 
-import org.junit.runner.Failure;
-import org.junit.runner.plan.LeafPlan;
+import org.junit.notify.Failure;
+import org.junit.plan.LeafPlan;
 
 /**
  * A Test Failure holds the failed Test, method name, and the 

@@ -6,17 +6,17 @@ import java.util.Collection;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.notify.RunNotifier;
+import org.junit.plan.CompositePlan;
+import org.junit.plan.LeafPlan;
+import org.junit.runner.Request;
 import org.junit.runner.Result;
-import org.junit.runner.RunNotifier;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.junit.runner.extensions.Parameterized;
-import org.junit.runner.extensions.Parameters;
 import org.junit.runner.extensions.Suite;
-import org.junit.runner.extensions.SuiteClasses;
-import org.junit.runner.plan.CompositePlan;
-import org.junit.runner.plan.LeafPlan;
-import org.junit.runner.request.Request;
+import org.junit.runner.extensions.Parameterized.Parameters;
+import org.junit.runner.extensions.Suite.SuiteClasses;
 
 public class SingleMethodTest {
 	public static int count;
