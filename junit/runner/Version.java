@@ -9,7 +9,7 @@ public class Version {
 	}
 
 	public static String id() {
-		return "4.0rc1";
+		return "4.0rc2";
 	}
 	
 	public static void main(String[] args) {
