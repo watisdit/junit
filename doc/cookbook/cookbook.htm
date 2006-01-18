@@ -120,7 +120,7 @@ How do you verify that code throws exceptions as expected?
 <p>Verifying that code completes normally is only part of programming. Making sure the code
 behaves as expected in exceptional situations is part of the craft of programming too. For example:
 <blockquote>
-<pre><tt>new ArrayList&ltObject&gt().get(0);&nbsp;
+<pre><tt>new ArrayList&lt;Object&gt;().get(0);&nbsp;
 </tt></pre>
 </blockquote>
 This code should throw an IndexOutOfBoundsException. The @Test annotation has an optional parameter "expected"
@@ -128,7 +128,7 @@ that takes as values subclasses of Throwable. If we wanted to verify that ArrayL
 we would write:
 <blockquote>
 <pre><tt>@Test(expected= IndexOutOfBoundsException.class) public void empty() {&nbsp;
-&nbsp;&nbsp;&nbsp; new ArrayList&ltObject&gt().get(0);&nbsp;
+&nbsp;&nbsp;&nbsp; new ArrayList&lt;Object&gt;().get(0);&nbsp;
 }</tt></pre>
 </blockquote>
 <hr WIDTH="100%">
