@@ -16,9 +16,7 @@ public class JUnitCore {
 	public RunNotifier fNotifier;
 
 	public JUnitCore() {
-		fResult= new Result();
 		fNotifier= new RunNotifier();
-		fResult.addListenerTo(fNotifier);
 	}
 
 	public static void main(String... args) {
@@ -56,10 +54,10 @@ public class JUnitCore {
 	}
 	
 	public Result run(Class... testClasses) {
-		return run(Request.classes(testClasses));
+		return run(Request.classes("All", testClasses));
 	}
 
-	private Result run(Request request) {
+	public Result run(Request request) {
 		return run(request.getRunner());
 	}
 
@@ -67,10 +65,17 @@ public class JUnitCore {
 		run(new OldTestClassRunner(test));
 	}
 	
-	public Result run(Runner runner) {							
-		fNotifier.fireTestRunStarted(runner.getPlan());
-		runner.run(fNotifier);
-		fNotifier.fireTestRunFinished(fResult);
+	public Result run(Runner runner) {
+		fResult= new Result();
+		RunListener listener = fResult.createListener();
+		fNotifier.addListener(listener);
+		try {
+			fNotifier.fireTestRunStarted(runner.getPlan());
+			runner.run(fNotifier);
+			fNotifier.fireTestRunFinished(fResult);
+		} finally {
+			fNotifier.removeListener(listener);
+		}
 		return fResult;
 	}
 	

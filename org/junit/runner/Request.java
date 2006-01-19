@@ -1,6 +1,7 @@
 package org.junit.runner;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import org.junit.plan.CompositePlan;
 import org.junit.plan.LeafPlan;
@@ -11,6 +12,7 @@ import org.junit.runner.internal.request.ClassRequest;
 import org.junit.runner.internal.request.ClassesRequest;
 import org.junit.runner.internal.request.ErrorReportingRequest;
 import org.junit.runner.internal.request.FilterRequest;
+import org.junit.runner.internal.request.SortingRequest;
 
 public abstract class Request {
 	public static Request aMethod(Class<?> clazz, String methodName) {
@@ -22,8 +24,8 @@ public abstract class Request {
 		return new ClassRequest(clazz);
 	}
 
-	public static Request classes(String name, Class... classes) {
-		return new ClassesRequest(name, classes);
+	public static Request classes(String collectionName, Class... classes) {
+		return new ClassesRequest(collectionName, classes);
 	}
 
 	public static Request anErrorReport(Class<?> klass, Throwable cause) {
@@ -59,7 +61,7 @@ public abstract class Request {
 		});
 	}
 
-	static Request classes(Class... testClasses) {
-		return classes("All", testClasses);
+	public Request sortWith(Comparator<Plan> comparator) {
+		return new SortingRequest(this, comparator);
 	}
 }

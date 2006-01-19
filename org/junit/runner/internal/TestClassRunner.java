@@ -9,8 +9,10 @@ import org.junit.plan.Plan;
 import org.junit.runner.Runner;
 import org.junit.runner.extensions.Filter;
 import org.junit.runner.extensions.Filterable;
+import org.junit.runner.extensions.Sortable;
+import org.junit.runner.extensions.Sorter;
 
-public class TestClassRunner extends ClassRunner implements Filterable {
+public class TestClassRunner extends ClassRunner implements Filterable, Sortable {
 	protected final Runner fEnclosedRunner;
 
 	public TestClassRunner(Class<? extends Object> klass) throws InitializationError {
@@ -53,7 +55,12 @@ public class TestClassRunner extends ClassRunner implements Filterable {
 		return fEnclosedRunner.getPlan();
 	}
 
+	// TODO: dup?
 	public void filter(Filter filter) {
 		filter.apply(fEnclosedRunner);
+	}
+
+	public void sort(Sorter sorter) {
+		sorter.apply(fEnclosedRunner);
 	}
 }

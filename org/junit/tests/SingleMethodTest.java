@@ -6,9 +6,9 @@ import java.util.Collection;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.notify.RunNotifier;
 import org.junit.plan.CompositePlan;
 import org.junit.plan.LeafPlan;
+import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
@@ -40,7 +40,7 @@ public class SingleMethodTest {
 	public void oneTimeSetup() throws Exception {
 		count = 0;
 		Runner runner = Request.aMethod(OneTimeSetup.class, "one").getRunner();
-		Result result = run(runner);
+		Result result = new JUnitCore().run(runner);
 		
 		assertEquals(1, count);
 		assertEquals(1, result.getRunCount());
@@ -71,7 +71,7 @@ public class SingleMethodTest {
 	public void parameterizedOneTimeSetup() throws Exception {
 		count = 0;
 		Runner runner = Request.aMethod(ParameterizedOneTimeSetup.class, "one[0]").getRunner();
-		Result result = run(runner);
+		Result result = new JUnitCore().run(runner);
 
 		assertEquals(1, count);
 		assertEquals(1, result.getRunCount());
@@ -102,14 +102,5 @@ public class SingleMethodTest {
 		Runner runner = Request.aClass(OneTwoSuite.class).filterWith(new LeafPlan(TestOne.class, "a")).getRunner();
 		CompositePlan plan = (CompositePlan) runner.getPlan();
 		assertEquals(1, plan.getChildren().size());
-	}
-	
-	private Result run(Runner runner) {
-		RunNotifier runNotifier = new RunNotifier();
-		Result result = new Result();
-		result.addListenerTo(runNotifier);
-
-		runner.run(runNotifier);
-		return result;
 	}
 }

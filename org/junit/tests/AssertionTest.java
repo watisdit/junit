@@ -50,13 +50,11 @@ public class AssertionTest {
 		}
 	}
 	
-	@Test public void arraysElementsDiffer() {
-		try {
-			assertEquals("not equal", new Object[] {"one"} , new Object[] {"two"});
-		} catch (AssertionError exception) {
-			assertEquals("not equal: arrays first differed at element 0 expected:<one> but was:<two>", exception.getMessage());
-		}
+	@Test(expected=ComparisonFailure.class) public void arraysElementsDiffer() {
+		assertEquals("not equal", new Object[] {"this is a very long string in the middle of an array"} , new Object[] {"this is another very long string in the middle of an array"});
 	}
+	
+	//TODO: test that array element differences result in "arrays first differ at element n" failure message
 	
 	@Test public void stringsDifferWithUserMessage() {
 		try {
@@ -66,7 +64,6 @@ public class AssertionTest {
 		}
 	}
 	
-	//TODO: Should we compact the comparison of Objects and not just Strings? In any case, we should compact the comparison of elements which are Strings
 	
 	@Test public void arraysEqual() {
 		Object element= new Object();

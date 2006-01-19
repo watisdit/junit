@@ -28,7 +28,8 @@ import org.junit.runner.extensions.Suite.SuiteClasses;
 		InitializationErrorForwardCompatibilityTest.class,
 		SingleMethodTest.class,
 		ValidationTest.class,
-		UserStopTest.class
+		UserStopTest.class,
+		SortableTest.class
 })
 public class AllTests {	
 	public static junit.framework.Test suite() {

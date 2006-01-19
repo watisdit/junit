@@ -32,4 +32,9 @@ public class EnclosedTest {
 		Result result = JUnitCore.runClasses(Enclosing.class);
 		assertEquals(5, result.getRunCount());
 	}
+	
+	@Test public void enclosedRunnerIsNamedForEnclosingClass() throws Exception {
+		assertEquals(Enclosing.class.getName(), Request.aClass(Enclosing.class)
+				.getRunner().getPlan().getName());
+	}
 }

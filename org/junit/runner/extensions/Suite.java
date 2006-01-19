@@ -6,43 +6,29 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.junit.notify.RunNotifier;
-import org.junit.plan.Plan;
 import org.junit.runner.Request;
-import org.junit.runner.Runner;
-import org.junit.runner.internal.ClassRunner;
+import org.junit.runner.internal.InitializationError;
+import org.junit.runner.internal.TestClassRunner;
 
-public class Suite extends ClassRunner implements Filterable {
+public class Suite extends TestClassRunner implements Filterable, Sortable {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.TYPE)
 	public @interface SuiteClasses {
 		public Class[] value();
 	}
-	
-	private Runner fComposite;
 
-	public Suite(Class< ? extends Object> klass) {
-		super(klass);
-		fComposite = Request.classes("All", getTestClasses()).getRunner();
+	public Suite(Class< ? extends Object> klass) throws InitializationError {
+		this(klass, getAnnotatedClasses(klass));
 	}
-	
-	protected Class[] getTestClasses() {
-		SuiteClasses annotation= getTestClass().getAnnotation(SuiteClasses.class);
-		// TODO: if null?
+
+	public Suite(Class<? extends Object> klass, Class[] annotatedClasses) throws InitializationError {
+		super(klass, Request.classes(klass.getName(), annotatedClasses).getRunner());
+	}
+
+	private static Class[] getAnnotatedClasses(Class<? extends Object> klass) throws InitializationError {
+		SuiteClasses annotation= klass.getAnnotation(SuiteClasses.class);
+		if (annotation == null)
+			throw new InitializationError(String.format("class '%s' must have a SuiteClasses annotation", klass.getName()));
 		return annotation.value();
-	}
-
-	@Override
-	public Plan getPlan() {
-		return fComposite.getPlan();
-	}
-
-	@Override
-	public void run(RunNotifier notifier) {
-		fComposite.run(notifier);
-	}
-
-	public void filter(Filter filter) {
-		filter.apply(fComposite);
 	}
 }

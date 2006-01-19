@@ -73,7 +73,10 @@ public class Assert {
 			return;
 		if (expected != null && expected.equals(actual))
 			return;
-		failNotEquals(message, expected, actual);
+		if (expected instanceof String && actual instanceof String)
+			throw new ComparisonFailure(message, (String)expected, (String)actual);
+		else
+			failNotEquals(message, expected, actual);
 	}
 
 	/**
@@ -101,8 +104,7 @@ public class Assert {
 		for (int i= 0; i < expected.length; i++) {
 			Object o1= expected[i];
 			Object o2= actual[i];
-			if (!(o1 == null ? o2 == null : o1.equals(o2)))
-				fail(message + ":" + " arrays first differed at element " + i + format("", o1, o2));
+			assertEquals(message + ":" + " arrays first differed at element ", o1, o2);
 		}
 	}
 
@@ -112,26 +114,6 @@ public class Assert {
 	 */
 	public static void assertEquals(Object[] objects1, Object[] objects2) {
 		assertEquals(null, objects1, objects2);
-	}
-
-	/**
-	 * Asserts that two Strings are equal. If they are not, an
-	 * AssertionError is thrown with the given message.
-	 */
-	static public void assertEquals(String message, String expected, String actual) {
-		if (expected == null && actual == null)
-			return;
-		if (expected != null && expected.equals(actual))
-			return;
-		throw new ComparisonFailure(message, expected, actual);
-	}
-
-	/**
-	 * Asserts that two Strings are equal. If they are not, an
-	 * AssertionError is thrown.
-	 */
-	static public void assertEquals(String expected, String actual) {
-		assertEquals(null, expected, actual);
 	}
 
 	/**

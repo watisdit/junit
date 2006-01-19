@@ -67,7 +67,7 @@ public abstract class BeforeAndAfterRunner {
 			} catch (InvocationTargetException e) {
 				addFailure(e.getTargetException());
 			} catch (Throwable e) {
-				addFailure(e); // TODO:
+				addFailure(e); // Untested, but seems impossible
 			}
 	}
 }

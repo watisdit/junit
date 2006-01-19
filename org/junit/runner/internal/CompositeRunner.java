@@ -1,6 +1,8 @@
 package org.junit.runner.internal;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,8 +12,10 @@ import org.junit.plan.Plan;
 import org.junit.runner.Runner;
 import org.junit.runner.extensions.Filter;
 import org.junit.runner.extensions.Filterable;
+import org.junit.runner.extensions.Sortable;
+import org.junit.runner.extensions.Sorter;
 
-public class CompositeRunner extends Runner implements Filterable {
+public class CompositeRunner extends Runner implements Filterable, Sortable {
 	private final List<Runner> fRunners = new ArrayList<Runner>();
 	private final String fName;
 	
@@ -59,5 +63,16 @@ public class CompositeRunner extends Runner implements Filterable {
 
 	protected String getName() {
 		return fName;
+	}
+
+	public void sort(final Sorter sorter) {
+		Collections.sort(fRunners, new Comparator<Runner>() {
+			public int compare(Runner o1, Runner o2) {
+				return sorter.compare(o1.getPlan(), o2.getPlan());
+			}
+		});
+		for (Runner each : fRunners) {
+			sorter.apply(each);
+		}
 	}
 }

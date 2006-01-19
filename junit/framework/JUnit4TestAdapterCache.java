@@ -35,8 +35,6 @@ public class JUnit4TestAdapterCache extends HashMap<LeafPlan, Test> {
 		});
 	}
 
-	// TODO: plan passes ignored methods, but nothing happens with them
-
 	Test createTest(Plan plan) {
 		return plan.accept(new Visitor<Test>() {
 			public Test visitComposite(CompositePlan plan) {

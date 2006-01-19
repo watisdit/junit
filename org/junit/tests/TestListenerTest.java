@@ -1,6 +1,7 @@
 package org.junit.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
 import org.junit.notify.Failure;
@@ -57,7 +58,6 @@ public class TestListenerTest {
 		JUnitCore core= new JUnitCore();
 		core.addListener(new ExceptionListener());
 		
-		// TODO: a fresh result each time?
 		count= 0;
 		Result result= core.run(OneTest.class);
 		assertEquals(1, count);
@@ -66,6 +66,13 @@ public class TestListenerTest {
 		count= 0;
 		core.run(OneTest.class);
 		assertEquals(0, count); // Doesn't change because listener was removed		
+	}
+	
+	@Test public void freshResultEachTime() {
+		JUnitCore core= new JUnitCore();
+		Result first= core.run(OneTest.class);
+		Result second= core.run(OneTest.class);
+		assertNotSame(first, second);
 	}
 	
 	public static junit.framework.Test suite() {

@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.junit.notify.Failure;
 import org.junit.notify.RunListener;
-import org.junit.notify.RunNotifier;
 import org.junit.plan.LeafPlan;
 import org.junit.plan.Plan;
 
@@ -66,7 +65,7 @@ public class Result {
 		}
 	}
 
-	public void addListenerTo(RunNotifier notifier) {
-		notifier.addListener(new Listener());
+	public RunListener createListener() {
+		return new Listener();
 	}
 }
