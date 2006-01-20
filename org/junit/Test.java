@@ -16,5 +16,6 @@ public @interface Test {
 	
 	Class<? extends Throwable> expected() default None.class;
 	
+	/** timeout in milliseconds */
 	long timeout() default 0L; 
 }
