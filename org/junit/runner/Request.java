@@ -58,6 +58,12 @@ public abstract class Request {
 					}
 				});
 			}
+
+			@Override
+			public String describe() {
+				// TODO: Is this duped?  DUP doesn't work
+				return String.format("Method %s.%s()", desiredPlan.getTestClass().getName(), desiredPlan.getName());
+			}
 		});
 	}
 

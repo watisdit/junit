@@ -4,10 +4,15 @@ import org.junit.plan.Plan;
 import org.junit.runner.Runner;
 
 public abstract class Filter {
-	public static Filter ALWAYS = new Filter() {
+	public static Filter ALL = new Filter() {
 		@Override
 		public boolean shouldRun(Plan plan) {
 			return true;
+		}
+
+		@Override
+		public String describe() {
+			return "all tests";
 		}
 	};
 
@@ -20,4 +25,6 @@ public abstract class Filter {
 		}
 		return runner;
 	}
+
+	public abstract String describe();
 }
