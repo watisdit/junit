@@ -2,6 +2,7 @@ package junit.framework;
 
 import java.util.List;
 
+import org.junit.plan.Plan;
 import org.junit.runner.Request;
 import org.junit.runner.Runner;
 
@@ -21,19 +22,6 @@ public class JUnit4TestAdapter implements Test {
 		fCache = cache;
 		fNewTestClass = newTestClass;
 		fRunner = Request.aClass(newTestClass).getRunner();
-//		if (fRunner == null)
-//			fRunner = new Runner() {
-//				@Override
-//				public void run(RunNotifier notifier) {
-//					// do nothing
-//				}
-//
-//				@Override
-//				public Plan getPlan() {
-//					return new CompositePlan("Could not initialize "
-//							+ newTestClass.getName());
-//				}
-//			};
 	}
 
 	public int countTestCases() {
@@ -46,12 +34,16 @@ public class JUnit4TestAdapter implements Test {
 
 	// reflective interface for Eclipse
 	public List<Test> getTests() {
-		return fCache.asTestList(fRunner.getPlan());
+		return fCache.asTestList(getPlan());
 	}
 
 	// reflective interface for Eclipse
 	public Class getTestClass() {
 		return fNewTestClass;
+	}
+	
+	public Plan getPlan() {
+		return fRunner.getPlan();
 	}
 
 	@Override

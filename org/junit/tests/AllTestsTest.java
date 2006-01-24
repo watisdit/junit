@@ -40,6 +40,26 @@ public class AllTestsTest {
 		assertEquals(1, tests.testCount());
 	}
 	
+	public static class JUnit4Test {
+		@org.junit.Test public void testSomething() {
+			run= true;
+		}
+	}
+	
+	@RunWith(AllTests.class)
+	public static class AllJUnit4 {
+		static public junit.framework.Test suite() {
+			TestSuite suite= new TestSuite();
+			suite.addTest(new JUnit4TestAdapter(JUnit4Test.class));
+			return suite;
+		}
+	}
+
+	@org.junit.Test public void correctTestCountAdapted() throws Throwable {
+		AllTests tests = new AllTests(AllJUnit4.class);
+		assertEquals(1, tests.testCount());
+	}
+
 	static public junit.framework.Test suite() {
 		return new JUnit4TestAdapter(AllTestsTest.class);
 	}

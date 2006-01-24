@@ -29,7 +29,8 @@ import org.junit.runner.extensions.Suite.SuiteClasses;
 		SingleMethodTest.class,
 		ValidationTest.class,
 		UserStopTest.class,
-		SortableTest.class
+		SortableTest.class,
+		OldTestClassRunnerTest.class
 })
 public class AllTests {	
 	public static junit.framework.Test suite() {
