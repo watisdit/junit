@@ -14,7 +14,7 @@ public class JUnit4TestAdapter implements Test {
 	private JUnit4TestAdapterCache fCache;
 
 	public JUnit4TestAdapter(Class<? extends Object> newTestClass) {
-		this(newTestClass, new JUnit4TestAdapterCache());
+		this(newTestClass, JUnit4TestAdapterCache.getDefault());
 	}
 
 	public JUnit4TestAdapter(final Class<? extends Object> newTestClass,

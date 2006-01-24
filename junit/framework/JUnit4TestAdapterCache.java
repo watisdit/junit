@@ -20,7 +20,12 @@ import org.junit.runner.internal.TestFailure;
 
 public class JUnit4TestAdapterCache extends HashMap<LeafPlan, Test> {
 	private static final long serialVersionUID = 1L;
+	private static final JUnit4TestAdapterCache fInstance = new JUnit4TestAdapterCache();
 
+	public static JUnit4TestAdapterCache getDefault() {
+		return fInstance;
+	}
+	
 	public Test asTest(Plan plan) {
 		return plan.accept(new Visitor<Test>() {
 			public Test visitComposite(CompositePlan plan) {

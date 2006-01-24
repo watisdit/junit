@@ -44,6 +44,12 @@ public class ForwardCompatibilityTest extends TestCase {
 		junit.framework.Test test = adapter.getTests().get(0);
 		assertEquals(String.format("test(%s)", NewTest.class.getName()), test.toString());
 	}
+
+	public void testUseGlobalCache() {
+		JUnit4TestAdapter adapter1 = new JUnit4TestAdapter(NewTest.class);
+		JUnit4TestAdapter adapter2 = new JUnit4TestAdapter(NewTest.class);
+		assertSame(adapter1.getTests().get(0), adapter2.getTests().get(0));
+	}
 	
 	static Exception exception= new Exception();
 	
