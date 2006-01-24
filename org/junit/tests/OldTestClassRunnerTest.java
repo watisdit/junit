@@ -3,10 +3,15 @@ package org.junit.tests;
 import static org.junit.Assert.assertEquals;
 
 import junit.extensions.TestDecorator;
+import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
 import org.junit.runner.internal.OldTestClassRunner;
+import org.junit.runner.internal.TestFailure;
 
 public class OldTestClassRunnerTest {
 	public static class MyTest extends TestCase {
@@ -20,4 +25,16 @@ public class OldTestClassRunnerTest {
 		assertEquals(1, runner.testCount());
 	}
 	
+	public static class AnnotatedTest {
+		@Test public void foo() {
+			Assert.fail();
+		}
+	}
+	
+	@Test public void canUnadaptAnAdapter() {
+		OldTestClassRunner runner = new OldTestClassRunner(new JUnit4TestAdapter(AnnotatedTest.class));
+		Result result = new JUnitCore().run(runner);
+		TestFailure failure = (TestFailure) result.getFailures().get(0);
+		assertEquals(AnnotatedTest.class, failure.getPlan().getTestClass());
+	}
 }

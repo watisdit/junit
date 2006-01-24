@@ -3,6 +3,7 @@ package org.junit.runner.internal;
 import junit.extensions.TestDecorator;
 import junit.framework.AssertionFailedError;
 import junit.framework.JUnit4TestAdapter;
+import junit.framework.JUnit4TestCaseFacade;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestListener;
@@ -55,6 +56,10 @@ public class OldTestClassRunner extends Runner {
 			
 
 			private LeafPlan asPlan(Test test) {
+				if (test instanceof JUnit4TestCaseFacade) {
+					JUnit4TestCaseFacade facade = (JUnit4TestCaseFacade) test;
+					return facade.getPlan();
+				}
 				return new LeafPlan(test.getClass(), getName(test));
 			}
 

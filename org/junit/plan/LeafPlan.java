@@ -39,4 +39,9 @@ public class LeafPlan extends Plan {
 	public String getName() {
 		return fName;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("%s(%s)", getName(), getTestClass().getName());
+	}
 }

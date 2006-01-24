@@ -51,22 +51,7 @@ public class JUnit4TestAdapterCache extends HashMap<LeafPlan, Test> {
 			}
 
 			public Test visitLeaf(final LeafPlan plan) {
-				return new Test() {
-					@Override
-					public String toString() {
-						return String.format("%s(%s)", plan.getName(), plan
-								.getTestClass().getName());
-					}
-
-					public int countTestCases() {
-						return 1;
-					}
-
-					public void run(TestResult result) {
-						throw new RuntimeException(
-								"This test stub created only for informational purposes.");
-					}
-				};
+				return new JUnit4TestCaseFacade(plan);
 			}
 		});
 	}
