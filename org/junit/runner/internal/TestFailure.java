@@ -20,7 +20,7 @@ public class TestFailure extends Failure {
 
 	@Override
 	public String getTestHeader() {
-		return fPlan.getTestClass().getName() + "." + fPlan.getName() + "()";
+		return String.format("%s.%s()", fPlan.getTestClass().getName(), fPlan.getName());
 	}
 	
 	@Override

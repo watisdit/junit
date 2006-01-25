@@ -20,13 +20,12 @@ public class JUnitCore {
 	}
 
 	public static void main(String... args) {
-		new JUnitCore().runMain(args);
-		killAllThreads();
+		Result result= new JUnitCore().runMain(args);
+		killAllThreads(result);
 	}
 
-	private static void killAllThreads() {
-		// TODO: should we exit with status 1 on test failure?
-		System.exit(0);
+	private static void killAllThreads(Result result) {
+		System.exit(result.wasSuccessful() ? 0 : 1);
 	}
 	
 	public static Result runClasses(Class... classes) {
@@ -34,7 +33,7 @@ public class JUnitCore {
 	}
 	
 	// only public for testing
-	public void runMain(String... args) {
+	public Result runMain(String... args) {
 		System.out.println("JUnit version " + Version.id());
 		// TODO some kind of plugin mechanism here?
 		List<Class> classes= new ArrayList<Class>();
@@ -46,7 +45,7 @@ public class JUnitCore {
 			}
 		RunListener listener= new TextListener();
 		addListener(listener);
-		run(classes.toArray(new Class[0]));
+		return run(classes.toArray(new Class[0]));
 	}
 
 	public String getVersion() {
