@@ -10,6 +10,7 @@ Before first public release:
 * Decide how we ship JUnit-- 1.5 only or hybrid
 * review Ant scripts
 * Merge branch back into head
+* Should ClassRequest search up the hierarchy for the requested Class to look for @RunWith?
 
 Before next JUnit 4 release:
 * update the build process
