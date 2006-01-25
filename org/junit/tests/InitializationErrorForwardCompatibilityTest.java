@@ -68,15 +68,12 @@ public class InitializationErrorForwardCompatibilityTest {
 
 		public void addFailure(junit.framework.Test test,
 				AssertionFailedError t) {
-		
 		}
 
 		public void endTest(junit.framework.Test test) {
-		
 		}
 
 		public void startTest(junit.framework.Test test) {
-		
 		}
 
 		public junit.framework.Test getError() {

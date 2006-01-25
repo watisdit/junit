@@ -54,7 +54,6 @@ public class OldTestClassRunner extends Runner {
 				notifier.fireTestFailure(failure);
 			}
 			
-
 			private LeafPlan asPlan(Test test) {
 				if (test instanceof JUnit4TestCaseFacade) {
 					JUnit4TestCaseFacade facade = (JUnit4TestCaseFacade) test;
@@ -74,7 +73,6 @@ public class OldTestClassRunner extends Runner {
 			public void addFailure(Test test, AssertionFailedError t) {
 				addError(test, t);
 			}
-		
 		};
 	}
 	

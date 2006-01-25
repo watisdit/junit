@@ -140,8 +140,6 @@ public class AssertionTest {
 		assertEquals(Double.NaN, Double.NaN, Double.POSITIVE_INFINITY);
 	}
 	
-	//TODO tests for the other flavors of assertions
-	
 	static public junit.framework.Test suite() {
 		return new JUnit4TestAdapter(AssertionTest.class);
 	}

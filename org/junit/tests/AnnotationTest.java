@@ -142,8 +142,8 @@ public class AnnotationTest extends TestCase {
 		assertTrue(run);
 	}
 	
-	static int count= 0;
-	static Collection<Object> tests= new HashSet<Object>();
+	static int count;
+	static Collection<Object> tests;
 	static public class TwoTests {
 		@Test public void one() {
 			count++;
@@ -156,6 +156,8 @@ public class AnnotationTest extends TestCase {
 	}
 	
 	public void testTwoTests() throws Exception {
+		count= 0;
+		tests= new HashSet<Object>();
 		JUnitCore runner= new JUnitCore();
 		runner.run(TwoTests.class);
 		assertEquals(2, count);

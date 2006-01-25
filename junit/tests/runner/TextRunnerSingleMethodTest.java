@@ -11,6 +11,9 @@ import junit.textui.TestRunner;
  *  Test invoking a single test method of a TestCase.
  */
 public class TextRunnerSingleMethodTest extends TestCase {
+	
+	static boolean fgWasInvoked;
+	
 	public static class InvocationTest extends TestCase {
 
 		public void testWasInvoked() {
@@ -21,15 +24,14 @@ public class TextRunnerSingleMethodTest extends TestCase {
 			fail("Shouldn't get here.");
 		}
 	}
-	static boolean fgWasInvoked= false;
-
+	
 	public void testSingle() throws Exception {
 		TestRunner t= new TestRunner();
 		t.setPrinter(new ResultPrinter(new PrintStream(new ByteArrayOutputStream())));
 		String[] args= {
 				"-m", "junit.tests.runner.TextRunnerSingleMethodTest$InvocationTest.testWasInvoked"
 		};
-		assertFalse(fgWasInvoked);
+		fgWasInvoked= false;
 		t.start(args);
 		assertTrue(fgWasInvoked);
 	}
