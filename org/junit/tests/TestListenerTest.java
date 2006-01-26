@@ -4,35 +4,35 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
-import org.junit.notify.Failure;
-import org.junit.notify.RunListener;
-import org.junit.plan.LeafPlan;
-import org.junit.plan.Plan;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
+import org.junit.runner.description.Description;
+import org.junit.runner.description.TestDescription;
+import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunListener;
 
 public class TestListenerTest {
 	
 	int count;
 	
 	class ErrorListener implements RunListener {
-		public void testRunStarted(Plan plan) throws Exception {
+		public void testRunStarted(Description description) throws Exception {
 			throw new Error();
 		}
 
 		public void testRunFinished(Result result) {
 		}
 
-		public void testStarted(LeafPlan plan) {
+		public void testStarted(TestDescription description) {
 		}
 
-		public void testFinished(LeafPlan plan) {
+		public void testFinished(TestDescription description) {
 		}
 
 		public void testFailure(Failure failure) {
 		}
 
-		public void testIgnored(LeafPlan plan) {
+		public void testIgnored(TestDescription description) {
 		}
 	}
 	
@@ -48,7 +48,7 @@ public class TestListenerTest {
 	
 	class ExceptionListener extends ErrorListener {
 		@Override
-		public void testRunStarted(Plan plan) throws Exception {
+		public void testRunStarted(Description description) throws Exception {
 			count++;
 			throw new Exception();
 		}

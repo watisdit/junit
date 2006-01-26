@@ -3,18 +3,18 @@
  */
 package junit.framework;
 
-import org.junit.plan.LeafPlan;
+import org.junit.runner.description.TestDescription;
 
 public class JUnit4TestCaseFacade implements Test {
-	private final LeafPlan fPlan;
+	private final TestDescription fDescription;
 
-	JUnit4TestCaseFacade(LeafPlan plan) {
-		fPlan = plan;
+	JUnit4TestCaseFacade(TestDescription description) {
+		fDescription = description;
 	}
 
 	@Override
 	public String toString() {
-		return getPlan().toString();
+		return getDescription().toString();
 	}
 
 	public int countTestCases() {
@@ -26,7 +26,7 @@ public class JUnit4TestCaseFacade implements Test {
 				"This test stub created only for informational purposes.");
 	}
 
-	public LeafPlan getPlan() {
-		return fPlan;
+	public TestDescription getDescription() {
+		return fDescription;
 	}
 }

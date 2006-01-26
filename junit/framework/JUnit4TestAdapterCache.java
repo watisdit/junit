@@ -8,17 +8,17 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import org.junit.notify.Failure;
-import org.junit.notify.RunListener;
-import org.junit.notify.RunNotifier;
-import org.junit.plan.CompositePlan;
-import org.junit.plan.LeafPlan;
-import org.junit.plan.Plan;
-import org.junit.plan.Plan.Visitor;
+import org.junit.internal.runners.TestFailure;
 import org.junit.runner.Result;
-import org.junit.runner.internal.TestFailure;
+import org.junit.runner.description.Description;
+import org.junit.runner.description.SuiteDescription;
+import org.junit.runner.description.TestDescription;
+import org.junit.runner.description.Description.Visitor;
+import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunListener;
+import org.junit.runner.notification.RunNotifier;
 
-public class JUnit4TestAdapterCache extends HashMap<LeafPlan, Test> {
+public class JUnit4TestAdapterCache extends HashMap<TestDescription, Test> {
 	private static final long serialVersionUID = 1L;
 	private static final JUnit4TestAdapterCache fInstance = new JUnit4TestAdapterCache();
 
@@ -26,32 +26,32 @@ public class JUnit4TestAdapterCache extends HashMap<LeafPlan, Test> {
 		return fInstance;
 	}
 	
-	public Test asTest(Plan plan) {
-		return plan.accept(new Visitor<Test>() {
-			public Test visitComposite(CompositePlan plan) {
-				return createTest(plan);
+	public Test asTest(Description description) {
+		return description.accept(new Visitor<Test>() {
+			public Test visitSuite(SuiteDescription description) {
+				return createTest(description);
 			}
 
-			public Test visitLeaf(LeafPlan plan) {
-				if (!containsKey(plan))
-					put(plan, createTest(plan));
-				return get(plan);
+			public Test visitTest(TestDescription description) {
+				if (!containsKey(description))
+					put(description, createTest(description));
+				return get(description);
 			}
 		});
 	}
 
-	Test createTest(Plan plan) {
-		return plan.accept(new Visitor<Test>() {
-			public Test visitComposite(CompositePlan plan) {
-				TestSuite suite = new TestSuite(plan.getName());
-				for (Plan child : plan.getChildren()) {
+	Test createTest(Description description) {
+		return description.accept(new Visitor<Test>() {
+			public Test visitSuite(SuiteDescription description) {
+				TestSuite suite = new TestSuite(description.getName());
+				for (Description child : description.getChildren()) {
 					suite.addTest(asTest(child));
 				}
 				return suite;
 			}
 
-			public Test visitLeaf(final LeafPlan plan) {
-				return new JUnit4TestCaseFacade(plan);
+			public Test visitTest(final TestDescription description) {
+				return new JUnit4TestCaseFacade(description);
 			}
 		});
 	}
@@ -60,7 +60,7 @@ public class JUnit4TestAdapterCache extends HashMap<LeafPlan, Test> {
 			final JUnit4TestAdapter adapter) {
 		RunNotifier notifier = new RunNotifier();
 		notifier.addListener(new RunListener() {
-			public void testIgnored(LeafPlan plan) throws Exception {
+			public void testIgnored(TestDescription description) throws Exception {
 			}
 
 			public void testFailure(Failure failure) throws Exception {
@@ -70,43 +70,43 @@ public class JUnit4TestAdapterCache extends HashMap<LeafPlan, Test> {
 			private Test getTest(Failure failure) {
 				if (failure instanceof TestFailure) {
 					TestFailure tf = (TestFailure) failure;
-					return asTest(tf.getPlan());
+					return asTest(tf.getDescription());
 				} else {
 					return null;
 				}
 			}
 
-			public void testFinished(LeafPlan plan)
+			public void testFinished(TestDescription description)
 					throws Exception {
-				result.endTest(asTest(plan));
+				result.endTest(asTest(description));
 			}
 
-			public void testStarted(LeafPlan plan)
+			public void testStarted(TestDescription description)
 					throws Exception {
-				result.startTest(asTest(plan));
+				result.startTest(asTest(description));
 			}
 
 			public void testRunFinished(Result result) throws Exception {
 			}
 
-			public void testRunStarted(Plan plan) throws Exception {
+			public void testRunStarted(Description description) throws Exception {
 			}
 		});
 		return notifier;
 	}
 
-	public List<Test> asTestList(Plan plan) {
-		return plan.accept(new Visitor<List<Test>>() {
-			public List<Test> visitComposite(CompositePlan plan) {
+	public List<Test> asTestList(Description description) {
+		return description.accept(new Visitor<List<Test>>() {
+			public List<Test> visitSuite(SuiteDescription description) {
 				List<Test> returnThis = new ArrayList<Test>();
-				for (Plan child : plan.getChildren()) {
+				for (Description child : description.getChildren()) {
 					returnThis.add(asTest(child));
 				}
 				return returnThis;
 			}
 
-			public List<Test> visitLeaf(LeafPlan plan) {
-				return Arrays.asList(asTest(plan));
+			public List<Test> visitTest(TestDescription description) {
+				return Arrays.asList(asTest(description));
 			}
 		});
 	}

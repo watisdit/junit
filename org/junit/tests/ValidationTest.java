@@ -2,12 +2,12 @@ package org.junit.tests;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.notify.RunNotifier;
-import org.junit.plan.Plan;
+import org.junit.internal.runners.InitializationError;
+import org.junit.internal.runners.TestClassRunner;
 import org.junit.runner.Request;
 import org.junit.runner.Runner;
-import org.junit.runner.internal.InitializationError;
-import org.junit.runner.internal.TestClassRunner;
+import org.junit.runner.description.Description;
+import org.junit.runner.notification.RunNotifier;
 
 import static org.junit.Assert.assertEquals;
 
@@ -23,7 +23,7 @@ public class ValidationTest {
 	public void testClassRunnerHandlesBeforeClassAndAfterClassValidation() throws InitializationError {
 		new TestClassRunner(WrongBeforeClass.class, new Runner() {
 			@Override
-			public Plan getPlan() {
+			public Description getDescription() {
 				return null;
 			}
 
@@ -36,6 +36,6 @@ public class ValidationTest {
 	
 	@Test
 	public void initializationErrorIsOnCorrectClass() {
-		assertEquals(WrongBeforeClass.class.getName(), Request.aClass(WrongBeforeClass.class).getRunner().getPlan().getName());
+		assertEquals(WrongBeforeClass.class.getName(), Request.aClass(WrongBeforeClass.class).getRunner().getDescription().getName());
 	}
 }

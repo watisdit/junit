@@ -3,20 +3,19 @@ package org.junit.tests;
 import static org.junit.Assert.assertTrue;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
-import org.junit.notify.RunNotifier;
-import org.junit.plan.CompositePlan;
-import org.junit.plan.Plan;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
-import org.junit.runner.internal.ClassRunner;
+import org.junit.runner.Runner;
+import org.junit.runner.description.Description;
+import org.junit.runner.description.SuiteDescription;
+import org.junit.runner.notification.RunNotifier;
 
 public class RunWithTest {
 
 	private static String log;
 
-	public static class ExampleRunner extends ClassRunner {
+	public static class ExampleRunner extends Runner {
 		public ExampleRunner(Class<? extends Object> klass) {
-			super(klass);
 			log+= "initialize";
 		}
 
@@ -32,11 +31,10 @@ public class RunWithTest {
 		}
 
 		@Override
-		public Plan getPlan() {
+		public Description getDescription() {
 			log+= "plan";
-			return new CompositePlan("example");
-		}
-		
+			return new SuiteDescription("example");
+		}		
 	}
 	
 	@RunWith(ExampleRunner.class)

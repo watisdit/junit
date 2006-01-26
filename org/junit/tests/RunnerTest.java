@@ -5,12 +5,12 @@ import static org.junit.Assert.assertTrue;
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 import org.junit.Test;
-import org.junit.notify.Failure;
-import org.junit.notify.RunListener;
-import org.junit.plan.LeafPlan;
-import org.junit.plan.Plan;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
+import org.junit.runner.description.Description;
+import org.junit.runner.description.TestDescription;
+import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunListener;
 
 public class RunnerTest {
 
@@ -20,23 +20,23 @@ public class RunnerTest {
 
 		int testCount;
 
-		public void testRunStarted(Plan plan) {
-			this.testCount= plan.testCount();
+		public void testRunStarted(Description description) {
+			this.testCount= description.testCount();
 		}
 
 		public void testRunFinished(Result result) {
 		}
 
-		public void testStarted(LeafPlan plan) {
+		public void testStarted(TestDescription description) {
 		}
 
 		public void testFailure(Failure failure) {
 		}
 
-		public void testIgnored(LeafPlan plan) {
+		public void testIgnored(TestDescription description) {
 		}
 
-		public void testFinished(LeafPlan plan) {
+		public void testFinished(TestDescription description) {
 		}
 		
 	}
@@ -77,7 +77,7 @@ public class RunnerTest {
 		wasRun= false;
 		RunListener listener= new MyListener() {
 			@Override
-			public void testFinished(LeafPlan plan) {
+			public void testFinished(TestDescription description) {
 				wasRun= true;
 			}
 		};

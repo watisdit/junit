@@ -9,23 +9,22 @@ import junit.framework.TestListener;
 import junit.framework.TestResult;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.notify.RunNotifier;
-import org.junit.plan.Plan;
+import org.junit.internal.runners.TestClassRunner;
 import org.junit.runner.RunWith;
-import org.junit.runner.internal.ClassRunner;
-import org.junit.runner.internal.TestClassRunner;
+import org.junit.runner.Runner;
+import org.junit.runner.description.Description;
+import org.junit.runner.notification.RunNotifier;
 
 public class InitializationErrorForwardCompatibilityTest {
-	public static class CantInitialize extends ClassRunner {
+	public static class CantInitialize extends Runner {
 		private static final String UNIQUE_ERROR_MESSAGE = "Unique error message";
 
 		public CantInitialize(Class<? extends Object> klass) throws Exception {
-			super(klass);
 			throw new Exception(UNIQUE_ERROR_MESSAGE);
 		}
 
 		@Override
-		public Plan getPlan() {
+		public Description getDescription() {
 			return null;
 		}
 

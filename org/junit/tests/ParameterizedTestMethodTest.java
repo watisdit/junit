@@ -12,10 +12,10 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.internal.runners.MethodValidator;
 import org.junit.runner.RunWith;
-import org.junit.runner.extensions.Parameterized;
-import org.junit.runner.extensions.Parameterized.Parameters;
-import org.junit.runner.internal.MethodValidator;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
 public class ParameterizedTestMethodTest {

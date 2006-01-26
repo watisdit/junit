@@ -1,14 +1,14 @@
 package org.junit.runner;
 
-import org.junit.notify.RunNotifier;
-import org.junit.plan.Plan;
+import org.junit.runner.description.Description;
+import org.junit.runner.notification.RunNotifier;
 
 public abstract class Runner {
-	public abstract Plan getPlan();
+	public abstract Description getDescription();
 
 	public abstract void run(RunNotifier notifier);
 	
 	public int testCount() {
-		return getPlan().testCount();
+		return getDescription().testCount();
 	}
 }

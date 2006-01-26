@@ -6,30 +6,30 @@ import java.util.Comparator;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.notify.RunNotifier;
-import org.junit.plan.Plan;
+import org.junit.internal.runners.InitializationError;
+import org.junit.internal.runners.TestClassRunner;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.RunWith;
-import org.junit.runner.extensions.Enclosed;
-import org.junit.runner.extensions.Sorter;
-import org.junit.runner.internal.ClassRunner;
-import org.junit.runner.internal.InitializationError;
-import org.junit.runner.internal.TestClassRunner;
+import org.junit.runner.Runner;
+import org.junit.runner.description.Description;
+import org.junit.runner.manipulation.Sorter;
+import org.junit.runner.notification.RunNotifier;
+import org.junit.runners.Enclosed;
 
 @RunWith(Enclosed.class)
 public class SortableTest {
-	private static Comparator<Plan> forward() {
-		return new Comparator<Plan>() {
-			public int compare(Plan o1, Plan o2) {
+	private static Comparator<Description> forward() {
+		return new Comparator<Description>() {
+			public int compare(Description o1, Description o2) {
 				return o1.getName().compareTo(o2.getName());
 			}
 		};
 	}
 	
-	private static Comparator<Plan> backward() {
-		return new Comparator<Plan>() {
-			public int compare(Plan o1, Plan o2) {
+	private static Comparator<Description> backward() {
+		return new Comparator<Description>() {
+			public int compare(Description o1, Description o2) {
 				return o2.getName().compareTo(o1.getName());
 			}
 		};
@@ -93,19 +93,18 @@ public class SortableTest {
 	}
 	
 	public static class UnsortableRunnersAreHandledWithoutCrashing {
-		public static class UnsortableRunner extends ClassRunner {
+		public static class UnsortableRunner extends Runner {
 			public UnsortableRunner(Class<? extends Object> klass) {
-				super(klass);
 			}
 			
 			@Override
-			public Plan getPlan() {
+			public Description getDescription() {
 				return null;
 			}
 			
 			@Override
 			public void run(RunNotifier notifier) {
-			}		
+			}
 		}
 		
 		@RunWith(UnsortableRunner.class)

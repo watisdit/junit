@@ -2,11 +2,11 @@ package org.junit.tests;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.notify.RunNotifier;
-import org.junit.notify.StoppedByUserException;
-import org.junit.plan.LeafPlan;
+import org.junit.internal.runners.TestMethodRunner;
 import org.junit.runner.Request;
-import org.junit.runner.internal.TestMethodRunner;
+import org.junit.runner.description.TestDescription;
+import org.junit.runner.notification.RunNotifier;
+import org.junit.runner.notification.StoppedByUserException;
 
 public class UserStopTest {
 	private RunNotifier fNotifier;
@@ -22,7 +22,7 @@ public class UserStopTest {
 
 	@Test(expected=StoppedByUserException.class) public void stopMethodRunner() throws Exception {
 		new TestMethodRunner(this, OneTest.class.getMethod("foo"), fNotifier,
-				new LeafPlan(OneTest.class, "foo")).run();
+				new TestDescription(OneTest.class, "foo")).run();
 	}
 	
 	public static class OneTest {

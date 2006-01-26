@@ -2,9 +2,9 @@ package junit.framework;
 
 import java.util.List;
 
-import org.junit.plan.Plan;
 import org.junit.runner.Request;
 import org.junit.runner.Runner;
+import org.junit.runner.description.Description;
 
 public class JUnit4TestAdapter implements Test {
 	private final Class<? extends Object> fNewTestClass;
@@ -34,7 +34,7 @@ public class JUnit4TestAdapter implements Test {
 
 	// reflective interface for Eclipse
 	public List<Test> getTests() {
-		return fCache.asTestList(getPlan());
+		return fCache.asTestList(getDescription());
 	}
 
 	// reflective interface for Eclipse
@@ -42,8 +42,8 @@ public class JUnit4TestAdapter implements Test {
 		return fNewTestClass;
 	}
 	
-	public Plan getPlan() {
-		return fRunner.getPlan();
+	public Description getDescription() {
+		return fRunner.getDescription();
 	}
 
 	@Override

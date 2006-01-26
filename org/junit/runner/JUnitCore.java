@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import junit.runner.Version;
-import org.junit.notify.RunListener;
-import org.junit.notify.RunNotifier;
-import org.junit.runner.internal.OldTestClassRunner;
-import org.junit.runner.internal.TextListener;
+import org.junit.internal.runners.OldTestClassRunner;
+import org.junit.internal.runners.TextListener;
+import org.junit.runner.notification.RunListener;
+import org.junit.runner.notification.RunNotifier;
 
 
 public class JUnitCore {
@@ -69,7 +69,7 @@ public class JUnitCore {
 		RunListener listener = fResult.createListener();
 		fNotifier.addListener(listener);
 		try {
-			fNotifier.fireTestRunStarted(runner.getPlan());
+			fNotifier.fireTestRunStarted(runner.getDescription());
 			runner.run(fNotifier);
 			fNotifier.fireTestRunFinished(fResult);
 		} finally {

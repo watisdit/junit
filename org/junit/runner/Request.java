@@ -3,21 +3,21 @@ package org.junit.runner;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-import org.junit.plan.CompositePlan;
-import org.junit.plan.LeafPlan;
-import org.junit.plan.Plan;
-import org.junit.plan.Plan.Visitor;
-import org.junit.runner.extensions.Filter;
-import org.junit.runner.internal.request.ClassRequest;
-import org.junit.runner.internal.request.ClassesRequest;
-import org.junit.runner.internal.request.ErrorReportingRequest;
-import org.junit.runner.internal.request.FilterRequest;
-import org.junit.runner.internal.request.SortingRequest;
+import org.junit.internal.requests.ClassRequest;
+import org.junit.internal.requests.ClassesRequest;
+import org.junit.internal.requests.ErrorReportingRequest;
+import org.junit.internal.requests.FilterRequest;
+import org.junit.internal.requests.SortingRequest;
+import org.junit.runner.description.Description;
+import org.junit.runner.description.SuiteDescription;
+import org.junit.runner.description.TestDescription;
+import org.junit.runner.description.Description.Visitor;
+import org.junit.runner.manipulation.Filter;
 
 public abstract class Request {
 	public static Request aMethod(Class<?> clazz, String methodName) {
 		return Request.aClass(clazz)
-				.filterWith(new LeafPlan(clazz, methodName));
+				.filterWith(new TestDescription(clazz, methodName));
 	}
 
 	public static Request aClass(Class<?> clazz) {
@@ -39,22 +39,22 @@ public abstract class Request {
 		return new FilterRequest(this, filter);
 	}
 
-	public Request filterWith(final LeafPlan desiredPlan) {
+	public Request filterWith(final TestDescription desiredDescription) {
 		return filterWith(new Filter() {
 			@Override
-			public boolean shouldRun(Plan plan) {
-				return plan.accept(new Visitor<Boolean>() {
-					public Boolean visitComposite(CompositePlan plan) {
-						ArrayList<Plan> children = plan.getChildren();
-						for (Plan each : children) {
+			public boolean shouldRun(Description description) {
+				return description.accept(new Visitor<Boolean>() {
+					public Boolean visitSuite(SuiteDescription description) {
+						ArrayList<Description> children = description.getChildren();
+						for (Description each : children) {
 							if (shouldRun(each))
 								return true;
 						}
 						return false;
 					}
 
-					public Boolean visitLeaf(LeafPlan plan) {
-						return desiredPlan.equals(plan);
+					public Boolean visitTest(TestDescription description) {
+						return desiredDescription.equals(description);
 					}
 				});
 			}
@@ -62,12 +62,12 @@ public abstract class Request {
 			@Override
 			public String describe() {
 				// TODO: Is this duped?  DUP doesn't work
-				return String.format("Method %s.%s()", desiredPlan.getTestClass().getName(), desiredPlan.getName());
+				return String.format("Method %s.%s()", desiredDescription.getTestClass().getName(), desiredDescription.getName());
 			}
 		});
 	}
 
-	public Request sortWith(Comparator<Plan> comparator) {
+	public Request sortWith(Comparator<Description> comparator) {
 		return new SortingRequest(this, comparator);
 	}
 }

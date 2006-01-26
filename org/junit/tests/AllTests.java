@@ -2,8 +2,8 @@ package org.junit.tests;
 
 import junit.framework.JUnit4TestAdapter;
 import org.junit.runner.RunWith;
-import org.junit.runner.extensions.Suite;
-import org.junit.runner.extensions.Suite.SuiteClasses;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -37,4 +37,6 @@ public class AllTests {
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(AllTests.class);
 	}
+//	@Ignore
+//	@Test public void foo() {}
 }

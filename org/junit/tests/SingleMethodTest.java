@@ -6,17 +6,17 @@ import java.util.Collection;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.plan.CompositePlan;
-import org.junit.plan.LeafPlan;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
-import org.junit.runner.extensions.Parameterized;
-import org.junit.runner.extensions.Suite;
-import org.junit.runner.extensions.Parameterized.Parameters;
-import org.junit.runner.extensions.Suite.SuiteClasses;
+import org.junit.runner.description.SuiteDescription;
+import org.junit.runner.description.TestDescription;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Suite;
+import org.junit.runners.Parameterized.Parameters;
+import org.junit.runners.Suite.SuiteClasses;
 
 public class SingleMethodTest {
 	public static int count;
@@ -99,8 +99,8 @@ public class SingleMethodTest {
 
 	@Test
 	public void eliminateUnnecessaryTreeBranches() throws Exception {
-		Runner runner = Request.aClass(OneTwoSuite.class).filterWith(new LeafPlan(TestOne.class, "a")).getRunner();
-		CompositePlan plan = (CompositePlan) runner.getPlan();
-		assertEquals(1, plan.getChildren().size());
+		Runner runner = Request.aClass(OneTwoSuite.class).filterWith(new TestDescription(TestOne.class, "a")).getRunner();
+		SuiteDescription description = (SuiteDescription) runner.getDescription();
+		assertEquals(1, description.getChildren().size());
 	}
 }

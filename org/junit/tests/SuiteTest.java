@@ -15,8 +15,8 @@ import org.junit.runner.Request;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
-import org.junit.runner.extensions.Suite;
-import org.junit.runner.extensions.Suite.SuiteClasses;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
 public class SuiteTest {
 	public static class TestA {

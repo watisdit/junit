@@ -14,6 +14,7 @@ public class ExpectedTest {
 			throw new Exception();
 		}
 	}
+	
 	@Test public void expected() {
 		JUnitCore core= new JUnitCore();
 		Result result= core.run(Expected.class);

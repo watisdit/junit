@@ -13,9 +13,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.internal.runners.MethodValidator;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
-import org.junit.runner.internal.MethodValidator;
 
 public class TestMethodTest {
 

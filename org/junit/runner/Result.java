@@ -3,10 +3,10 @@ package org.junit.runner;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.notify.Failure;
-import org.junit.notify.RunListener;
-import org.junit.plan.LeafPlan;
-import org.junit.plan.Plan;
+import org.junit.runner.description.Description;
+import org.junit.runner.description.TestDescription;
+import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunListener;
 
 public class Result {
 	private int fCount= 0;
@@ -40,7 +40,7 @@ public class Result {
 	}
 
 	private class Listener implements RunListener {
-		public void testRunStarted(Plan plan) throws Exception {
+		public void testRunStarted(Description description) throws Exception {
 			fStartTime= System.currentTimeMillis();
 		}
 
@@ -49,18 +49,18 @@ public class Result {
 			fRunTime+= endTime - fStartTime;
 		}
 
-		public void testStarted(LeafPlan plan) throws Exception {
+		public void testStarted(TestDescription description) throws Exception {
 			fCount++;
 		}
 
-		public void testFinished(LeafPlan plan) throws Exception {
+		public void testFinished(TestDescription description) throws Exception {
 		}
 
 		public void testFailure(Failure failure) throws Exception {
 			fFailures.add(failure);
 		}
 
-		public void testIgnored(LeafPlan plan) throws Exception {
+		public void testIgnored(TestDescription description) throws Exception {
 			fIgnoreCount++;
 		}
 	}

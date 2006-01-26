@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
-import org.junit.runner.extensions.AllTests;
+import org.junit.runners.AllTests;
 
 public class AllTestsTest {
 	

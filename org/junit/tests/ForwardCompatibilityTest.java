@@ -11,10 +11,10 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.notify.RunNotifier;
-import org.junit.plan.Plan;
 import org.junit.runner.RunWith;
-import org.junit.runner.internal.ClassRunner;
+import org.junit.runner.Runner;
+import org.junit.runner.description.Description;
+import org.junit.runner.notification.RunNotifier;
 
 public class ForwardCompatibilityTest extends TestCase {
 	static String fLog;
@@ -182,9 +182,8 @@ public class ForwardCompatibilityTest extends TestCase {
 	
 	private static boolean wasRun = false;
 	
-	public static class MarkerRunner extends ClassRunner {
+	public static class MarkerRunner extends Runner {
 		public MarkerRunner(Class< ? extends Object> klass) {
-			super(klass);
 		}
 
 		@Override
@@ -198,7 +197,7 @@ public class ForwardCompatibilityTest extends TestCase {
 		}
 
 		@Override
-		public Plan getPlan() {
+		public Description getDescription() {
 			return null;
 		}
 	}

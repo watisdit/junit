@@ -5,12 +5,12 @@ import static org.junit.Assert.assertEquals;
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 import org.junit.Test;
-import org.junit.notify.Failure;
-import org.junit.notify.RunListener;
-import org.junit.plan.LeafPlan;
-import org.junit.plan.Plan;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
+import org.junit.runner.description.Description;
+import org.junit.runner.description.TestDescription;
+import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunListener;
 
 public class PreJUnit4TestCaseRunnerTest {
 
@@ -25,8 +25,8 @@ public class PreJUnit4TestCaseRunnerTest {
 		JUnitCore runner= new JUnitCore();
 		RunListener listener= new RunListener() {
 
-			public void testStarted(LeafPlan plan) {
-				assertEquals("testOne", plan.getName());
+			public void testStarted(TestDescription description) {
+				assertEquals("testOne", description.getName());
 				count++;
 			}
 
@@ -36,13 +36,13 @@ public class PreJUnit4TestCaseRunnerTest {
 			public void testFailure(Failure failure) {
 			}
 
-			public void testRunStarted(Plan plan) {
+			public void testRunStarted(Description description) {
 			}
 
-			public void testIgnored(LeafPlan plan) {
+			public void testIgnored(TestDescription description) {
 			}
 
-			public void testFinished(LeafPlan plan) {
+			public void testFinished(TestDescription description) {
 			}
 		};
 		

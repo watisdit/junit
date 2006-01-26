@@ -8,10 +8,10 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.internal.runners.OldTestClassRunner;
+import org.junit.internal.runners.TestFailure;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
-import org.junit.runner.internal.OldTestClassRunner;
-import org.junit.runner.internal.TestFailure;
 
 public class OldTestClassRunnerTest {
 	public static class MyTest extends TestCase {
@@ -35,6 +35,6 @@ public class OldTestClassRunnerTest {
 		OldTestClassRunner runner = new OldTestClassRunner(new JUnit4TestAdapter(AnnotatedTest.class));
 		Result result = new JUnitCore().run(runner);
 		TestFailure failure = (TestFailure) result.getFailures().get(0);
-		assertEquals(AnnotatedTest.class, failure.getPlan().getTestClass());
+		assertEquals(AnnotatedTest.class, failure.getDescription().getTestClass());
 	}
 }

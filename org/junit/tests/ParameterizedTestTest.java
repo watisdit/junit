@@ -10,14 +10,14 @@ import junit.framework.JUnit4TestAdapter;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.plan.CompositePlan;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
-import org.junit.runner.extensions.Parameterized;
-import org.junit.runner.extensions.Parameterized.Parameters;
+import org.junit.runner.description.SuiteDescription;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 public class ParameterizedTestTest {
 	@RunWith(Parameterized.class)
@@ -71,8 +71,8 @@ public class ParameterizedTestTest {
 	@Test
 	public void plansNamedCorrectly() throws Exception {
 		Runner runner = Request.aClass(FibonacciTest.class).getRunner();
-		CompositePlan plan = (CompositePlan) runner.getPlan();
-		assertEquals("[0]", plan.getChildren().get(0).getName());
+		SuiteDescription description = (SuiteDescription) runner.getDescription();
+		assertEquals("[0]", description.getChildren().get(0).getName());
 	}
 
 	private static String fLog;
