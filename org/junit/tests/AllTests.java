@@ -7,6 +7,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({
+		SuiteDescriptionTest.class,
 		AllTestsTest.class,
 		AnnotationTest.class,
 		AssertionTest.class,
@@ -37,6 +38,4 @@ public class AllTests {
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(AllTests.class);
 	}
-//	@Ignore
-//	@Test public void foo() {}
 }

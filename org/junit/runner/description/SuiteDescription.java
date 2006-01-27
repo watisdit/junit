@@ -2,9 +2,9 @@ package org.junit.runner.description;
 
 import java.util.ArrayList;
 
-
 public class SuiteDescription extends Description {
-	private final ArrayList<Description> fChildren= new ArrayList<Description>();
+	private final ArrayList<Description> fChildren = new ArrayList<Description>();
+
 	private final String fName;
 
 	public SuiteDescription(Class<? extends Object> testClass) {
@@ -12,14 +12,14 @@ public class SuiteDescription extends Description {
 	}
 
 	public SuiteDescription(String name) {
-		fName= name;
+		fName = name;
 	}
 
 	@Override
 	public int testCount() {
-		int n= 0;
+		int n = 0;
 		for (Description child : getChildren()) {
-			n+= child.testCount();
+			n += child.testCount();
 		}
 		return n;
 	}
@@ -43,5 +43,21 @@ public class SuiteDescription extends Description {
 	@Override
 	public String getName() {
 		return fName;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return (obj instanceof SuiteDescription)
+				&& equalsSuiteDescription((SuiteDescription) obj);
+	}
+
+	private boolean equalsSuiteDescription(SuiteDescription desc) {
+		return getName().equals(desc.getName())
+				&& getChildren().equals(desc.getChildren());
+	}
+
+	@Override
+	public int hashCode() {
+		return getName().hashCode();
 	}
 }
