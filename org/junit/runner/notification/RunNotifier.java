@@ -11,7 +11,7 @@ import org.junit.runner.description.TestDescription;
 
 public class RunNotifier {
 	private List<RunListener> fListeners= new ArrayList<RunListener>();
-	private boolean fPleaseStop = false;
+	private boolean fPleaseStop= false;
 	
 	public void addListener(RunListener listener) {
 		fListeners.add(listener);
@@ -97,6 +97,6 @@ public class RunNotifier {
 	}
 
 	public void pleaseStop() {
-		fPleaseStop = true;
+		fPleaseStop= true;
 	}
 }

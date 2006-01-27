@@ -21,7 +21,7 @@ public class OldTestClassRunnerTest {
 	}
 	
 	@Test public void plansDecoratorCorrectly() {
-		OldTestClassRunner runner = new OldTestClassRunner(new TestDecorator(new TestSuite(MyTest.class)));
+		OldTestClassRunner runner= new OldTestClassRunner(new TestDecorator(new TestSuite(MyTest.class)));
 		assertEquals(1, runner.testCount());
 	}
 	
@@ -32,9 +32,9 @@ public class OldTestClassRunnerTest {
 	}
 	
 	@Test public void canUnadaptAnAdapter() {
-		OldTestClassRunner runner = new OldTestClassRunner(new JUnit4TestAdapter(AnnotatedTest.class));
-		Result result = new JUnitCore().run(runner);
-		TestFailure failure = (TestFailure) result.getFailures().get(0);
+		OldTestClassRunner runner= new OldTestClassRunner(new JUnit4TestAdapter(AnnotatedTest.class));
+		Result result= new JUnitCore().run(runner);
+		TestFailure failure= (TestFailure) result.getFailures().get(0);
 		assertEquals(AnnotatedTest.class, failure.getDescription().getTestClass());
 	}
 }

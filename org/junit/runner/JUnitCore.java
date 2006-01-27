@@ -66,7 +66,7 @@ public class JUnitCore {
 	
 	public Result run(Runner runner) {
 		fResult= new Result();
-		RunListener listener = fResult.createListener();
+		RunListener listener= fResult.createListener();
 		fNotifier.addListener(listener);
 		try {
 			fNotifier.fireTestRunStarted(runner.getDescription());

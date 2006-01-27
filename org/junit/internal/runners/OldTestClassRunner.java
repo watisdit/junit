@@ -56,7 +56,7 @@ public class OldTestClassRunner extends Runner {
 			
 			private TestDescription asDescription(Test test) {
 				if (test instanceof JUnit4TestCaseFacade) {
-					JUnit4TestCaseFacade facade = (JUnit4TestCaseFacade) test;
+					JUnit4TestCaseFacade facade= (JUnit4TestCaseFacade) test;
 					return facade.getDescription();
 				}
 				return new TestDescription(test.getClass(), getName(test));
@@ -83,20 +83,20 @@ public class OldTestClassRunner extends Runner {
 
 	private Description makeDescription(Test test) {
 		if (test instanceof TestCase) {
-			TestCase tc = (TestCase) test;
+			TestCase tc= (TestCase) test;
 			return new TestDescription(tc.getClass(), tc.getName());
 		} else if (test instanceof TestSuite) {
-			TestSuite ts = (TestSuite) test;
-			SuiteDescription description = new SuiteDescription(ts.getName());
-			int n = ts.testCount();
-			for (int i = 0; i < n; i++)
+			TestSuite ts= (TestSuite) test;
+			SuiteDescription description= new SuiteDescription(ts.getName());
+			int n= ts.testCount();
+			for (int i= 0; i < n; i++)
 				description.addChild(makeDescription(ts.testAt(i)));
 			return description;
 		} else if (test instanceof JUnit4TestAdapter) {
-			JUnit4TestAdapter adapter = (JUnit4TestAdapter) test;
+			JUnit4TestAdapter adapter= (JUnit4TestAdapter) test;
 			return adapter.getDescription();
 		} else if (test instanceof TestDecorator) {
-			TestDecorator decorator = (TestDecorator) test;
+			TestDecorator decorator= (TestDecorator) test;
 			return makeDescription(decorator.getTest());
 		} else {
 			// This is the best we can do in this case

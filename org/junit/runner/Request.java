@@ -45,7 +45,7 @@ public abstract class Request {
 			public boolean shouldRun(Description description) {
 				return description.accept(new Visitor<Boolean>() {
 					public Boolean visitSuite(SuiteDescription description) {
-						ArrayList<Description> children = description.getChildren();
+						ArrayList<Description> children= description.getChildren();
 						for (Description each : children) {
 							if (shouldRun(each))
 								return true;

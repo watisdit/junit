@@ -27,7 +27,7 @@ public class Parameterized extends TestClassRunner implements Filterable {
 	}
 
 	public static Collection<Object[]> eachOne(Object... params) {
-		ArrayList<Object[]> returnThis = new ArrayList<Object[]>();
+		ArrayList<Object[]> returnThis= new ArrayList<Object[]>();
 		for (Object param : params) {
 			returnThis.add(new Object[] { param });
 		}
@@ -43,9 +43,9 @@ public class Parameterized extends TestClassRunner implements Filterable {
 
 		private TestClassRunnerForParameters(Class<? extends Object> klass, Object[] parameters, int i) throws InitializationError {
 			super(klass);
-			fParameters = parameters;
-			fParameterSetNumber = i;
-			fConstructor = getOnlyConstructor();
+			fParameters= parameters;
+			fParameterSetNumber= i;
+			fConstructor= getOnlyConstructor();
 		}
 
 		@Override
@@ -64,7 +64,7 @@ public class Parameterized extends TestClassRunner implements Filterable {
 		}
 
 		private Constructor getOnlyConstructor() {
-			Constructor[] constructors = getTestClass().getConstructors();
+			Constructor[] constructors= getTestClass().getConstructors();
 			assertEquals(1, constructors.length);
 			return constructors[0];
 		}
@@ -75,8 +75,8 @@ public class Parameterized extends TestClassRunner implements Filterable {
 
 		public RunAllParameterMethods(Class<? extends Object> klass) throws Exception {
 			super(klass.getName());
-			fKlass = klass;
-			int i = 0;
+			fKlass= klass;
+			int i= 0;
 			for (final Object[] parameters : getParametersList()) {
 				super.add(new TestClassRunnerForParameters(klass, parameters, i++));
 			}
@@ -90,7 +90,7 @@ public class Parameterized extends TestClassRunner implements Filterable {
 		private Method getParametersMethod() throws Exception {
 			for (Method each : fKlass.getMethods()) {
 				if (Modifier.isStatic(each.getModifiers())) {
-					Annotation[] annotations = each.getAnnotations();
+					Annotation[] annotations= each.getAnnotations();
 					for (Annotation annotation : annotations) {
 						if (annotation.annotationType() == Parameters.class)
 							return each;

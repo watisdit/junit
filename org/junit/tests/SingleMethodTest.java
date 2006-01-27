@@ -38,9 +38,9 @@ public class SingleMethodTest {
 
 	@Test
 	public void oneTimeSetup() throws Exception {
-		count = 0;
-		Runner runner = Request.aMethod(OneTimeSetup.class, "one").getRunner();
-		Result result = new JUnitCore().run(runner);
+		count= 0;
+		Runner runner= Request.aMethod(OneTimeSetup.class, "one").getRunner();
+		Result result= new JUnitCore().run(runner);
 		
 		assertEquals(1, count);
 		assertEquals(1, result.getRunCount());
@@ -69,9 +69,9 @@ public class SingleMethodTest {
 
 	@Test
 	public void parameterizedOneTimeSetup() throws Exception {
-		count = 0;
-		Runner runner = Request.aMethod(ParameterizedOneTimeSetup.class, "one[0]").getRunner();
-		Result result = new JUnitCore().run(runner);
+		count= 0;
+		Runner runner= Request.aMethod(ParameterizedOneTimeSetup.class, "one[0]").getRunner();
+		Result result= new JUnitCore().run(runner);
 
 		assertEquals(1, count);
 		assertEquals(1, result.getRunCount());
@@ -79,7 +79,7 @@ public class SingleMethodTest {
 
 	@Test
 	public void filteringAffectsPlan() throws Exception {
-		Runner runner = Request.aMethod(OneTimeSetup.class, "one").getRunner();
+		Runner runner= Request.aMethod(OneTimeSetup.class, "one").getRunner();
 		assertEquals(1, runner.testCount());
 	}
 
@@ -99,8 +99,8 @@ public class SingleMethodTest {
 
 	@Test
 	public void eliminateUnnecessaryTreeBranches() throws Exception {
-		Runner runner = Request.aClass(OneTwoSuite.class).filterWith(new TestDescription(TestOne.class, "a")).getRunner();
-		SuiteDescription description = (SuiteDescription) runner.getDescription();
+		Runner runner= Request.aClass(OneTwoSuite.class).filterWith(new TestDescription(TestOne.class, "a")).getRunner();
+		SuiteDescription description= (SuiteDescription) runner.getDescription();
 		assertEquals(1, description.getChildren().size());
 	}
 }

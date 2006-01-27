@@ -24,12 +24,12 @@ public class EnclosedTest {
 	}
 	
 	@Test public void enclosedRunnerPlansEnclosedClasses() throws Exception {
-		Runner runner = Request.aClass(Enclosing.class).getRunner();
+		Runner runner= Request.aClass(Enclosing.class).getRunner();
 		assertEquals(5, runner.testCount());
 	}
 	
 	@Test public void enclosedRunnerRunsEnclosedClasses() throws Exception {
-		Result result = JUnitCore.runClasses(Enclosing.class);
+		Result result= JUnitCore.runClasses(Enclosing.class);
 		assertEquals(5, result.getRunCount());
 	}
 	

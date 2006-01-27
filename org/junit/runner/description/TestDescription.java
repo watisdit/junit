@@ -5,8 +5,8 @@ public class TestDescription extends Description {
 	private final String fName;
 
 	public TestDescription(Class clazz, String name) {
-		fClass = clazz;
-		fName = name;
+		fClass= clazz;
+		fName= name;
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class TestDescription extends Description {
 
 	@Override
 	public boolean equals(Object obj) {
-		TestDescription description = (TestDescription) obj;
+		TestDescription description= (TestDescription) obj;
 		return description.getTestClass().equals(getTestClass())
 				&& description.getName().equals(getName());
 	}

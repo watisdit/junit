@@ -23,16 +23,16 @@ public class TestClassMethodsRunner extends Runner implements Filterable, Sortab
 	private final Class<? extends Object> fTestClass;
 	
 	public TestClassMethodsRunner(Class<? extends Object> klass) throws InitializationError {
-		fTestClass = klass;
-		MethodValidator validator = new MethodValidator(klass);
+		fTestClass= klass;
+		MethodValidator validator= new MethodValidator(klass);
 		validator.validateInstanceMethods();
 		validator.assertValid();
-		fTestMethods = new TestIntrospector(getTestClass()).getTestMethods(Test.class);
+		fTestMethods= new TestIntrospector(getTestClass()).getTestMethods(Test.class);
 	}
 	
 	@Override
 	public void run(RunNotifier notifier) {
-			List<Method> methods = fTestMethods;
+			List<Method> methods= fTestMethods;
 			for (Method method : methods) {
 				try {
 					invokeTestMethod(method, notifier);
@@ -46,8 +46,8 @@ public class TestClassMethodsRunner extends Runner implements Filterable, Sortab
 
 	@Override
 	public Description getDescription() {
-		SuiteDescription spec = new SuiteDescription(getName());
-		List<Method> testMethods = fTestMethods;
+		SuiteDescription spec= new SuiteDescription(getName());
+		List<Method> testMethods= fTestMethods;
 		for (Method method : testMethods)
 				spec.addChild(methodDescription(method));
 		return spec;
@@ -74,8 +74,8 @@ public class TestClassMethodsRunner extends Runner implements Filterable, Sortab
 	}
 
 	public void filter(Filter filter) {
-		for (Iterator iter = fTestMethods.iterator(); iter.hasNext();) {
-			Method method = (Method) iter.next();
+		for (Iterator iter= fTestMethods.iterator(); iter.hasNext();) {
+			Method method= (Method) iter.next();
 			if (!filter.shouldRun(methodDescription(method)))
 				iter.remove();
 		}

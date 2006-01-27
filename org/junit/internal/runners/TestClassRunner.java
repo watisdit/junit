@@ -21,16 +21,16 @@ public class TestClassRunner extends Runner implements Filterable, Sortable {
 	}
 	
 	public TestClassRunner(Class<? extends Object> klass, Runner runner) throws InitializationError {
-		fTestClass = klass;
-		fEnclosedRunner = runner;
-		MethodValidator methodValidator = new MethodValidator(klass);
+		fTestClass= klass;
+		fEnclosedRunner= runner;
+		MethodValidator methodValidator= new MethodValidator(klass);
 		methodValidator.validateStaticMethods();
 		methodValidator.assertValid();
 	}
 
 	@Override
 	public void run(final RunNotifier notifier) {
-		BeforeAndAfterRunner runner = new BeforeAndAfterRunner(getTestClass(), BeforeClass.class, AfterClass.class) {		
+		BeforeAndAfterRunner runner= new BeforeAndAfterRunner(getTestClass(), BeforeClass.class, AfterClass.class) {		
 			@Override
 			protected void runUnprotected() {
 				fEnclosedRunner.run(notifier);

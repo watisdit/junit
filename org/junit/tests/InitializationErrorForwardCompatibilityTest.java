@@ -17,7 +17,7 @@ import org.junit.runner.notification.RunNotifier;
 
 public class InitializationErrorForwardCompatibilityTest {
 	public static class CantInitialize extends Runner {
-		private static final String UNIQUE_ERROR_MESSAGE = "Unique error message";
+		private static final String UNIQUE_ERROR_MESSAGE= "Unique error message";
 
 		public CantInitialize(Class<? extends Object> klass) throws Exception {
 			throw new Exception(UNIQUE_ERROR_MESSAGE);
@@ -40,7 +40,7 @@ public class InitializationErrorForwardCompatibilityTest {
 	private JUnit4TestAdapter fAdapter;
 	
 	@Before public void createAdapter() {
-		fAdapter = new JUnit4TestAdapter(
+		fAdapter= new JUnit4TestAdapter(
 				CantInitializeTests.class);
 	}
 	
@@ -51,7 +51,7 @@ public class InitializationErrorForwardCompatibilityTest {
 	
 	@Test
 	public void initializationErrorsAreThrownAtRuntime() {
-		TestResult result = new TestResult();
+		TestResult result= new TestResult();
 		fAdapter.run(result);
 		assertEquals(1, result.errorCount());
 		assertEquals(CantInitialize.UNIQUE_ERROR_MESSAGE, result.errors()
@@ -62,7 +62,7 @@ public class InitializationErrorForwardCompatibilityTest {
 		private junit.framework.Test fError;
 
 		public void addError(junit.framework.Test test, Throwable t) {
-			fError = test;
+			fError= test;
 		}
 
 		public void addFailure(junit.framework.Test test,
@@ -84,9 +84,9 @@ public class InitializationErrorForwardCompatibilityTest {
 	
 	@Test
 	public void generatedErrorTestsMatchUp() {
-		junit.framework.Test shouldFail = fAdapter.getTests().get(0);
-		TestResult result = new TestResult();
-		ErrorRememberingListener listener = new ErrorRememberingListener();
+		junit.framework.Test shouldFail= fAdapter.getTests().get(0);
+		TestResult result= new TestResult();
+		ErrorRememberingListener listener= new ErrorRememberingListener();
 		result.addListener(listener);
 		fAdapter.run(result);
 		assertNotNull(listener.getError());

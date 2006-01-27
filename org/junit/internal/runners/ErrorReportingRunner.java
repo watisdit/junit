@@ -14,8 +14,8 @@ public class ErrorReportingRunner extends Runner {
 	private final Throwable fThrowable;
 
 	public ErrorReportingRunner(TestDescription description, Throwable throwable) {
-		fDescription = description;
-		fThrowable = throwable;
+		fDescription= description;
+		fThrowable= throwable;
 	}
 
 	@Override

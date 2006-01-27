@@ -70,8 +70,8 @@ public class ParameterizedTestMethodTest {
 	}
 
 	public ParameterizedTestMethodTest(Class<? extends Object> class1, int errorCount) {
-		fClass = class1;
-		fErrorCount = errorCount;
+		fClass= class1;
+		fErrorCount= errorCount;
 	}
 	
 	@Parameters

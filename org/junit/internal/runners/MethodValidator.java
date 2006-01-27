@@ -15,21 +15,21 @@ import org.junit.Test;
 public class MethodValidator {
 	private final TestIntrospector fIntrospector;
 
-	private final List<Throwable> fErrors = new ArrayList<Throwable>();
+	private final List<Throwable> fErrors= new ArrayList<Throwable>();
 
 	private final Class<? extends Object> fTestClass;
 
 	public MethodValidator(Class<? extends Object> testClass) {
-		fTestClass = testClass;
-		fIntrospector = new TestIntrospector(testClass);
+		fTestClass= testClass;
+		fIntrospector= new TestIntrospector(testClass);
 	}
 
 	public void validateTestMethods(Class<? extends Annotation> annotation,
 			boolean isStatic) {
-		List<Method> methods = fIntrospector.getTestMethods(annotation);
+		List<Method> methods= fIntrospector.getTestMethods(annotation);
 		for (Method each : methods) {
 			if (Modifier.isStatic(each.getModifiers()) != isStatic) {
-				String state = isStatic ? "should" : "should not";
+				String state= isStatic ? "should" : "should not";
 				fErrors.add(new Exception("Method " + each.getName() + "() "
 						+ state + " be static"));
 			}

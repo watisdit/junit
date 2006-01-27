@@ -55,13 +55,13 @@ public class SuiteTest {
 	}
 
 	@Test public void forwardCompatibilityWorksWithGetTests() {
-		JUnit4TestAdapter adapter = new JUnit4TestAdapter(All.class);
-		List<? extends junit.framework.Test> tests = adapter.getTests();
+		JUnit4TestAdapter adapter= new JUnit4TestAdapter(All.class);
+		List<? extends junit.framework.Test> tests= adapter.getTests();
 		assertEquals(2, tests.size());
 	}
 	
 	@Test public void forwardCompatibilityWorksWithTestCount() {
-		JUnit4TestAdapter adapter = new JUnit4TestAdapter(All.class);
+		JUnit4TestAdapter adapter= new JUnit4TestAdapter(All.class);
 		assertEquals(2, adapter.countTestCases());
 	}
 	
@@ -70,12 +70,12 @@ public class SuiteTest {
 	@RunWith(Suite.class)
 	@SuiteClasses({TestA.class, TestB.class})
 	public static class AllWithBeforeAndAfterClass {
-		@BeforeClass public static void before() { log += "before "; }
-		@AfterClass public static void after() { log += "after "; }
+		@BeforeClass public static void before() { log+= "before "; }
+		@AfterClass public static void after() { log+= "after "; }
 	}
 	
 	@Test public void beforeAndAfterClassRunOnSuite() {
-		log = "";
+		log= "";
 		JUnitCore.runClasses(AllWithBeforeAndAfterClass.class);
 		assertEquals("before after ", log);
 	}
@@ -85,9 +85,9 @@ public class SuiteTest {
 	}
 	
 	@Test public void withoutSuiteClassAnnotationProducesFailure() {
-		Result result = JUnitCore.runClasses(AllWithOutAnnotation.class);
+		Result result= JUnitCore.runClasses(AllWithOutAnnotation.class);
 		assertEquals(1, result.getFailureCount());
-		String expected = String.format(
+		String expected= String.format(
 				"class '%s' must have a SuiteClasses annotation",
 				AllWithOutAnnotation.class.getName());
 		assertEquals(expected, result.getFailures().get(0).getMessage());		

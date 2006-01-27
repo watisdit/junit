@@ -27,7 +27,7 @@ public class ExpectedTest {
 		}
 	}
 	@Test public void unexpected() {
-		Result result = JUnitCore.runClasses(Unexpected.class);
+		Result result= JUnitCore.runClasses(Unexpected.class);
 		String message= result.getFailures().get(0).getMessage();
 		assertTrue(message.contains("expected<java.lang.Exception> but was<java.lang.Error>"));
 	}

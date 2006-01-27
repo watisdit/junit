@@ -26,7 +26,7 @@ public class TestMethodRunner extends BeforeAndAfterRunner {
 		fMethod= method;
 		fNotifier= notifier;
 		fTestIntrospector= new TestIntrospector(test.getClass());
-		fDescription = description;
+		fDescription= description;
 	}
 
 	public void run() {
@@ -57,7 +57,7 @@ public class TestMethodRunner extends BeforeAndAfterRunner {
 		Future<Object> result= service.submit(callable);
 		service.shutdown();
 		try {
-			boolean terminated = service.awaitTermination(timeout,
+			boolean terminated= service.awaitTermination(timeout,
 					TimeUnit.MILLISECONDS);
 			if (!terminated)
 				service.shutdownNow();

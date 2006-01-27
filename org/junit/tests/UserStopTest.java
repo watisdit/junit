@@ -12,7 +12,7 @@ public class UserStopTest {
 	private RunNotifier fNotifier;
 
 	@Before public void createNotifier() {
-		fNotifier = new RunNotifier();
+		fNotifier= new RunNotifier();
 		fNotifier.pleaseStop();		
 	}
 	

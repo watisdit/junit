@@ -12,13 +12,13 @@ public class SortingRequest extends Request {
 	private final Comparator<Description> fComparator;
 
 	public SortingRequest(Request request, Comparator<Description> comparator) {
-		fRequest = request;
-		fComparator = comparator;
+		fRequest= request;
+		fComparator= comparator;
 	}
 
 	@Override
 	public Runner getRunner() {
-		Runner runner = fRequest.getRunner();
+		Runner runner= fRequest.getRunner();
 		new Sorter(fComparator).apply(runner);
 		return runner;
 	}

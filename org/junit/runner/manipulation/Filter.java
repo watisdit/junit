@@ -4,7 +4,7 @@ import org.junit.runner.Runner;
 import org.junit.runner.description.Description;
 
 public abstract class Filter {
-	public static Filter ALL = new Filter() {
+	public static Filter ALL= new Filter() {
 		@Override
 		public boolean shouldRun(Description description) {
 			return true;
@@ -20,7 +20,7 @@ public abstract class Filter {
 
 	public Runner apply(Runner runner) {
 		if (runner instanceof Filterable) {
-			Filterable filterable = (Filterable)runner;
+			Filterable filterable= (Filterable)runner;
 			filterable.filter(this);
 		}
 		return runner;

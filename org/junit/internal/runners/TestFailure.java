@@ -15,7 +15,7 @@ public class TestFailure extends Failure {
 	 */
 	public TestFailure(TestDescription description, Throwable thrownException) {
 		super(thrownException);
-		fDescription = description;
+		fDescription= description;
 	}
 
 	@Override

@@ -4,11 +4,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class InitializationError extends Exception {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID= 1L;
 	private final List<Throwable> fErrors;
 
 	public InitializationError(List<Throwable> errors) {
-		fErrors = errors;
+		fErrors= errors;
 	}
 
 	public InitializationError(Throwable... errors) {

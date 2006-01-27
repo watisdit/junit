@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 
 public class SuiteDescription extends Description {
-	private final ArrayList<Description> fChildren = new ArrayList<Description>();
+	private final ArrayList<Description> fChildren= new ArrayList<Description>();
 	private final String fName;
 
 	public SuiteDescription(Class<? extends Object> testClass) {
@@ -12,14 +12,14 @@ public class SuiteDescription extends Description {
 	}
 
 	public SuiteDescription(String name) {
-		fName = name;
+		fName= name;
 	}
 
 	@Override
 	public int testCount() {
-		int n = 0;
+		int n= 0;
 		for (Description child : getChildren()) {
-			n += child.testCount();
+			n+= child.testCount();
 		}
 		return n;
 	}

@@ -96,8 +96,8 @@ public class MoneyTest {
 		assertTrue(!f12CHF.equals(f14CHF));
 	}
 	@Test public void zeroMoniesAreEqualRegardlessOfCurrency() {
-		   Money zeroDollars = new Money(0, "USD");
-		   Money zeroFrancs = new Money(0, "CHF");
+		   Money zeroDollars= new Money(0, "USD");
+		   Money zeroFrancs= new Money(0, "CHF");
 				
 		   assertEquals(zeroDollars, zeroFrancs);
 		   assertEquals(zeroDollars.hashCode(), zeroFrancs.hashCode());

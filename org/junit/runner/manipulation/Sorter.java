@@ -10,12 +10,12 @@ public class Sorter implements Comparator<Description> {
 	private final Comparator<Description> fComparator;
 
 	public Sorter(Comparator<Description> comparator) {
-		fComparator = comparator;
+		fComparator= comparator;
 	}
 
 	public void apply(Runner runner) {
 		if (runner instanceof Sortable) {
-			Sortable sortable = (Sortable) runner;
+			Sortable sortable= (Sortable) runner;
 			sortable.sort(this);
 		}
 	}

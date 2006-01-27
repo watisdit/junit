@@ -15,15 +15,15 @@ public class ClassRequest extends Request {
 	private final Class<? extends Object> fTestClass;
 
 	public ClassRequest(Class<? extends Object> each) {
-		fTestClass = each;
+		fTestClass= each;
 	}
 
 	@Override
 	public Runner getRunner() {
-		Class runnerClass = getRunnerClass(fTestClass);
+		Class runnerClass= getRunnerClass(fTestClass);
 		try {
-			Constructor constructor = runnerClass.getConstructor(Class.class); // TODO good error message if no such constructor
-			Runner runner = (Runner) constructor
+			Constructor constructor= runnerClass.getConstructor(Class.class); // TODO good error message if no such constructor
+			Runner runner= (Runner) constructor
 					.newInstance(new Object[] { fTestClass });
 			return runner;
 		} catch (Exception e) {

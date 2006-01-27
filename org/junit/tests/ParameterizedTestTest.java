@@ -33,8 +33,8 @@ public class ParameterizedTestTest {
 		private int fExpected;
 
 		public FibonacciTest(int input, int expected) {
-			fInput = input;
-			fExpected = expected;
+			fInput= input;
+			fExpected= expected;
 		}
 
 		@Test
@@ -49,14 +49,14 @@ public class ParameterizedTestTest {
 
 	@Test
 	public void count() {
-		Result result = JUnitCore.runClasses(FibonacciTest.class);
+		Result result= JUnitCore.runClasses(FibonacciTest.class);
 		assertEquals(7, result.getRunCount());
 		assertEquals(6, result.getFailureCount());
 	}
 
 	@Test
 	public void failuresNamedCorrectly() {
-		Result result = JUnitCore.runClasses(FibonacciTest.class);
+		Result result= JUnitCore.runClasses(FibonacciTest.class);
 		assertEquals(
 				String.format("%s.test[1]()", FibonacciTest.class.getName()),
 				result.getFailures().get(0).getTestHeader());
@@ -64,14 +64,14 @@ public class ParameterizedTestTest {
 
 	@Test
 	public void countBeforeRun() throws Exception {
-		Runner runner = Request.aClass(FibonacciTest.class).getRunner();
+		Runner runner= Request.aClass(FibonacciTest.class).getRunner();
 		assertEquals(7, runner.testCount());
 	}
 
 	@Test
 	public void plansNamedCorrectly() throws Exception {
-		Runner runner = Request.aClass(FibonacciTest.class).getRunner();
-		SuiteDescription description = (SuiteDescription) runner.getDescription();
+		Runner runner= Request.aClass(FibonacciTest.class).getRunner();
+		SuiteDescription description= (SuiteDescription) runner.getDescription();
 		assertEquals("[0]", description.getChildren().get(0).getName());
 	}
 
@@ -81,11 +81,11 @@ public class ParameterizedTestTest {
 	static public class BeforeAndAfter {
 		@BeforeClass
 		public static void before() {
-			fLog += "before ";
+			fLog+= "before ";
 		}
 		@AfterClass
 		public static void after() {
-			fLog += "after ";
+			fLog+= "after ";
 		}
 
 		@Parameters
@@ -96,7 +96,7 @@ public class ParameterizedTestTest {
 
 	@Test
 	public void beforeAndAfterClassAreRun() {
-		fLog = "";
+		fLog= "";
 		JUnitCore.runClasses(BeforeAndAfter.class);
 		assertEquals("before after ", fLog);
 	}
@@ -105,18 +105,18 @@ public class ParameterizedTestTest {
 	static public class EmptyTest {
 		@BeforeClass
 		public static void before() {
-			fLog += "before ";
+			fLog+= "before ";
 		}
 
 		@AfterClass
 		public static void after() {
-			fLog += "after ";
+			fLog+= "after ";
 		}
 	}
 
 	@Test
 	public void validateClassCatchesNoParameters() {
-		Result result = JUnitCore.runClasses(EmptyTest.class);
+		Result result= JUnitCore.runClasses(EmptyTest.class);
 		assertEquals(1, result.getFailureCount());
 	}
 
@@ -135,7 +135,7 @@ public class ParameterizedTestTest {
 
 	@Test
 	public void failuresAddedForBadTestMethod() throws Exception {
-		Result result = JUnitCore.runClasses(IncorrectTest.class);
+		Result result= JUnitCore.runClasses(IncorrectTest.class);
 		assertEquals(1, result.getFailureCount());
 	}
 
@@ -149,9 +149,9 @@ public class ParameterizedTestTest {
 
 	@Test
 	public void meaningfulFailureWhenParametersNotPublic() throws Exception {
-		Result result = JUnitCore.runClasses(ProtectedParametersTest.class);
+		Result result= JUnitCore.runClasses(ProtectedParametersTest.class);
 		assertEquals(1, result.getFailureCount());
-		String expected = String.format(
+		String expected= String.format(
 				"No public static parameters method on class %s",
 				ProtectedParametersTest.class.getName());
 		assertEquals(expected, result.getFailures().get(0).getMessage());

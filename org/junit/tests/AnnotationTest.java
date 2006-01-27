@@ -86,7 +86,7 @@ public class AnnotationTest extends TestCase {
 	
 	public void testSetupFailure() throws Exception {
 		JUnitCore core= new JUnitCore();
-		Result runner = core.run(SetupFailureTest.class);
+		Result runner= core.run(SetupFailureTest.class);
 		assertEquals(1, runner.getRunCount());
 		assertEquals(1, runner.getFailureCount());
 		assertEquals(Error.class, runner.getFailures().get(0).getException().getClass());
@@ -103,7 +103,7 @@ public class AnnotationTest extends TestCase {
 	
 	public void testTeardownFailure() throws Exception {
 		JUnitCore core= new JUnitCore();
-		Result runner = core.run(TeardownFailureTest.class);
+		Result runner= core.run(TeardownFailureTest.class);
 		assertEquals(1, runner.getRunCount());
 		assertEquals(1, runner.getFailureCount());
 		assertEquals(Error.class, runner.getFailures().get(0).getException().getClass());
@@ -120,7 +120,7 @@ public class AnnotationTest extends TestCase {
 	
 	public void testTestAndTeardownFailure() throws Exception {
 		JUnitCore core= new JUnitCore();
-		Result runner = core.run(TestAndTeardownFailureTest.class);
+		Result runner= core.run(TestAndTeardownFailureTest.class);
 		assertEquals(1, runner.getRunCount());
 		assertEquals(2, runner.getFailureCount());
 		assertEquals(Exception.class, runner.getFailures().get(0).getException().getClass());
@@ -196,7 +196,7 @@ public class AnnotationTest extends TestCase {
 	
 	public void testException() throws Exception {
 		JUnitCore core= new JUnitCore();
-		Result result = core.run(ExceptionTest.class);
+		Result result= core.run(ExceptionTest.class);
 		assertEquals(0, result.getFailureCount());
 	}
 	
@@ -208,7 +208,7 @@ public class AnnotationTest extends TestCase {
 
 	public void testExceptionNotThrown() throws Exception {
 		JUnitCore core= new JUnitCore();
-		Result result = core.run(NoExceptionTest.class);
+		Result result= core.run(NoExceptionTest.class);
 		assertEquals(1, result.getFailureCount());
 		assertEquals("Expected exception: java.lang.Error", result.getFailures().get(0).getMessage());
 	}
@@ -247,10 +247,10 @@ public class AnnotationTest extends TestCase {
 	
 	public static class OrderTest {
 		@BeforeClass public static void onceBefore() { log+= "beforeClass "; }
-		@Before public void before() { log += "before "; }
-		@Test public void test() { log += "test "; }
-		@After public void after() { log += "after "; }
-		@AfterClass public static void onceAfter() { log += "afterClass "; }
+		@Before public void before() { log+= "before "; }
+		@Test public void test() { log+= "test "; }
+		@After public void after() { log+= "after "; }
+		@AfterClass public static void onceAfter() { log+= "afterClass "; }
 	}
 	
 	public void testOrder() throws Exception {
@@ -267,7 +267,7 @@ public class AnnotationTest extends TestCase {
 	
 	public void testNonStaticOneTimeSetup() throws Exception {
 		JUnitCore core= new JUnitCore();
-		Result result = core.run(NonStaticOneTimeSetup.class);
+		Result result= core.run(NonStaticOneTimeSetup.class);
 		assertEquals(1, result.getFailureCount());
 	}
 	
@@ -283,7 +283,7 @@ public class AnnotationTest extends TestCase {
 	public void testErrorInBeforeClass() throws Exception {
 		run= false;		
 		JUnitCore core= new JUnitCore();
-		Result result = core.run(ErrorInBeforeClass.class);
+		Result result= core.run(ErrorInBeforeClass.class);
 		assertFalse(run);
 		assertEquals(1, result.getFailureCount());
 	}
@@ -300,7 +300,7 @@ public class AnnotationTest extends TestCase {
 	public void testErrorInAfterClass() throws Exception {
 		run= false;
 		JUnitCore core= new JUnitCore();
-		Result result = core.run(ErrorInAfterClass.class); 
+		Result result= core.run(ErrorInAfterClass.class); 
 		assertTrue(run);
 		assertEquals(1, result.getFailureCount());
 	}
@@ -442,7 +442,7 @@ public class AnnotationTest extends TestCase {
 	public void testRunAllAftersRegardless() {
 		log= "";
 		JUnitCore core= new JUnitCore();
-		Result result = core.run(RunAllAftersRegardless.class);
+		Result result= core.run(RunAllAftersRegardless.class);
 		assertTrue(log.contains("one"));
 		assertTrue(log.contains("two"));
 		assertEquals(2, result.getFailureCount());
@@ -488,7 +488,7 @@ public class AnnotationTest extends TestCase {
 	public void testRunAllAfterClassesRegardless() {
 		log= "";
 		JUnitCore core= new JUnitCore();
-		Result result = core.run(RunAllAfterClassesRegardless.class);
+		Result result= core.run(RunAllAfterClassesRegardless.class);
 		assertTrue(log.contains("one"));
 		assertTrue(log.contains("two"));
 		assertEquals(2, result.getFailureCount());

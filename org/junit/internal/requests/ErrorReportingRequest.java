@@ -17,17 +17,17 @@ public class ErrorReportingRequest extends Request {
 	private final Throwable fCause;
 
 	public ErrorReportingRequest(Class<?> klass, Throwable cause) {
-		fClass = klass;
-		fCause = cause;
+		fClass= klass;
+		fCause= cause;
 	}
 
 	@Override
 	public Runner getRunner() {
-		List<Throwable> goofs = getCauses(fCause);
-		CompositeRunner runner = new CompositeRunner(fClass.getName());
-		for (int i = 0; i < goofs.size(); i++) {
-			final TestDescription description = new TestDescription(fClass, "initializationError" + i);
-			final Throwable throwable = goofs.get(i);
+		List<Throwable> goofs= getCauses(fCause);
+		CompositeRunner runner= new CompositeRunner(fClass.getName());
+		for (int i= 0; i < goofs.size(); i++) {
+			final TestDescription description= new TestDescription(fClass, "initializationError" + i);
+			final Throwable throwable= goofs.get(i);
 			runner.add(new ErrorReportingRunner(description, throwable));
 		}
 		return runner;

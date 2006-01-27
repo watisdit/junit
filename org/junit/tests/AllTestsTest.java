@@ -36,7 +36,7 @@ public class AllTestsTest {
 	}
 	
 	@org.junit.Test public void correctTestCount() throws Throwable {
-		AllTests tests = new AllTests(All.class);
+		AllTests tests= new AllTests(All.class);
 		assertEquals(1, tests.testCount());
 	}
 	
@@ -56,7 +56,7 @@ public class AllTestsTest {
 	}
 
 	@org.junit.Test public void correctTestCountAdapted() throws Throwable {
-		AllTests tests = new AllTests(AllJUnit4.class);
+		AllTests tests= new AllTests(AllJUnit4.class);
 		assertEquals(1, tests.testCount());
 	}
 
