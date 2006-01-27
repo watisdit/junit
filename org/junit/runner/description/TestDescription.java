@@ -30,7 +30,10 @@ public class TestDescription extends Description {
 
 	@Override
 	public boolean equals(Object obj) {
-		TestDescription description= (TestDescription) obj;
+		return (obj instanceof TestDescription) && equalsDescription((TestDescription) obj);
+	}
+
+	private boolean equalsDescription(TestDescription description) {
 		return description.getTestClass().equals(getTestClass())
 				&& description.getName().equals(getName());
 	}

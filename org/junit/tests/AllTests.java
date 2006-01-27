@@ -7,6 +7,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({
+		TestDescriptionTest.class,
 		SuiteDescriptionTest.class,
 		AllTestsTest.class,
 		AnnotationTest.class,
