@@ -1,7 +1,6 @@
 <project name="junit" default="dist" basedir=".">
 	<property file="${user.home}/.junit.properties" />
-	<property name="build.compiler" value="classic" />
-	<property name="version" value="4.0rc2" />
+	<property name="version" value="4.0rc3" />
 	<property name="dist"  value="junit${version}" />
 	<property name="versionfile"  value="junit/runner/Version.java" />
 	<property name="zipfile"  value="${dist}.zip" />
@@ -57,7 +56,7 @@
 		<mkdir dir="${dist}/javadoc" />
 		<javadoc 
 			sourcepath="."
-			packagenames="org.junit, org.junit.notify, org.junit.plan, org.junit.runner, org.junit.runner.extensions"
+			packagenames="org.junit, org.junit.runner, org.junit.runner.description, org.junit.runner.manipulation, org.junit.runner.notification, org.junit.runners"
 			destdir="${dist}/javadoc"
 			author="false"
 			version="false"
