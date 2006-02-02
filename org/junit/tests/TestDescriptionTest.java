@@ -1,11 +1,11 @@
 package org.junit.tests;
 
 import org.junit.Test;
-import org.junit.runner.description.TestDescription;
+import org.junit.runner.Description;
 import static org.junit.Assert.assertFalse;
 
 public class TestDescriptionTest {
 	@Test public void equalsIsFalseForNonTestDescription() {
-		assertFalse(new TestDescription(getClass(), "a").equals(new Integer(5)));
+		assertFalse(Description.createTestDescription(getClass(), "a").equals(new Integer(5)));
 	}
 }

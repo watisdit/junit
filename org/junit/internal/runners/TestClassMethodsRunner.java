@@ -7,10 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Test;
+import org.junit.runner.Description;
 import org.junit.runner.Runner;
-import org.junit.runner.description.Description;
-import org.junit.runner.description.SuiteDescription;
-import org.junit.runner.description.TestDescription;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.manipulation.Filterable;
 import org.junit.runner.manipulation.Sortable;
@@ -46,7 +44,7 @@ public class TestClassMethodsRunner extends Runner implements Filterable, Sortab
 
 	@Override
 	public Description getDescription() {
-		SuiteDescription spec= new SuiteDescription(getName());
+		Description spec= Description.createSuiteDescription(getName());
 		List<Method> testMethods= fTestMethods;
 		for (Method method : testMethods)
 				spec.addChild(methodDescription(method));
@@ -69,8 +67,8 @@ public class TestClassMethodsRunner extends Runner implements Filterable, Sortab
 		return method.getName();
 	}
 
-	private TestDescription methodDescription(Method method) {
-		return new TestDescription(getTestClass(), testName(method));
+	private Description methodDescription(Method method) {
+		return Description.createTestDescription(getTestClass(), testName(method));
 	}
 
 	public void filter(Filter filter) {

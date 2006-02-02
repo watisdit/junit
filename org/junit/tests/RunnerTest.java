@@ -5,10 +5,9 @@ import static org.junit.Assert.assertTrue;
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
-import org.junit.runner.description.Description;
-import org.junit.runner.description.TestDescription;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
@@ -27,16 +26,16 @@ public class RunnerTest {
 		public void testRunFinished(Result result) {
 		}
 
-		public void testStarted(TestDescription description) {
+		public void testStarted(Description description) {
 		}
 
 		public void testFailure(Failure failure) {
 		}
 
-		public void testIgnored(TestDescription description) {
+		public void testIgnored(Description description) {
 		}
 
-		public void testFinished(TestDescription description) {
+		public void testFinished(Description description) {
 		}
 		
 	}
@@ -77,7 +76,7 @@ public class RunnerTest {
 		wasRun= false;
 		RunListener listener= new MyListener() {
 			@Override
-			public void testFinished(TestDescription description) {
+			public void testFinished(Description description) {
 				wasRun= true;
 			}
 		};

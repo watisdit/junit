@@ -4,9 +4,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.internal.runners.InitializationError;
 import org.junit.internal.runners.TestClassRunner;
+import org.junit.runner.Description;
 import org.junit.runner.Request;
 import org.junit.runner.Runner;
-import org.junit.runner.description.Description;
 import org.junit.runner.notification.RunNotifier;
 
 import static org.junit.Assert.assertEquals;
@@ -36,6 +36,7 @@ public class ValidationTest {
 	
 	@Test
 	public void initializationErrorIsOnCorrectClass() {
-		assertEquals(WrongBeforeClass.class.getName(), Request.aClass(WrongBeforeClass.class).getRunner().getDescription().getName());
+		assertEquals(WrongBeforeClass.class.getName(), 
+				Request.aClass(WrongBeforeClass.class).getRunner().getDescription().getDisplayName());
 	}
 }

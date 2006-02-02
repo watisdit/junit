@@ -9,10 +9,8 @@ import junit.framework.TestCase;
 import junit.framework.TestListener;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
+import org.junit.runner.Description;
 import org.junit.runner.Runner;
-import org.junit.runner.description.Description;
-import org.junit.runner.description.SuiteDescription;
-import org.junit.runner.description.TestDescription;
 import org.junit.runner.notification.RunNotifier;
 
 public class OldTestClassRunner extends Runner {
@@ -54,12 +52,12 @@ public class OldTestClassRunner extends Runner {
 				notifier.fireTestFailure(failure);
 			}
 			
-			private TestDescription asDescription(Test test) {
+			private Description asDescription(Test test) {
 				if (test instanceof JUnit4TestCaseFacade) {
 					JUnit4TestCaseFacade facade= (JUnit4TestCaseFacade) test;
 					return facade.getDescription();
 				}
-				return new TestDescription(test.getClass(), getName(test));
+				return Description.createTestDescription(test.getClass(), getName(test));
 			}
 
 			private String getName(Test test) {
@@ -84,10 +82,10 @@ public class OldTestClassRunner extends Runner {
 	private Description makeDescription(Test test) {
 		if (test instanceof TestCase) {
 			TestCase tc= (TestCase) test;
-			return new TestDescription(tc.getClass(), tc.getName());
+			return Description.createTestDescription(tc.getClass(), tc.getName());
 		} else if (test instanceof TestSuite) {
 			TestSuite ts= (TestSuite) test;
-			SuiteDescription description= new SuiteDescription(ts.getName());
+			Description description= Description.createSuiteDescription(ts.getName());
 			int n= ts.testCount();
 			for (int i= 0; i < n; i++)
 				description.addChild(makeDescription(ts.testAt(i)));
@@ -100,7 +98,7 @@ public class OldTestClassRunner extends Runner {
 			return makeDescription(decorator.getTest());
 		} else {
 			// This is the best we can do in this case
-			return new SuiteDescription(test.getClass());
+			return Description.createSuiteDescription(test.getClass());
 		}
 	}
 }

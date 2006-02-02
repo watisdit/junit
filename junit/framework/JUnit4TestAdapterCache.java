@@ -9,16 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.junit.internal.runners.TestFailure;
+import org.junit.runner.Description;
 import org.junit.runner.Result;
-import org.junit.runner.description.Description;
-import org.junit.runner.description.SuiteDescription;
-import org.junit.runner.description.TestDescription;
-import org.junit.runner.description.Description.Visitor;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;
 
-public class JUnit4TestAdapterCache extends HashMap<TestDescription, Test> {
+public class JUnit4TestAdapterCache extends HashMap<Description, Test> {
 	private static final long serialVersionUID = 1L;
 	private static final JUnit4TestAdapterCache fInstance = new JUnit4TestAdapterCache();
 
@@ -27,40 +24,31 @@ public class JUnit4TestAdapterCache extends HashMap<TestDescription, Test> {
 	}
 	
 	public Test asTest(Description description) {
-		return description.accept(new Visitor<Test>() {
-			public Test visitSuite(SuiteDescription description) {
-				return createTest(description);
-			}
-
-			public Test visitTest(TestDescription description) {
-				if (!containsKey(description))
-					put(description, createTest(description));
-				return get(description);
-			}
-		});
+		if (description.hasChildren())
+			return createTest(description);
+		else {
+			if (!containsKey(description))
+				put(description, createTest(description));
+			return get(description);
+		}
 	}
 
 	Test createTest(Description description) {
-		return description.accept(new Visitor<Test>() {
-			public Test visitSuite(SuiteDescription description) {
-				TestSuite suite = new TestSuite(description.getName());
-				for (Description child : description.getChildren()) {
-					suite.addTest(asTest(child));
-				}
-				return suite;
-			}
-
-			public Test visitTest(final TestDescription description) {
-				return new JUnit4TestCaseFacade(description);
-			}
-		});
+		if (!description.hasChildren())
+			return new JUnit4TestCaseFacade(description);
+		else {
+			TestSuite suite = new TestSuite(description.getDisplayName());
+			for (Description child : description.getChildren())
+				suite.addTest(asTest(child));
+			return suite;
+		}
 	}
 
 	public RunNotifier getNotifier(final TestResult result,
 			final JUnit4TestAdapter adapter) {
 		RunNotifier notifier = new RunNotifier();
 		notifier.addListener(new RunListener() {
-			public void testIgnored(TestDescription description) throws Exception {
+			public void testIgnored(Description description) throws Exception {
 			}
 
 			public void testFailure(Failure failure) throws Exception {
@@ -76,12 +64,12 @@ public class JUnit4TestAdapterCache extends HashMap<TestDescription, Test> {
 				}
 			}
 
-			public void testFinished(TestDescription description)
+			public void testFinished(Description description)
 					throws Exception {
 				result.endTest(asTest(description));
 			}
 
-			public void testStarted(TestDescription description)
+			public void testStarted(Description description)
 					throws Exception {
 				result.startTest(asTest(description));
 			}
@@ -96,19 +84,15 @@ public class JUnit4TestAdapterCache extends HashMap<TestDescription, Test> {
 	}
 
 	public List<Test> asTestList(Description description) {
-		return description.accept(new Visitor<List<Test>>() {
-			public List<Test> visitSuite(SuiteDescription description) {
-				List<Test> returnThis = new ArrayList<Test>();
-				for (Description child : description.getChildren()) {
-					returnThis.add(asTest(child));
-				}
-				return returnThis;
+		if (!description.hasChildren())
+			return Arrays.asList(asTest(description));
+		else {
+			List<Test> returnThis = new ArrayList<Test>();
+			for (Description child : description.getChildren()) {
+				returnThis.add(asTest(child));
 			}
-
-			public List<Test> visitTest(TestDescription description) {
-				return Arrays.asList(asTest(description));
-			}
-		});
+			return returnThis;
+		}
 	}
 
 }

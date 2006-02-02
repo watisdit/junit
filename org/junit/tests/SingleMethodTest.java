@@ -6,13 +6,12 @@ import java.util.Collection;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
-import org.junit.runner.description.SuiteDescription;
-import org.junit.runner.description.TestDescription;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Suite;
 import org.junit.runners.Parameterized.Parameters;
@@ -99,8 +98,8 @@ public class SingleMethodTest {
 
 	@Test
 	public void eliminateUnnecessaryTreeBranches() throws Exception {
-		Runner runner= Request.aClass(OneTwoSuite.class).filterWith(new TestDescription(TestOne.class, "a")).getRunner();
-		SuiteDescription description= (SuiteDescription) runner.getDescription();
+		Runner runner= Request.aClass(OneTwoSuite.class).filterWith(Description.createTestDescription(TestOne.class, "a")).getRunner();
+		Description description= runner.getDescription();
 		assertEquals(1, description.getChildren().size());
 	}
 }

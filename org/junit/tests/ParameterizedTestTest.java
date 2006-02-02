@@ -10,12 +10,12 @@ import junit.framework.JUnit4TestAdapter;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
-import org.junit.runner.description.SuiteDescription;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
@@ -58,7 +58,7 @@ public class ParameterizedTestTest {
 	public void failuresNamedCorrectly() {
 		Result result= JUnitCore.runClasses(FibonacciTest.class);
 		assertEquals(
-				String.format("%s.test[1]()", FibonacciTest.class.getName()),
+				String.format("test[1](%s)", FibonacciTest.class.getName()),
 				result.getFailures().get(0).getTestHeader());
 	}
 
@@ -71,8 +71,8 @@ public class ParameterizedTestTest {
 	@Test
 	public void plansNamedCorrectly() throws Exception {
 		Runner runner= Request.aClass(FibonacciTest.class).getRunner();
-		SuiteDescription description= (SuiteDescription) runner.getDescription();
-		assertEquals("[0]", description.getChildren().get(0).getName());
+		Description description= runner.getDescription();
+		assertEquals("[0]", description.getChildren().get(0).getDisplayName());
 	}
 
 	private static String fLog;

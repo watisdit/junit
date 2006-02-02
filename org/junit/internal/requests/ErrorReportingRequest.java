@@ -7,9 +7,9 @@ import java.util.List;
 import org.junit.internal.runners.CompositeRunner;
 import org.junit.internal.runners.ErrorReportingRunner;
 import org.junit.internal.runners.InitializationError;
+import org.junit.runner.Description;
 import org.junit.runner.Request;
 import org.junit.runner.Runner;
-import org.junit.runner.description.TestDescription;
 
 public class ErrorReportingRequest extends Request {
 
@@ -26,7 +26,7 @@ public class ErrorReportingRequest extends Request {
 		List<Throwable> goofs= getCauses(fCause);
 		CompositeRunner runner= new CompositeRunner(fClass.getName());
 		for (int i= 0; i < goofs.size(); i++) {
-			final TestDescription description= new TestDescription(fClass, "initializationError" + i);
+			final Description description= Description.createTestDescription(fClass, "initializationError" + i);
 			final Throwable throwable= goofs.get(i);
 			runner.add(new ErrorReportingRunner(description, throwable));
 		}

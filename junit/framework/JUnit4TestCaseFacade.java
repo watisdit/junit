@@ -3,12 +3,12 @@
  */
 package junit.framework;
 
-import org.junit.runner.description.TestDescription;
+import org.junit.runner.Description;
 
 public class JUnit4TestCaseFacade implements Test {
-	private final TestDescription fDescription;
+	private final Description fDescription;
 
-	JUnit4TestCaseFacade(TestDescription description) {
+	JUnit4TestCaseFacade(Description description) {
 		fDescription = description;
 	}
 
@@ -26,7 +26,7 @@ public class JUnit4TestCaseFacade implements Test {
 				"This test stub created only for informational purposes.");
 	}
 
-	public TestDescription getDescription() {
+	public Description getDescription() {
 		return fDescription;
 	}
 }

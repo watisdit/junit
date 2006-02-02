@@ -11,7 +11,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.runner.description.TestDescription;
+import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 
 public class TestMethodRunner extends BeforeAndAfterRunner {
@@ -19,9 +19,9 @@ public class TestMethodRunner extends BeforeAndAfterRunner {
 	private final Method fMethod;
 	private final RunNotifier fNotifier;
 	private final TestIntrospector fTestIntrospector;
-	private final TestDescription fDescription;
+	private final Description fDescription;
 
-	public TestMethodRunner(Object test, Method method, RunNotifier notifier, TestDescription description) {
+	public TestMethodRunner(Object test, Method method, RunNotifier notifier, Description description) {
 		super(test.getClass(), Before.class, After.class);
 		fTest= test;
 		fMethod= method;
@@ -84,9 +84,9 @@ public class TestMethodRunner extends BeforeAndAfterRunner {
 			Throwable actual= e.getTargetException();
 			if (!expectsException())
 				addFailure(actual);
-			else if (isUnexpected(e.getTargetException())) {
+			else if (isUnexpected(actual)) {
 				String message= "Unexpected exception, expected<" + expectedException().getName() + "> but was<"
-					+ e.getTargetException().getClass().getName() + ">";
+					+ actual.getClass().getName() + ">";
 				addFailure(new Exception(message, actual));
 			}
 		} catch (Throwable e) {

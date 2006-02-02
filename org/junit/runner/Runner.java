@@ -1,6 +1,5 @@
 package org.junit.runner;
 
-import org.junit.runner.description.Description;
 import org.junit.runner.notification.RunNotifier;
 
 public abstract class Runner {

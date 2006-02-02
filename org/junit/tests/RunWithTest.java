@@ -3,11 +3,10 @@ package org.junit.tests;
 import static org.junit.Assert.assertTrue;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
+import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
-import org.junit.runner.description.Description;
-import org.junit.runner.description.SuiteDescription;
 import org.junit.runner.notification.RunNotifier;
 
 public class RunWithTest {
@@ -33,7 +32,7 @@ public class RunWithTest {
 		@Override
 		public Description getDescription() {
 			log+= "plan";
-			return new SuiteDescription("example");
+			return Description.createSuiteDescription("example");
 		}		
 	}
 	

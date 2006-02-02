@@ -1,6 +1,5 @@
 package org.junit.runner;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 
 import org.junit.internal.requests.ClassRequest;
@@ -8,16 +7,12 @@ import org.junit.internal.requests.ClassesRequest;
 import org.junit.internal.requests.ErrorReportingRequest;
 import org.junit.internal.requests.FilterRequest;
 import org.junit.internal.requests.SortingRequest;
-import org.junit.runner.description.Description;
-import org.junit.runner.description.SuiteDescription;
-import org.junit.runner.description.TestDescription;
-import org.junit.runner.description.Description.Visitor;
 import org.junit.runner.manipulation.Filter;
 
 public abstract class Request {
 	public static Request aMethod(Class<?> clazz, String methodName) {
 		return Request.aClass(clazz)
-				.filterWith(new TestDescription(clazz, methodName));
+				.filterWith(Description.createTestDescription(clazz, methodName));
 	}
 
 	public static Request aClass(Class<?> clazz) {
@@ -39,30 +34,25 @@ public abstract class Request {
 		return new FilterRequest(this, filter);
 	}
 
-	public Request filterWith(final TestDescription desiredDescription) {
+	public Request filterWith(final Description desiredDescription) {
 		return filterWith(new Filter() {
 			@Override
 			public boolean shouldRun(Description description) {
-				return description.accept(new Visitor<Boolean>() {
-					public Boolean visitSuite(SuiteDescription description) {
-						ArrayList<Description> children= description.getChildren();
-						for (Description each : children) {
-							if (shouldRun(each))
-								return true;
-						}
-						return false;
+				// TODO: test for equality even if we have children?
+				if (!description.hasChildren())
+					return desiredDescription.equals(description);
+				else {
+					for (Description each : description.getChildren()) {
+						if (shouldRun(each))
+							return true;
 					}
-
-					public Boolean visitTest(TestDescription description) {
-						return desiredDescription.equals(description);
-					}
-				});
+					return false;					
+				}
 			}
 
 			@Override
 			public String describe() {
-				// TODO: Is this duped?  DUP doesn't work
-				return String.format("Method %s.%s()", desiredDescription.getTestClass().getName(), desiredDescription.getName());
+				return String.format("Method %s", desiredDescription.getDisplayName());
 			}
 		});
 	}

@@ -1,6 +1,7 @@
 package org.junit.tests;
 
 import junit.framework.JUnit4TestAdapter;
+import junit.framework.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -35,8 +36,10 @@ import org.junit.runners.Suite.SuiteClasses;
 		OldTestClassRunnerTest.class,
 		JUnitCoreTest.class
 })
-public class AllTests {	
-	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(AllTests.class);
+public class AllTests {
+	public static class Compatibility {
+		public static Test suite() {
+			return new JUnit4TestAdapter(AllTests.class);
+		}
 	}
 }

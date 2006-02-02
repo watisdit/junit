@@ -5,10 +5,9 @@ import static org.junit.Assert.assertEquals;
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
-import org.junit.runner.description.Description;
-import org.junit.runner.description.TestDescription;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
@@ -25,8 +24,9 @@ public class PreJUnit4TestCaseRunnerTest {
 		JUnitCore runner= new JUnitCore();
 		RunListener listener= new RunListener() {
 
-			public void testStarted(TestDescription description) {
-				assertEquals("testOne", description.getName());
+			public void testStarted(Description description) {
+				assertEquals(Description.createTestDescription(OneTest.class, "testOne"), 
+						description);
 				count++;
 			}
 
@@ -39,10 +39,10 @@ public class PreJUnit4TestCaseRunnerTest {
 			public void testRunStarted(Description description) {
 			}
 
-			public void testIgnored(TestDescription description) {
+			public void testIgnored(Description description) {
 			}
 
-			public void testFinished(TestDescription description) {
+			public void testFinished(Description description) {
 			}
 		};
 		

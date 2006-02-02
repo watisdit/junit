@@ -2,9 +2,9 @@ package org.junit.internal.requests;
 
 import java.util.Comparator;
 
+import org.junit.runner.Description;
 import org.junit.runner.Request;
 import org.junit.runner.Runner;
-import org.junit.runner.description.Description;
 import org.junit.runner.manipulation.Sorter;
 
 public class SortingRequest extends Request {

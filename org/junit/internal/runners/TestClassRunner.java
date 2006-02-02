@@ -4,8 +4,8 @@ import java.lang.reflect.Method;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.runner.Description;
 import org.junit.runner.Runner;
-import org.junit.runner.description.Description;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.manipulation.Filterable;
 import org.junit.runner.manipulation.Sortable;

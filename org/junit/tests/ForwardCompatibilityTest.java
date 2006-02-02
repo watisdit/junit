@@ -11,9 +11,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
-import org.junit.runner.description.Description;
 import org.junit.runner.notification.RunNotifier;
 
 public class ForwardCompatibilityTest extends TestCase {

@@ -10,9 +10,9 @@ import junit.framework.TestResult;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.internal.runners.TestClassRunner;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
-import org.junit.runner.description.Description;
 import org.junit.runner.notification.RunNotifier;
 
 public class InitializationErrorForwardCompatibilityTest {

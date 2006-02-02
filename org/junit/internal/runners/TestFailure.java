@@ -1,6 +1,6 @@
 package org.junit.internal.runners;
 
-import org.junit.runner.description.TestDescription;
+import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 
 /**
@@ -8,19 +8,19 @@ import org.junit.runner.notification.Failure;
  * thrown exception
  */
 public class TestFailure extends Failure {
-	private final TestDescription fDescription;
+	private final Description fDescription;
 
 	/**
 	 * Constructs a TestFailure with the given plan and exception.
 	 */
-	public TestFailure(TestDescription description, Throwable thrownException) {
+	public TestFailure(Description description, Throwable thrownException) {
 		super(thrownException);
 		fDescription= description;
 	}
 
 	@Override
 	public String getTestHeader() {
-		return String.format("%s.%s()", fDescription.getTestClass().getName(), fDescription.getName());
+		return fDescription.getDisplayName();
 	}
 	
 	@Override
@@ -28,7 +28,7 @@ public class TestFailure extends Failure {
 		return true;
 	}
 
-	public TestDescription getDescription() {
+	public Description getDescription() {
 		return fDescription;
 	}
 }

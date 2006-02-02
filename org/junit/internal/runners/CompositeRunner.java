@@ -6,9 +6,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import org.junit.runner.Description;
 import org.junit.runner.Runner;
-import org.junit.runner.description.Description;
-import org.junit.runner.description.SuiteDescription;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.manipulation.Filterable;
 import org.junit.runner.manipulation.Sortable;
@@ -31,7 +30,7 @@ public class CompositeRunner extends Runner implements Filterable, Sortable {
 
 	@Override
 	public Description getDescription() {
-		SuiteDescription spec= new SuiteDescription(fName);
+		Description spec= Description.createSuiteDescription(fName);
 		for (Runner runner : fRunners) {
 			spec.addChild(runner.getDescription());
 		}

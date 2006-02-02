@@ -35,6 +35,6 @@ public class EnclosedTest {
 	
 	@Test public void enclosedRunnerIsNamedForEnclosingClass() throws Exception {
 		assertEquals(Enclosing.class.getName(), Request.aClass(Enclosing.class)
-				.getRunner().getDescription().getName());
+				.getRunner().getDescription().getDisplayName());
 	}
 }

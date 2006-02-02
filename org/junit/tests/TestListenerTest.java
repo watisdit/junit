@@ -4,10 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
+import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
-import org.junit.runner.description.Description;
-import org.junit.runner.description.TestDescription;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
@@ -23,16 +22,16 @@ public class TestListenerTest {
 		public void testRunFinished(Result result) {
 		}
 
-		public void testStarted(TestDescription description) {
+		public void testStarted(Description description) {
 		}
 
-		public void testFinished(TestDescription description) {
+		public void testFinished(Description description) {
 		}
 
 		public void testFailure(Failure failure) {
 		}
 
-		public void testIgnored(TestDescription description) {
+		public void testIgnored(Description description) {
 		}
 	}
 	

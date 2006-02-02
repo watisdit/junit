@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.junit.runner.Description;
 import org.junit.runner.Result;
-import org.junit.runner.description.Description;
-import org.junit.runner.description.TestDescription;
 
 
 public class RunNotifier {
@@ -54,7 +53,7 @@ public class RunNotifier {
 		}.run();
 	}
 	
-	public void fireTestStarted(final TestDescription description) throws StoppedByUserException {
+	public void fireTestStarted(final Description description) throws StoppedByUserException {
 		if (fPleaseStop)
 			throw new StoppedByUserException();
 		new SafeNotifier() {
@@ -74,7 +73,7 @@ public class RunNotifier {
 		}.run();
 	}
 
-	public void fireTestIgnored(final TestDescription description) {
+	public void fireTestIgnored(final Description description) {
 		new SafeNotifier() {
 			@Override
 			protected void notifyListener(RunListener each) throws Exception {
@@ -83,7 +82,7 @@ public class RunNotifier {
 		}.run();
 	}
 
-	public void fireTestFinished(final TestDescription description) {
+	public void fireTestFinished(final Description description) {
 		new SafeNotifier() {
 			@Override
 			protected void notifyListener(RunListener each) throws Exception {

@@ -42,7 +42,7 @@ public class TextListenerTest extends TestCase {
 	public void testError() throws Exception {
 		runner.run(ErrorTest.class);
 		assertTrue(results.toString().startsWith(convert(".E\nTime: ")));
-		assertTrue(results.toString().indexOf(convert("\nThere was 1 failure:\n1) org.junit.tests.TextListenerTest$ErrorTest.error()\njava.lang.Exception")) != -1);
+		assertTrue(results.toString().indexOf(convert("\nThere was 1 failure:\n1) error(org.junit.tests.TextListenerTest$ErrorTest)\njava.lang.Exception")) != -1);
 	}
 	
 	private String convert(String string) {

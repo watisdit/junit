@@ -3,9 +3,8 @@ package org.junit.internal.runners;
 import java.io.PrintStream;
 import java.text.NumberFormat;
 
+import org.junit.runner.Description;
 import org.junit.runner.Result;
-import org.junit.runner.description.Description;
-import org.junit.runner.description.TestDescription;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
@@ -31,7 +30,7 @@ public class TextListener implements RunListener {
 		printFooter(result);
 	}
 
-	public void testStarted(TestDescription description) {
+	public void testStarted(Description description) {
 		fWriter.append('.');
 	}
 
@@ -39,7 +38,7 @@ public class TextListener implements RunListener {
 		fWriter.append('E');
 	}
 	
-	public void testIgnored(TestDescription description) {
+	public void testIgnored(Description description) {
 		fWriter.append('I');
 	}
 	
@@ -103,7 +102,7 @@ public class TextListener implements RunListener {
 		return NumberFormat.getInstance().format((double) runTime / 1000);
 	}
 
-	public void testFinished(TestDescription description) {
+	public void testFinished(Description description) {
 	}
 
 

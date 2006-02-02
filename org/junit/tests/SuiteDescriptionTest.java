@@ -3,16 +3,15 @@ package org.junit.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import org.junit.Test;
-import org.junit.runner.description.SuiteDescription;
-import org.junit.runner.description.TestDescription;
+import org.junit.runner.Description;
 
 public class SuiteDescriptionTest {
-	SuiteDescription childless = new SuiteDescription("a");
-	SuiteDescription anotherChildless = new SuiteDescription("a");
-	SuiteDescription namedB = new SuiteDescription("b");
+	Description childless = Description.createSuiteDescription("a");
+	Description anotherChildless = Description.createSuiteDescription("a");
+	Description namedB = Description.createSuiteDescription("b");
 	
-	SuiteDescription twoKids = descriptionWithTwoKids("foo", "bar");
-	SuiteDescription anotherTwoKids = descriptionWithTwoKids("foo", "baz");
+	Description twoKids = descriptionWithTwoKids("foo", "bar");
+	Description anotherTwoKids = descriptionWithTwoKids("foo", "baz");
 
 	@Test public void equalsIsCorrect() {	
 		assertEquals(childless, anotherChildless);
@@ -27,10 +26,10 @@ public class SuiteDescriptionTest {
 		assertFalse(childless.hashCode() == namedB.hashCode());
 	}
 	
-	private SuiteDescription descriptionWithTwoKids(String first, String second) {
-		SuiteDescription twoKids = new SuiteDescription("a");
-		twoKids.addChild(new TestDescription(getClass(), first));
-		twoKids.addChild(new TestDescription(getClass(), second));
+	private Description descriptionWithTwoKids(String first, String second) {
+		Description twoKids = Description.createSuiteDescription("a");
+		twoKids.addChild(Description.createTestDescription(getClass(), first));
+		twoKids.addChild(Description.createTestDescription(getClass(), second));
 		return twoKids;
 	}
 }

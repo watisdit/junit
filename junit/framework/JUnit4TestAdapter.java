@@ -2,9 +2,9 @@ package junit.framework;
 
 import java.util.List;
 
+import org.junit.runner.Description;
 import org.junit.runner.Request;
 import org.junit.runner.Runner;
-import org.junit.runner.description.Description;
 
 public class JUnit4TestAdapter implements Test {
 	private final Class<? extends Object> fNewTestClass;

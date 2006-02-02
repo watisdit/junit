@@ -8,11 +8,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.internal.runners.InitializationError;
 import org.junit.internal.runners.TestClassRunner;
+import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
-import org.junit.runner.description.Description;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Enclosed;
@@ -22,7 +22,7 @@ public class SortableTest {
 	private static Comparator<Description> forward() {
 		return new Comparator<Description>() {
 			public int compare(Description o1, Description o2) {
-				return o1.getName().compareTo(o2.getName());
+				return o1.getDisplayName().compareTo(o2.getDisplayName());
 			}
 		};
 	}
@@ -30,7 +30,7 @@ public class SortableTest {
 	private static Comparator<Description> backward() {
 		return new Comparator<Description>() {
 			public int compare(Description o1, Description o2) {
-				return o2.getName().compareTo(o1.getName());
+				return o2.getDisplayName().compareTo(o1.getDisplayName());
 			}
 		};
 	}

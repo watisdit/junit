@@ -2,8 +2,8 @@ package org.junit.runner.manipulation;
 
 import java.util.Comparator;
 
+import org.junit.runner.Description;
 import org.junit.runner.Runner;
-import org.junit.runner.description.Description;
 
 public class Sorter implements Comparator<Description> {
 

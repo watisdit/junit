@@ -3,8 +3,6 @@ package org.junit.runner;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.runner.description.Description;
-import org.junit.runner.description.TestDescription;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
@@ -49,18 +47,18 @@ public class Result {
 			fRunTime+= endTime - fStartTime;
 		}
 
-		public void testStarted(TestDescription description) throws Exception {
+		public void testStarted(Description description) throws Exception {
 			fCount++;
 		}
 
-		public void testFinished(TestDescription description) throws Exception {
+		public void testFinished(Description description) throws Exception {
 		}
 
 		public void testFailure(Failure failure) throws Exception {
 			fFailures.add(failure);
 		}
 
-		public void testIgnored(TestDescription description) throws Exception {
+		public void testIgnored(Description description) throws Exception {
 			fIgnoreCount++;
 		}
 	}
