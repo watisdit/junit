@@ -1,6 +1,7 @@
 package org.junit.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.concurrent.TimeoutException;
@@ -78,7 +79,9 @@ public class TimeoutTest {
 		Result result= core.run(InfiniteLoopTest.class);
 		assertEquals(1, result.getRunCount());
 		assertEquals(1, result.getFailureCount());
-		assertEquals(TimeoutException.class, result.getFailures().get(0).getException().getClass());
+		Throwable exception= result.getFailures().get(0).getException();
+		System.out.println(exception.getMessage());
+		assertTrue(exception.getMessage().contains("test timed out after 100 milliseconds"));
 	}
 
 	@Test public void compatibility() {

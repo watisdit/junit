@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -62,6 +63,8 @@ public class TestMethodRunner extends BeforeAndAfterRunner {
 			if (!terminated)
 				service.shutdownNow();
 			result.get(timeout, TimeUnit.MILLISECONDS); // throws the exception if one occurred during the invocation
+		} catch (TimeoutException e) {
+			addFailure(new Exception(String.format("test timed out after %d milliseconds", timeout)));
 		} catch (Exception e) {
 			addFailure(e);
 		}		
