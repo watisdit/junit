@@ -81,11 +81,14 @@ public class TestMethodRunner extends BeforeAndAfterRunner {
 			if (expectsException())
 				addFailure(new AssertionError("Expected exception: " + expectedException().getName()));
 		} catch (InvocationTargetException e) {
+			Throwable actual= e.getTargetException();
 			if (!expectsException())
-				addFailure(e.getTargetException());
-			else if (isUnexpected(e.getTargetException()))
-				addFailure(new AssertionError("Unexpected exception, expected<" + expectedException().getName() + "> but was<"
-						+ e.getTargetException().getClass().getName() + ">"));
+				addFailure(actual);
+			else if (isUnexpected(e.getTargetException())) {
+				String message= "Unexpected exception, expected<" + expectedException().getName() + "> but was<"
+					+ e.getTargetException().getClass().getName() + ">";
+				addFailure(new Exception(message, actual));
+			}
 		} catch (Throwable e) {
 			addFailure(e);
 		}

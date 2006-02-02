@@ -1,11 +1,13 @@
 package org.junit.tests;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
 
 public class ExpectedTest {
 	
@@ -28,8 +30,10 @@ public class ExpectedTest {
 	}
 	@Test public void unexpected() {
 		Result result= JUnitCore.runClasses(Unexpected.class);
-		String message= result.getFailures().get(0).getMessage();
+		Failure failure= result.getFailures().get(0);
+		String message= failure.getMessage();
 		assertTrue(message.contains("expected<java.lang.Exception> but was<java.lang.Error>"));
+		assertEquals(Error.class, failure.getException().getCause().getClass());
 	}
 	
 	public static class NoneThrown {
