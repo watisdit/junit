@@ -82,6 +82,11 @@ public class SingleMethodTest {
 		assertEquals(1, runner.testCount());
 	}
 
+	@Test
+	public void nonexistentMethodCreatesFailure() throws Exception {
+		assertEquals(1, new JUnitCore().run(Request.aMethod(OneTimeSetup.class, "thisMethodDontExist")).getFailureCount());
+	}
+	
 	public static class TestOne {
 		@Test public void a() {}
 		@Test public void b() {}

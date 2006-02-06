@@ -30,15 +30,20 @@ public class TestClassMethodsRunner extends Runner implements Filterable, Sortab
 	
 	@Override
 	public void run(RunNotifier notifier) {
-			for (Method method : fTestMethods) {
-				try {
-					invokeTestMethod(method, notifier);
-				} catch (StoppedByUserException e) {
-					throw e;
-				} catch (Exception e) {
-					notifier.fireNonTestFailure(e);
-				}
+		if (fTestMethods.isEmpty()) {
+			notifier.fireTestStarted(getDescription());
+			notifier.fireTestFailure(new TestFailure(getDescription(), new Exception("No runnable methods")));
+			notifier.fireTestFinished(getDescription());
+		}
+		for (Method method : fTestMethods) {
+			try {
+				invokeTestMethod(method, notifier);
+			} catch (StoppedByUserException e) {
+				throw e;
+			} catch (Exception e) {
+				notifier.fireNonTestFailure(e);
 			}
+		}
 	}
 
 	@Override
