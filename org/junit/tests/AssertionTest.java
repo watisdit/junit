@@ -97,7 +97,6 @@ public class AssertionTest {
 		assertEquals(new Object(), new Object());
 	}
 	
-	//TODO should expected pass if you get a subclass of the expected exception?
 	//TODO does ComparisonFailure need to be API and/or migrated to org.junit?
 	@Test(expected= ComparisonFailure.class) public void stringsNotEqual() {
 		assertEquals("abc", "def");

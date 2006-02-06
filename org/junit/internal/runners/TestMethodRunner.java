@@ -113,7 +113,7 @@ public class TestMethodRunner extends BeforeAndAfterRunner {
 	}
 
 	private boolean isUnexpected(Throwable exception) {
-		return ! exception.getClass().equals(expectedException());
+		return ! expectedException().isAssignableFrom(exception.getClass());
 	}
 }
 

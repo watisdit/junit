@@ -30,8 +30,7 @@ public class TestClassMethodsRunner extends Runner implements Filterable, Sortab
 	
 	@Override
 	public void run(RunNotifier notifier) {
-			List<Method> methods= fTestMethods;
-			for (Method method : methods) {
+			for (Method method : fTestMethods) {
 				try {
 					invokeTestMethod(method, notifier);
 				} catch (StoppedByUserException e) {

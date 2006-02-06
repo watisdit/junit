@@ -48,6 +48,16 @@ public class ExpectedTest {
 		assertTrue(message.contains("Expected exception: java.lang.Exception"));
 	}
 	
+	public static class ExpectSuperclass {
+		@Test(expected= RuntimeException.class) public void throwsSubclass() {
+			throw new ClassCastException();
+		}
+	}
+	@Test public void expectsSuperclass() {
+		assertTrue(new JUnitCore().run(ExpectSuperclass.class).wasSuccessful());
+	}
+	
+	
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(ExpectedTest.class);
 	}
