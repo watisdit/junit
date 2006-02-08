@@ -5,7 +5,7 @@ import org.junit.runner.Result;
 
 
 
-public abstract class RunListener {
+public class RunListener {
 
 	public void testRunStarted(Description description) throws Exception {
 	}
