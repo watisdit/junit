@@ -3,7 +3,7 @@ package junit.framework;
 /**
  * Thrown when an assertion failed.
  */
-public class AssertionFailedError extends Error {
+public class AssertionFailedError extends AssertionError {
 
 	private static final long serialVersionUID= 1L;
 

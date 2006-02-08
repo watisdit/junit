@@ -47,12 +47,16 @@ public class Description {
 		return fChildren;
 	}
 
-	public boolean hasChildren() {
-		return !getChildren().isEmpty();
+	public boolean isSuite() {
+		return !isTest();
+	}
+
+	public boolean isTest() {
+		return getChildren().isEmpty();
 	}
 
 	public int testCount() {
-		if (!hasChildren())
+		if (isTest())
 			return 1;
 		else {
 			int n= 0;

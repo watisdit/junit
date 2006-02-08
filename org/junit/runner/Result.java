@@ -37,27 +37,29 @@ public class Result {
 		return getFailureCount() == 0;
 	}
 
-	private class Listener implements RunListener {
+	private class Listener extends RunListener {
+		@Override
 		public void testRunStarted(Description description) throws Exception {
 			fStartTime= System.currentTimeMillis();
 		}
 
+		@Override
 		public void testRunFinished(Result result) throws Exception {
 			long endTime= System.currentTimeMillis();
 			fRunTime+= endTime - fStartTime;
 		}
 
+		@Override
 		public void testStarted(Description description) throws Exception {
 			fCount++;
 		}
 
-		public void testFinished(Description description) throws Exception {
-		}
-
+		@Override
 		public void testFailure(Failure failure) throws Exception {
 			fFailures.add(failure);
 		}
 
+		@Override
 		public void testIgnored(Description description) throws Exception {
 			fIgnoreCount++;
 		}

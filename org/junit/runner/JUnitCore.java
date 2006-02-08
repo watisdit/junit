@@ -35,7 +35,6 @@ public class JUnitCore {
 	// only public for testing
 	public Result runMain(String... args) {
 		System.out.println("JUnit version " + Version.id());
-		// TODO some kind of plugin mechanism here?
 		List<Class> classes= new ArrayList<Class>();
 		for (String each : args)
 			try {

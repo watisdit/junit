@@ -1,9 +1,9 @@
 package org.junit.tests;
 
 import static org.junit.Assert.assertEquals;
-import junit.framework.ComparisonFailure;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Assert;
+import org.junit.ComparisonFailure;
 import org.junit.Test;
 
 public class AssertionTest {
@@ -53,8 +53,44 @@ public class AssertionTest {
 	@Test(expected=ComparisonFailure.class) public void arraysElementsDiffer() {
 		assertEquals("not equal", new Object[] {"this is a very long string in the middle of an array"} , new Object[] {"this is another very long string in the middle of an array"});
 	}
+
+    @Test public void arraysDifferAtElement0nullMessage() {
+		try {
+			assertEquals(new Object[] { true }, new Object[] { false });
+		} catch (AssertionError exception) {
+			assertEquals("arrays first differed at element 0; expected:<true> but was:<false>", exception
+					.getMessage());
+		}
+	}
+
+	@Test public void arraysDifferAtElement1nullMessage() {
+		try {
+			assertEquals(new Object[] { true, true }, new Object[] { true,
+					false });
+		} catch (AssertionError exception) {
+			assertEquals("arrays first differed at element 1; expected:<true> but was:<false>", exception
+					.getMessage());
+		}
+	}
 	
-	//TODO: test that array element differences result in "arrays first differ at element n" failure message
+    @Test public void arraysDifferAtElement0withMessage() {
+		try {
+			assertEquals("message", new Object[] { true }, new Object[] { false });
+		} catch (AssertionError exception) {
+			assertEquals("message: arrays first differed at element 0; expected:<true> but was:<false>", exception
+					.getMessage());
+		}
+	}
+
+	@Test public void arraysDifferAtElement1withMessage() {
+		try {
+			assertEquals("message", new Object[] { true, true }, new Object[] { true,
+					false });
+		} catch (AssertionError exception) {
+			assertEquals("message: arrays first differed at element 1; expected:<true> but was:<false>", exception
+					.getMessage());
+		}
+	}
 	
 	@Test public void stringsDifferWithUserMessage() {
 		try {
@@ -97,7 +133,7 @@ public class AssertionTest {
 		assertEquals(new Object(), new Object());
 	}
 	
-	//TODO does ComparisonFailure need to be API and/or migrated to org.junit?
+	//TODO where should ComparisonFailure live?
 	@Test(expected= ComparisonFailure.class) public void stringsNotEqual() {
 		assertEquals("abc", "def");
 	}

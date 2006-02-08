@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.junit.internal.runners.TestFailure;
 import org.junit.runner.Description;
-import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;
@@ -24,7 +23,7 @@ public class JUnit4TestAdapterCache extends HashMap<Description, Test> {
 	}
 	
 	public Test asTest(Description description) {
-		if (description.hasChildren())
+		if (description.isSuite())
 			return createTest(description);
 		else {
 			if (!containsKey(description))
@@ -34,7 +33,7 @@ public class JUnit4TestAdapterCache extends HashMap<Description, Test> {
 	}
 
 	Test createTest(Description description) {
-		if (!description.hasChildren())
+		if (description.isTest())
 			return new JUnit4TestCaseFacade(description);
 		else {
 			TestSuite suite = new TestSuite(description.getDisplayName());
@@ -48,9 +47,7 @@ public class JUnit4TestAdapterCache extends HashMap<Description, Test> {
 			final JUnit4TestAdapter adapter) {
 		RunNotifier notifier = new RunNotifier();
 		notifier.addListener(new RunListener() {
-			public void testIgnored(Description description) throws Exception {
-			}
-
+			@Override
 			public void testFailure(Failure failure) throws Exception {
 				result.addError(getTest(failure), failure.getException());
 			}
@@ -64,27 +61,23 @@ public class JUnit4TestAdapterCache extends HashMap<Description, Test> {
 				}
 			}
 
+			@Override
 			public void testFinished(Description description)
 					throws Exception {
 				result.endTest(asTest(description));
 			}
 
+			@Override
 			public void testStarted(Description description)
 					throws Exception {
 				result.startTest(asTest(description));
-			}
-
-			public void testRunFinished(Result result) throws Exception {
-			}
-
-			public void testRunStarted(Description description) throws Exception {
 			}
 		});
 		return notifier;
 	}
 
 	public List<Test> asTestList(Description description) {
-		if (!description.hasChildren())
+		if (description.isTest())
 			return Arrays.asList(asTest(description));
 		else {
 			List<Test> returnThis = new ArrayList<Test>();

@@ -11,6 +11,7 @@ import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.manipulation.Filterable;
+import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
@@ -75,12 +76,14 @@ public class TestClassMethodsRunner extends Runner implements Filterable, Sortab
 		return Description.createTestDescription(getTestClass(), testName(method));
 	}
 
-	public void filter(Filter filter) {
+	public void filter(Filter filter) throws NoTestsRemainException {
 		for (Iterator iter= fTestMethods.iterator(); iter.hasNext();) {
 			Method method= (Method) iter.next();
 			if (!filter.shouldRun(methodDescription(method)))
 				iter.remove();
 		}
+		if (fTestMethods.isEmpty())
+			throw new NoTestsRemainException();
 	}
 
 	public void sort(final Sorter sorter) {

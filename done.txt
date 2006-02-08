@@ -36,5 +36,8 @@
 * enable tighter and more flexible IDE integration
 	* enable test reordering/prioritization
 	* test categorization & filtering (<- seems like a runner issue) @Category(short, integration)  @Test(category=windowsOnly)
-
+* make sure TestListener is symmetric and meets needs of runner developers
+	* TestRunEvent
+* Decide how we ship JUnit-- 1.5 only or hybrid
+	
 	

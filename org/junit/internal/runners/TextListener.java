@@ -8,7 +8,7 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
-public class TextListener implements RunListener {
+public class TextListener extends RunListener {
 
 	private final PrintStream fWriter;
 
@@ -20,24 +20,24 @@ public class TextListener implements RunListener {
 		this.fWriter= writer;
 	}
 
-	// TestListener implementation
-	public void testRunStarted(Description description) {
-	}
-
+	@Override
 	public void testRunFinished(Result result) {
 		printHeader(result.getRunTime());
 		printFailures(result);
 		printFooter(result);
 	}
 
+	@Override
 	public void testStarted(Description description) {
 		fWriter.append('.');
 	}
 
+	@Override
 	public void testFailure(Failure failure) {
 		fWriter.append('E');
 	}
 	
+	@Override
 	public void testIgnored(Description description) {
 		fWriter.append('I');
 	}
@@ -101,9 +101,4 @@ public class TextListener implements RunListener {
 	protected String elapsedTimeAsString(long runTime) {
 		return NumberFormat.getInstance().format((double) runTime / 1000);
 	}
-
-	public void testFinished(Description description) {
-	}
-
-
 }

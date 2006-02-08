@@ -5,20 +5,26 @@ import org.junit.runner.Result;
 
 
 
-public interface RunListener {
+public abstract class RunListener {
 
-	// TODO Event-based interface instead?
+	public void testRunStarted(Description description) throws Exception {
+	}
 	
-	void testRunStarted(Description description) throws Exception;
+	public void testRunFinished(Result result) throws Exception {
+	}
 	
-	void testRunFinished(Result result) throws Exception;
-	
-	void testStarted(Description description) throws Exception;
+	public void testStarted(Description description) throws Exception {
+	}
 
-	void testFinished(Description description) throws Exception;
+	public void testFinished(Description description) throws Exception {
+	}
 
-	void testFailure(Failure failure) throws Exception;
+	public void testFailure(Failure failure) throws Exception {
+	}
 
-	void testIgnored(Description description) throws Exception;
+	public void testIgnored(Description description) throws Exception {
+	}
 
 }
+
+

@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
-import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
 public class PreJUnit4TestCaseRunnerTest {
@@ -23,26 +22,11 @@ public class PreJUnit4TestCaseRunnerTest {
 	@Test public void testListener() throws Exception {
 		JUnitCore runner= new JUnitCore();
 		RunListener listener= new RunListener() {
-
+			@Override
 			public void testStarted(Description description) {
 				assertEquals(Description.createTestDescription(OneTest.class, "testOne"), 
 						description);
 				count++;
-			}
-
-			public void testRunFinished(Result r) {
-			}
-
-			public void testFailure(Failure failure) {
-			}
-
-			public void testRunStarted(Description description) {
-			}
-
-			public void testIgnored(Description description) {
-			}
-
-			public void testFinished(Description description) {
 			}
 		};
 		

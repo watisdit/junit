@@ -10,6 +10,7 @@ import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.manipulation.Filterable;
+import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
@@ -49,7 +50,7 @@ public class CompositeRunner extends Runner implements Filterable, Sortable {
 		fRunners.add(runner);
 	}
 	
-	public void filter(Filter filter) {
+	public void filter(Filter filter) throws NoTestsRemainException {
 		for (Iterator iter= fRunners.iterator(); iter.hasNext();) {
 			Runner runner= (Runner) iter.next();
 			if (filter.shouldRun(runner.getDescription())) {

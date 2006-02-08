@@ -12,6 +12,9 @@ import org.junit.runner.Request;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
+import org.junit.runner.manipulation.Filter;
+import org.junit.runner.manipulation.Filterable;
+import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Suite;
 import org.junit.runners.Parameterized.Parameters;
@@ -37,10 +40,10 @@ public class SingleMethodTest {
 
 	@Test
 	public void oneTimeSetup() throws Exception {
-		count= 0;
-		Runner runner= Request.aMethod(OneTimeSetup.class, "one").getRunner();
-		Result result= new JUnitCore().run(runner);
-		
+		count = 0;
+		Runner runner = Request.aMethod(OneTimeSetup.class, "one").getRunner();
+		Result result = new JUnitCore().run(runner);
+
 		assertEquals(1, count);
 		assertEquals(1, result.getRunCount());
 	}
@@ -53,9 +56,9 @@ public class SingleMethodTest {
 		}
 
 		public ParameterizedOneTimeSetup(int x) {
-			
+
 		}
-		
+
 		@BeforeClass
 		public static void once() {
 			count++;
@@ -68,9 +71,10 @@ public class SingleMethodTest {
 
 	@Test
 	public void parameterizedOneTimeSetup() throws Exception {
-		count= 0;
-		Runner runner= Request.aMethod(ParameterizedOneTimeSetup.class, "one[0]").getRunner();
-		Result result= new JUnitCore().run(runner);
+		count = 0;
+		Runner runner = Request.aMethod(ParameterizedOneTimeSetup.class,
+				"one[0]").getRunner();
+		Result result = new JUnitCore().run(runner);
 
 		assertEquals(1, count);
 		assertEquals(1, result.getRunCount());
@@ -78,33 +82,64 @@ public class SingleMethodTest {
 
 	@Test
 	public void filteringAffectsPlan() throws Exception {
-		Runner runner= Request.aMethod(OneTimeSetup.class, "one").getRunner();
+		Runner runner = Request.aMethod(OneTimeSetup.class, "one").getRunner();
 		assertEquals(1, runner.testCount());
 	}
 
 	@Test
 	public void nonexistentMethodCreatesFailure() throws Exception {
-		assertEquals(1, new JUnitCore().run(Request.aMethod(OneTimeSetup.class, "thisMethodDontExist")).getFailureCount());
+		assertEquals(1, new JUnitCore().run(
+				Request.aMethod(OneTimeSetup.class, "thisMethodDontExist"))
+				.getFailureCount());
 	}
-	
+
+	@Test(expected = NoTestsRemainException.class)
+	public void filteringAwayEverythingThrowsException() throws NoTestsRemainException {
+		Filterable runner = (Filterable) Request.aClass(OneTimeSetup.class).getRunner();
+		runner.filter(new Filter() {
+			@Override
+			public boolean shouldRun(Description description) {
+				return false;
+			}
+
+			@Override
+			public String describe() {
+				return null;
+			}
+		});
+	}
+
 	public static class TestOne {
-		@Test public void a() {}
-		@Test public void b() {}
+		@Test
+		public void a() {
+		}
+
+		@Test
+		public void b() {
+		}
 	}
 
 	public static class TestTwo {
-		@Test public void a() {}
-		@Test public void b() {}
+		@Test
+		public void a() {
+		}
+
+		@Test
+		public void b() {
+		}
 	}
-	
+
 	@RunWith(Suite.class)
-	@SuiteClasses({TestOne.class, TestTwo.class})
-	public static class OneTwoSuite {} 
+	@SuiteClasses( { TestOne.class, TestTwo.class })
+	public static class OneTwoSuite {
+	}
 
 	@Test
 	public void eliminateUnnecessaryTreeBranches() throws Exception {
-		Runner runner= Request.aClass(OneTwoSuite.class).filterWith(Description.createTestDescription(TestOne.class, "a")).getRunner();
-		Description description= runner.getDescription();
+		Runner runner = Request.aClass(OneTwoSuite.class).filterWith(
+				Description.createTestDescription(TestOne.class, "a"))
+				.getRunner();
+		Description description = runner.getDescription();
 		assertEquals(1, description.getChildren().size());
 	}
 }

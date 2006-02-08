@@ -80,8 +80,6 @@ public class InitializationErrorForwardCompatibilityTest {
 		}
 	}
 	
-	// TODO: warning when public void test method has no @Test annotation?
-	
 	@Test
 	public void generatedErrorTestsMatchUp() {
 		junit.framework.Test shouldFail= fAdapter.getTests().get(0);

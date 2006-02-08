@@ -39,9 +39,7 @@ public abstract class Request {
 			@Override
 			public boolean shouldRun(Description description) {
 				// TODO: test for equality even if we have children?
-				// TODO: a suite with all children removed now looks like a one-method test.  
-				//       What to do?
-				if (!description.hasChildren())
+				if (description.isTest())
 					return desiredDescription.equals(description);
 				else {
 					for (Description each : description.getChildren()) {

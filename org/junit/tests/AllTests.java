@@ -37,7 +37,9 @@ import org.junit.runners.Suite.SuiteClasses;
 		JUnitCoreTest.class
 })
 public class AllTests {	
-	public static Test suite() {
-		return new JUnit4TestAdapter(AllTests.class);
+	public static class Compatibility {
+		public static Test suite() {
+			return new JUnit4TestAdapter(AllTests.class);
+		}
 	}
 }

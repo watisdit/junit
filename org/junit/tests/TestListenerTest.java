@@ -7,31 +7,16 @@ import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
-import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
 public class TestListenerTest {
 	
 	int count;
 	
-	class ErrorListener implements RunListener {
+	class ErrorListener extends RunListener {
+		@Override
 		public void testRunStarted(Description description) throws Exception {
 			throw new Error();
-		}
-
-		public void testRunFinished(Result result) {
-		}
-
-		public void testStarted(Description description) {
-		}
-
-		public void testFinished(Description description) {
-		}
-
-		public void testFailure(Failure failure) {
-		}
-
-		public void testIgnored(Description description) {
 		}
 	}
 	

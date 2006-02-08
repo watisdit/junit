@@ -1,7 +1,5 @@
 package org.junit;
 
-import junit.framework.ComparisonFailure;
-
 /**
  * A set of assert methods. Messages are only displayed when an assertion fails.
  * These methods can be used directly: Assert.assertEquals(...). They
@@ -94,17 +92,18 @@ public class Assert {
 	public static void assertEquals(String message, Object[] expected, Object[] actual) {
 		if (expected == actual)
 			return;
+		String header = message == null ? "" : message + ": ";
 		if (expected == null)
-			fail(message + ": expected array was null");
+			fail(header + "expected array was null");
 		if (actual == null)
-			fail(message + ": actual array was null");
+			fail(header + "actual array was null");
 		if (actual.length != expected.length)
-			fail(message + ": array lengths differed, expected.length=" + expected.length + " actual.length=" + actual.length);
+			fail(header + "array lengths differed, expected.length=" + expected.length + " actual.length=" + actual.length);
 
 		for (int i= 0; i < expected.length; i++) {
 			Object o1= expected[i];
 			Object o2= actual[i];
-			assertEquals(message + ":" + " arrays first differed at element ", o1, o2);
+			assertEquals(header + "arrays first differed at element " + i + ";", o1, o2);
 		}
 	}
 
@@ -252,7 +251,7 @@ public class Assert {
 		fail(format(message, expected, actual));
 	}
 
-	static private String format(String message, Object expected, Object actual) {
+	static String format(String message, Object expected, Object actual) {
 		String formatted= "";
 		if (message != null)
 			formatted= message + " ";

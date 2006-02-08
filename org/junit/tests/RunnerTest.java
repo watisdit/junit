@@ -7,37 +7,20 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
-import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
 public class RunnerTest {
 
 	private boolean wasRun;
 
-	public class MyListener implements RunListener {
+	public class MyListener extends RunListener {
 
 		int testCount;
 
+		@Override
 		public void testRunStarted(Description description) {
 			this.testCount= description.testCount();
 		}
-
-		public void testRunFinished(Result result) {
-		}
-
-		public void testStarted(Description description) {
-		}
-
-		public void testFailure(Failure failure) {
-		}
-
-		public void testIgnored(Description description) {
-		}
-
-		public void testFinished(Description description) {
-		}
-		
 	}
 	
 	public static class Example {

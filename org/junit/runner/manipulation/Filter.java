@@ -18,7 +18,7 @@ public abstract class Filter {
 
 	public abstract boolean shouldRun(Description description);
 
-	public Runner apply(Runner runner) {
+	public Runner apply(Runner runner) throws NoTestsRemainException {
 		if (runner instanceof Filterable) {
 			Filterable filterable= (Filterable)runner;
 			filterable.filter(this);
