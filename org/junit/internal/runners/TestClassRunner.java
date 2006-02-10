@@ -56,6 +56,9 @@ public class TestClassRunner extends Runner implements Filterable, Sortable {
 	public Description getDescription() {
 		return fEnclosedRunner.getDescription();
 	}
+	
+	// TODO: didn't catch non-public PluginLocationIsCorrect
+	// TODO: good behavior when createTest fails
 
 	// TODO: dup?
 	public void filter(Filter filter) throws NoTestsRemainException {
