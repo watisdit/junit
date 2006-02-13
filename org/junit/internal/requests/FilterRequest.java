@@ -23,7 +23,7 @@ public final class FilterRequest extends Request {
 		try {
 			return fFilter.apply(fRequest.getRunner());
 		} catch (NoTestsRemainException e) {
-			return Request.anErrorReport(Filter.class, new Exception(String
+			return Request.errorReport(Filter.class, new Exception(String
 					.format("No tests found matching %s from %s", fFilter
 							.describe(), fRequest.toString()))).getRunner();
 		}

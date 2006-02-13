@@ -10,7 +10,7 @@ import org.junit.internal.requests.SortingRequest;
 import org.junit.runner.manipulation.Filter;
 
 public abstract class Request {
-	public static Request aMethod(Class<?> clazz, String methodName) {
+	public static Request method(Class<?> clazz, String methodName) {
 		return Request.aClass(clazz)
 				.filterWith(Description.createTestDescription(clazz, methodName));
 	}
@@ -23,7 +23,7 @@ public abstract class Request {
 		return new ClassesRequest(collectionName, classes);
 	}
 
-	public static Request anErrorReport(Class<?> klass, Throwable cause) {
+	public static Request errorReport(Class<?> klass, Throwable cause) {
 		return new ErrorReportingRequest(klass, cause);
 	}
 	
@@ -41,13 +41,10 @@ public abstract class Request {
 				// TODO: test for equality even if we have children?
 				if (description.isTest())
 					return desiredDescription.equals(description);
-				else {
-					for (Description each : description.getChildren()) {
-						if (shouldRun(each))
-							return true;
-					}
-					return false;					
-				}
+				for (Description each : description.getChildren())
+					if (shouldRun(each))
+						return true;
+				return false;					
 			}
 
 			@Override

@@ -66,13 +66,13 @@ public class JUnitCore {
 	public Result run(Runner runner) {
 		fResult= new Result();
 		RunListener listener= fResult.createListener();
-		fNotifier.addListener(listener);
+		addListener(listener);
 		try {
 			fNotifier.fireTestRunStarted(runner.getDescription());
 			runner.run(fNotifier);
 			fNotifier.fireTestRunFinished(fResult);
 		} finally {
-			fNotifier.removeListener(listener);
+			removeListener(listener);
 		}
 		return fResult;
 	}

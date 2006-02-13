@@ -41,7 +41,7 @@ public class SingleMethodTest {
 	@Test
 	public void oneTimeSetup() throws Exception {
 		count = 0;
-		Runner runner = Request.aMethod(OneTimeSetup.class, "one").getRunner();
+		Runner runner = Request.method(OneTimeSetup.class, "one").getRunner();
 		Result result = new JUnitCore().run(runner);
 
 		assertEquals(1, count);
@@ -72,7 +72,7 @@ public class SingleMethodTest {
 	@Test
 	public void parameterizedOneTimeSetup() throws Exception {
 		count = 0;
-		Runner runner = Request.aMethod(ParameterizedOneTimeSetup.class,
+		Runner runner = Request.method(ParameterizedOneTimeSetup.class,
 				"one[0]").getRunner();
 		Result result = new JUnitCore().run(runner);
 
@@ -82,14 +82,14 @@ public class SingleMethodTest {
 
 	@Test
 	public void filteringAffectsPlan() throws Exception {
-		Runner runner = Request.aMethod(OneTimeSetup.class, "one").getRunner();
+		Runner runner = Request.method(OneTimeSetup.class, "one").getRunner();
 		assertEquals(1, runner.testCount());
 	}
 
 	@Test
 	public void nonexistentMethodCreatesFailure() throws Exception {
 		assertEquals(1, new JUnitCore().run(
-				Request.aMethod(OneTimeSetup.class, "thisMethodDontExist"))
+				Request.method(OneTimeSetup.class, "thisMethodDontExist"))
 				.getFailureCount());
 	}
 

@@ -29,7 +29,7 @@ public class ClassRequest extends Request {
 					.newInstance(new Object[] { fTestClass });
 			return runner;
 		} catch (Exception e) {
-			return Request.anErrorReport(fTestClass, e).getRunner();
+			return Request.errorReport(fTestClass, e).getRunner();
 		}
 	}
 

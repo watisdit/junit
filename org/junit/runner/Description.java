@@ -27,9 +27,6 @@ public class Description {
 	}
 
 	public void addChild(Description description) {
-		if (description == null)
-			throw new NullPointerException();
-	
 		getChildren().add(description);
 	}
 
