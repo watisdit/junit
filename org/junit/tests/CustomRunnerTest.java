@@ -37,7 +37,6 @@ public class CustomRunnerTest {
 				}
 			});
 		}
-
 	}
 
 	private static void assertGlobalStateIsValid() {

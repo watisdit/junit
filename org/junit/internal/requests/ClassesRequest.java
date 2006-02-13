@@ -10,7 +10,7 @@ import org.junit.runner.Runner;
 public class ClassesRequest extends Request {
 	private final Class[] fClasses;
 	private final String fName;
-
+	
 	public ClassesRequest(String name, Class... classes) {
 		fClasses= classes;
 		fName= name;

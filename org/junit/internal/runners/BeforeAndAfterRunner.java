@@ -16,15 +16,16 @@ public abstract class BeforeAndAfterRunner {
 
 	private TestIntrospector fTestIntrospector;
 
-	private Object fTarget;
+	private Object fTest;
 
 	public BeforeAndAfterRunner(Class<?> testClass,
 			Class<? extends Annotation> beforeAnnotation,
-			Class<? extends Annotation> afterAnnotation, Object target) {
+			Class<? extends Annotation> afterAnnotation, 
+			Object test) {
 		fBeforeAnnotation= beforeAnnotation;
 		fAfterAnnotation= afterAnnotation;
 		fTestIntrospector= new TestIntrospector(testClass);
-		fTarget= target;
+		fTest= test;
 	}
 
 	public void runProtected() {
@@ -70,6 +71,6 @@ public abstract class BeforeAndAfterRunner {
 	}
 	
 	private void invokeMethod(Method method) throws Exception {
-		method.invoke(fTarget);
+		method.invoke(fTest);
 	}
 }

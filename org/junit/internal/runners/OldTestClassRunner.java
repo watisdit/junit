@@ -15,6 +15,8 @@ import org.junit.runner.notification.RunNotifier;
 
 public class OldTestClassRunner extends Runner {
 	
+	private Test fTest;
+	
 	@SuppressWarnings("unchecked")
 	public OldTestClassRunner(Class< ? extends Object> klass) {
 		this(new TestSuite((Class<? extends TestCase>) klass));
@@ -25,8 +27,6 @@ public class OldTestClassRunner extends Runner {
 		fTest= test;
 	}
 
-	private Test fTest;
-	
 	@Override
 	public void run(RunNotifier notifier) {
 		TestResult result= new TestResult();

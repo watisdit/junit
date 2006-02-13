@@ -52,6 +52,7 @@ public class JUnit4TestAdapterCache extends HashMap<Description, Test> {
 				result.addError(getTest(failure), failure.getException());
 			}
 
+			// TODO: could all failures be test failures?
 			private Test getTest(Failure failure) {
 				if (failure instanceof TestFailure) {
 					TestFailure tf = (TestFailure) failure;

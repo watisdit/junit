@@ -18,6 +18,8 @@ public class ClassRequest extends Request {
 		fTestClass= each;
 	}
 
+	// TODO: could this just be a ClassesRequest with one class?
+	
 	@Override
 	public Runner getRunner() {
 		Class runnerClass= getRunnerClass(fTestClass);

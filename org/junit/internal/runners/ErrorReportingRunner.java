@@ -10,11 +10,11 @@ import org.junit.runner.notification.RunNotifier;
 public class ErrorReportingRunner extends Runner {
 	private final Description fDescription;
 
-	private final Throwable fThrowable;
+	private final Throwable fCause;
 
-	public ErrorReportingRunner(Description description, Throwable throwable) {
+	public ErrorReportingRunner(Description description, Throwable cause) {
 		fDescription= description;
-		fThrowable= throwable;
+		fCause= cause;
 	}
 
 	@Override
@@ -22,10 +22,11 @@ public class ErrorReportingRunner extends Runner {
 		return fDescription;
 	}
 
+	// TODO: this is duplicated in TestClassMethodsRunner
 	@Override
 	public void run(RunNotifier notifier) {
 		notifier.fireTestStarted(fDescription);
-		notifier.fireTestFailure(new TestFailure(fDescription, fThrowable));
+		notifier.fireTestFailure(new TestFailure(fDescription, fCause));
 		notifier.fireTestFinished(fDescription);
 	}
 }

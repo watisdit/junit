@@ -4,32 +4,22 @@ import java.util.ArrayList;
 
 public class Description {
 	public static Description createSuiteDescription(Class<? extends Object> testClass) {
-		// TODO: pass class
-		return new Description(testClass.getName(), null, null);
+		return new Description(testClass.getName());
 	}
 
 	public static Description createSuiteDescription(String name) {
-		return new Description(name, null, null);
+		return new Description(name);
 	}
 
 	public static Description createTestDescription(Class clazz, String name) {
-		return new Description(String.format("%s(%s)", name, clazz.getName()),
-				clazz, name);
+		return new Description(String.format("%s(%s)", name, clazz.getName()));
 	}
 	
 	private final ArrayList<Description> fChildren= new ArrayList<Description>();
 	private final String fDisplayName;
-	
-	// TODO: do we want these?  Just try to parse the string instead?
-	@SuppressWarnings("unused")
-	private final Class fClass;
-	@SuppressWarnings("unused")
-	private final String fMethodName;
 
-	public Description(final String displayName, final Class class1, final String methodName) {
+	public Description(final String displayName) {
 		fDisplayName= displayName;
-		fClass= class1;
-		fMethodName= methodName;
 	}
 
 	public String getDisplayName() {

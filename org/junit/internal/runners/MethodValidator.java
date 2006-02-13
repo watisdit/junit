@@ -24,7 +24,38 @@ public class MethodValidator {
 		fIntrospector= new TestIntrospector(testClass);
 	}
 
-	public void validateTestMethods(Class<? extends Annotation> annotation,
+	void validateInstanceMethods() {
+		validateTestMethods(After.class, false);
+		validateTestMethods(Before.class, false);
+		validateTestMethods(Test.class, false);
+	}
+
+	void validateStaticMethods() {
+		validateTestMethods(BeforeClass.class, true);
+		validateTestMethods(AfterClass.class, true);
+	}
+	
+	public List<Throwable> validateAllMethods() {
+		validateNoArgConstructor();
+		validateStaticMethods();
+		validateInstanceMethods();
+		return fErrors;
+	}
+	
+	public void assertValid() throws InitializationError {
+		if (!fErrors.isEmpty())
+			throw new InitializationError(fErrors);
+	}
+
+	public void validateNoArgConstructor() {
+		try {
+			fTestClass.getConstructor();
+		} catch (Exception e) {
+			fErrors.add(new Exception("Test class should have public zero-argument constructor", e));
+		}
+	}
+
+	private void validateTestMethods(Class<? extends Annotation> annotation,
 			boolean isStatic) {
 		List<Method> methods= fIntrospector.getTestMethods(annotation);
 		for (Method each : methods) {
@@ -43,38 +74,5 @@ public class MethodValidator {
 				fErrors.add(new Exception("Method " + each.getName()
 						+ " should have no parameters"));
 		}
-	}
-
-	void validateInstanceMethods() {
-		validateTestMethods(After.class, false);
-		validateTestMethods(Before.class, false);
-		validateTestMethods(Test.class, false);
-	}
-
-	void validateStaticMethods() {
-		validateTestMethods(BeforeClass.class, true);
-		validateTestMethods(AfterClass.class, true);
-	}
-
-	public void validateNoArgConstructor() {
-		try {
-			fTestClass.getConstructor();
-		} catch (Exception e) {
-			fErrors.add(new Exception(
-					"Test class should have public zero-argument constructor",
-					e));
-		}
-	}
-
-	public List<Throwable> validateAllMethods() {
-		validateNoArgConstructor();
-		validateStaticMethods();
-		validateInstanceMethods();
-		return fErrors;
-	}
-
-	public void assertValid() throws InitializationError {
-		if (!fErrors.isEmpty())
-			throw new InitializationError(fErrors);
 	}
 }
