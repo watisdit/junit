@@ -4,6 +4,8 @@
 	<property name="dist"  value="junit${version}" />
 	<property name="versionfile"  value="junit/runner/Version.java" />
 	<property name="zipfile"  value="${dist}.zip" />
+        <property name="unjarred" value="**/*.jar, **/junit/tests/**, **/junit/samples/**, doc/**, README.html, .classpath, .project, cpl-v10.html" />
+
 	<target name="init">
 		<tstamp/>
 	</target>
@@ -26,32 +28,31 @@
   		/>	
 	</target>
 
+        <target name="distributeTestsAndExamples">
+        	<copy todir="${dist}/${dir}">
+                	<fileset dir="${dir}" includes="junit/samples/**, junit/tests/**" />
+                </copy>
+        </target>
+
 	<target name="dist" depends="build">
 		<delete dir="${dist}" />
 		<mkdir dir="${dist}" />
-		<!-- TODO: lots of 3.x / 4.x duplication -->
 		<jar 
 			jarfile="${dist}/src.jar"
 			basedir="."
-			excludes="**/*.jar, **/junit/tests/**, **/junit/samples/**, **/*.class, doc/**, README.html, .classpath, .project, cpl-v10.html"
+			excludes="${unjarred}, **/*.class"
 		/>
 		<jar 
 			jarfile="${dist}/junit.jar"
 			basedir="."
-			excludes="**/*.jar, **/junit/tests/**, **/junit/samples/**, **/*.java, doc/**, README.html,  build.xml, jar-manifest.txt, .classpath, .project, cpl-v10.html"
+			excludes="${unjarred}, **/*.java, build.xml"
 		/>
-		<copy todir="${dist}/junit/samples">
-			<fileset dir="junit/samples" />
-		</copy>
-		<copy todir="${dist}/junit/tests">
-			<fileset dir="junit/tests" />
-		</copy>
-		<copy todir="${dist}/org/junit/samples">
-			<fileset dir="org/junit/samples" />
-		</copy>
-		<copy todir="${dist}/org/junit/tests">
-			<fileset dir="org/junit/tests" />
-		</copy>
+                <antcall target="distributeTestsAndExamples">
+                  <param name="dir" value="." />
+                </antcall>
+                <antcall target="distributeTestsAndExamples">
+                  <param name="dir" value="org" />
+                </antcall>
 
 		<mkdir dir="${dist}/javadoc" />
 		<javadoc 
