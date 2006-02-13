@@ -1,7 +1,5 @@
 package org.junit.internal.runners;
 
-import java.lang.reflect.Method;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.Description;
@@ -31,15 +29,11 @@ public class TestClassRunner extends Runner implements Filterable, Sortable {
 
 	@Override
 	public void run(final RunNotifier notifier) {
-		BeforeAndAfterRunner runner= new BeforeAndAfterRunner(getTestClass(), BeforeClass.class, AfterClass.class) {		
+		BeforeAndAfterRunner runner = new BeforeAndAfterRunner(getTestClass(),
+				BeforeClass.class, AfterClass.class, null) {		
 			@Override
 			protected void runUnprotected() {
 				fEnclosedRunner.run(notifier);
-			}
-		
-			@Override
-			protected void invokeMethod(Method method) throws Exception {
-				method.invoke(null);
 			}
 		
 			@Override
@@ -59,7 +53,7 @@ public class TestClassRunner extends Runner implements Filterable, Sortable {
 	
 	// TODO: didn't catch non-public PluginLocationIsCorrect
 	// TODO: good behavior when createTest fails
-
+	
 	// TODO: dup?
 	public void filter(Filter filter) throws NoTestsRemainException {
 		filter.apply(fEnclosedRunner);

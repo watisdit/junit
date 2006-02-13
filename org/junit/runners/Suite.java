@@ -9,10 +9,8 @@ import java.lang.annotation.Target;
 import org.junit.internal.runners.InitializationError;
 import org.junit.internal.runners.TestClassRunner;
 import org.junit.runner.Request;
-import org.junit.runner.manipulation.Filterable;
-import org.junit.runner.manipulation.Sortable;
 
-public class Suite extends TestClassRunner implements Filterable, Sortable {
+public class Suite extends TestClassRunner {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.TYPE)
 	public @interface SuiteClasses {

@@ -22,7 +22,7 @@ public class TestMethodRunner extends BeforeAndAfterRunner {
 	private final Description fDescription;
 
 	public TestMethodRunner(Object test, Method method, RunNotifier notifier, Description description) {
-		super(test.getClass(), Before.class, After.class);
+		super(test.getClass(), Before.class, After.class, test);
 		fTest= test;
 		fMethod= method;
 		fNotifier= notifier;
@@ -77,7 +77,7 @@ public class TestMethodRunner extends BeforeAndAfterRunner {
 	@Override
 	protected void runUnprotected() {
 		try {
-			fMethod.invoke(fTest);
+			executeMethodBody();
 			if (expectsException())
 				addFailure(new AssertionError("Expected exception: " + expectedException().getName()));
 		} catch (InvocationTargetException e) {
@@ -94,11 +94,10 @@ public class TestMethodRunner extends BeforeAndAfterRunner {
 		}
 	}
 
-	@Override
-	protected void invokeMethod(Method method) throws Exception {
-		method.invoke(fTest);
+	protected void executeMethodBody() throws IllegalAccessException, InvocationTargetException {
+		fMethod.invoke(fTest);
 	}
-	
+
 	@Override
 	protected void addFailure(Throwable e) {
 		fNotifier.fireTestFailure(new TestFailure(fDescription, e));

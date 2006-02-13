@@ -72,7 +72,7 @@ public class TestClassMethodsRunner extends Runner implements Filterable, Sortab
 		return method.getName();
 	}
 
-	private Description methodDescription(Method method) {
+	protected Description methodDescription(Method method) {
 		return Description.createTestDescription(getTestClass(), testName(method));
 	}
 

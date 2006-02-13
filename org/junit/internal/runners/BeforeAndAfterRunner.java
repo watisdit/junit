@@ -16,12 +16,15 @@ public abstract class BeforeAndAfterRunner {
 
 	private TestIntrospector fTestIntrospector;
 
+	private Object fTarget;
+
 	public BeforeAndAfterRunner(Class<?> testClass,
 			Class<? extends Annotation> beforeAnnotation,
-			Class<? extends Annotation> afterAnnotation) {
+			Class<? extends Annotation> afterAnnotation, Object target) {
 		fBeforeAnnotation= beforeAnnotation;
 		fAfterAnnotation= afterAnnotation;
 		fTestIntrospector= new TestIntrospector(testClass);
+		fTarget= target;
 	}
 
 	public void runProtected() {
@@ -37,8 +40,6 @@ public abstract class BeforeAndAfterRunner {
 	protected abstract void runUnprotected();
 
 	protected abstract void addFailure(Throwable targetException);
-
-	protected abstract void invokeMethod(Method method) throws Exception;
 
 	// Stop after first failed @Before
 	private void runBefores() throws FailedBefore {
@@ -66,5 +67,9 @@ public abstract class BeforeAndAfterRunner {
 			} catch (Throwable e) {
 				addFailure(e); // Untested, but seems impossible
 			}
+	}
+	
+	private void invokeMethod(Method method) throws Exception {
+		method.invoke(fTarget);
 	}
 }

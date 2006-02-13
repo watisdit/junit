@@ -18,9 +18,8 @@ import org.junit.internal.runners.CompositeRunner;
 import org.junit.internal.runners.InitializationError;
 import org.junit.internal.runners.TestClassMethodsRunner;
 import org.junit.internal.runners.TestClassRunner;
-import org.junit.runner.manipulation.Filterable;
 
-public class Parameterized extends TestClassRunner implements Filterable {
+public class Parameterized extends TestClassRunner {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.METHOD)
 	public static @interface Parameters {
@@ -69,6 +68,8 @@ public class Parameterized extends TestClassRunner implements Filterable {
 			return constructors[0];
 		}
 	}
+	
+	// TODO: I think this now eagerly reads parameters, which was never the point.
 	
 	public static class RunAllParameterMethods extends CompositeRunner {
 		private final Class<? extends Object> fKlass;
