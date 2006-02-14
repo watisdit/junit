@@ -12,6 +12,7 @@ import junit.framework.TestSuite;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
+import org.junit.runner.notification.Failure;
 
 public class OldTestClassRunner extends Runner {
 	
@@ -48,7 +49,7 @@ public class OldTestClassRunner extends Runner {
 			// Implement junit.framework.TestListener
 			//TODO method not covered
 			public void addError(Test test, Throwable t) {
-				TestFailure failure= new TestFailure(asDescription(test), t);
+				Failure failure= new Failure(asDescription(test), t);
 				notifier.fireTestFailure(failure);
 			}
 			

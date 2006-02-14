@@ -27,7 +27,7 @@ public class RunNotifier {
 					notifyListener(all.next());
 				} catch (Exception e) {
 					all.remove();
-					fireNonTestFailure(e); // Remove the offending listener first to avoid an infinite loop
+					fireTestFailure(new Failure(Description.TEST_MECHANISM, e)); // Remove the offending listener first to avoid an infinite loop
 				}
 			}
 		}
@@ -90,11 +90,7 @@ public class RunNotifier {
 			};
 		}.run();
 	}
-
-	public void fireNonTestFailure(Throwable exception) {
-		fireTestFailure(new Failure(exception));
-	}
-
+	
 	public void pleaseStop() {
 		fPleaseStop= true;
 	}

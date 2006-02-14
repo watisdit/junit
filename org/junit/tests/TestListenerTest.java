@@ -8,6 +8,7 @@ import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.RunListener;
+import org.junit.runner.notification.Failure;
 
 public class TestListenerTest {
 	
@@ -46,6 +47,8 @@ public class TestListenerTest {
 		Result result= core.run(OneTest.class);
 		assertEquals(1, count);
 		assertEquals(1, result.getFailureCount());
+		Failure testFailure= result.getFailures().get(0);
+		assertEquals(Description.TEST_MECHANISM, testFailure.getDescription());
 
 		count= 0;
 		core.run(OneTest.class);

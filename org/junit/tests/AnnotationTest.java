@@ -10,6 +10,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 
@@ -286,6 +287,8 @@ public class AnnotationTest extends TestCase {
 		Result result= core.run(ErrorInBeforeClass.class);
 		assertFalse(run);
 		assertEquals(1, result.getFailureCount());
+		Description description= result.getFailures().get(0).getDescription();
+		assertEquals(ErrorInBeforeClass.class.getName(), description.getDisplayName());
 	}
 
 	static public class ErrorInAfterClass {

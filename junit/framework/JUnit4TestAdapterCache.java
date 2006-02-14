@@ -8,11 +8,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import org.junit.internal.runners.TestFailure;
 import org.junit.runner.Description;
-import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;
+import org.junit.runner.notification.Failure;
 
 public class JUnit4TestAdapterCache extends HashMap<Description, Test> {
 	private static final long serialVersionUID = 1L;
@@ -49,17 +48,7 @@ public class JUnit4TestAdapterCache extends HashMap<Description, Test> {
 		notifier.addListener(new RunListener() {
 			@Override
 			public void testFailure(Failure failure) throws Exception {
-				result.addError(getTest(failure), failure.getException());
-			}
-
-			// TODO: could all failures be test failures?
-			private Test getTest(Failure failure) {
-				if (failure instanceof TestFailure) {
-					TestFailure tf = (TestFailure) failure;
-					return asTest(tf.getDescription());
-				} else {
-					return null;
-				}
+				result.addError(asTest(failure.getDescription()), failure.getException());
 			}
 
 			@Override

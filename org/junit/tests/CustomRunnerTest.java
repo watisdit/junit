@@ -22,9 +22,8 @@ public class CustomRunnerTest {
 				throws InitializationError {
 			super(klass, new TestClassMethodsRunner(klass) {
 				@Override
-				protected void invokeTestMethod(Method method,
-						RunNotifier notifier) throws Exception {
-					new TestMethodRunner(createTest(), method, notifier,
+				protected TestMethodRunner createMethodRunner(Object test, Method method, RunNotifier notifier) {
+					return new TestMethodRunner(test, method, notifier,
 							methodDescription(method)) {
 						@Override
 						protected void executeMethodBody()
@@ -33,7 +32,7 @@ public class CustomRunnerTest {
 							super.executeMethodBody();
 							assertGlobalStateIsValid();
 						}
-					}.run();
+					};				
 				}
 			});
 		}

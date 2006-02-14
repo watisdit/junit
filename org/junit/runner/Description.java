@@ -15,6 +15,8 @@ public class Description {
 		return new Description(String.format("%s(%s)", name, clazz.getName()));
 	}
 	
+	public static Description TEST_MECHANISM = new Description("Test mechanism");
+	
 	private final ArrayList<Description> fChildren= new ArrayList<Description>();
 	private final String fDisplayName;
 

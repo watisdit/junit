@@ -10,6 +10,7 @@ import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
+import org.junit.runner.notification.Failure;
 
 public class TestClassRunner extends Runner implements Filterable, Sortable {
 	protected final Runner fEnclosedRunner;
@@ -37,13 +38,13 @@ public class TestClassRunner extends Runner implements Filterable, Sortable {
 				fEnclosedRunner.run(notifier);
 			}
 		
+			// TODO: looks very similar to other method of BeforeAfter, now
 			@Override
 			protected void addFailure(Throwable targetException) {
-				notifier.fireNonTestFailure(targetException);
+				notifier.fireTestFailure(new Failure(getDescription(), targetException));
 			}
-		
 		};
-		
+
 		runner.runProtected();
 	}
 

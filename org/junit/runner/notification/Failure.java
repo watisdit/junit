@@ -3,26 +3,39 @@ package org.junit.runner.notification;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import org.junit.runner.Description;
 
 /**
- * A <code>Failure</code> reports an exception caught while
- * executing JUnit tests.
+ * A Test Failure holds the failed Test, method name, and the 
+ * thrown exception
  */
 public class Failure {
+	private final Description fDescription;
 	protected Throwable fThrownException;
-	
+
 	/**
-	 * Constructs a TestFailure with only the given exception.
+	 * Constructs a TestFailure with the given plan and exception.
 	 */
- 	public Failure(Throwable thrownException) {
-		fThrownException= thrownException;
+	public Failure(Description description, Throwable thrownException) {
+		fThrownException = thrownException;
+		fDescription= description;
 	}
+
+	public String getTestHeader() {
+		return fDescription.getDisplayName();
+	}
+
+	public Description getDescription() {
+		return fDescription;
+	}
+
 	/**
 	 * Gets the thrown exception.
 	 */
 	public Throwable getException() {
 	    return fThrownException;
 	}
+
 	/**
 	 * Returns a short description of the failure.
 	 */
@@ -32,7 +45,7 @@ public class Failure {
 	    buffer.append(getTestHeader() + ": "+fThrownException.getMessage());
 	    return buffer.toString();
 	}
-	
+
 	public String getTrace() {
 		StringWriter stringWriter= new StringWriter();
 		PrintWriter writer= new PrintWriter(stringWriter);
@@ -40,17 +53,8 @@ public class Failure {
 		StringBuffer buffer= stringWriter.getBuffer();
 		return buffer.toString();
 	}
-	
+
 	public String getMessage() {
 		return getException().getMessage();
 	}
-	
-	public String getTestHeader() {
-		return "Test mechanism failure";
-	}
-	
-	public boolean isTestFailure() {
-		return false;
-	}
-
 }

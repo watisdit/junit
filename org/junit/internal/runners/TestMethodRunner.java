@@ -13,6 +13,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
+import org.junit.runner.notification.Failure;
 
 public class TestMethodRunner extends BeforeAndAfterRunner {
 	private final Object fTest;
@@ -100,7 +101,7 @@ public class TestMethodRunner extends BeforeAndAfterRunner {
 
 	@Override
 	protected void addFailure(Throwable e) {
-		fNotifier.fireTestFailure(new TestFailure(fDescription, e));
+		fNotifier.fireTestFailure(new Failure(fDescription, e));
 	}
 	
 	private boolean expectsException() {

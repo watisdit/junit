@@ -15,7 +15,7 @@ import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
-import org.junit.runner.notification.StoppedByUserException;
+import org.junit.runner.notification.Failure;
 
 public class TestClassMethodsRunner extends Runner implements Filterable, Sortable {
 	private final List<Method> fTestMethods;
@@ -31,20 +31,18 @@ public class TestClassMethodsRunner extends Runner implements Filterable, Sortab
 	
 	@Override
 	public void run(RunNotifier notifier) {
-		if (fTestMethods.isEmpty()) {
-			notifier.fireTestStarted(getDescription());
-			notifier.fireTestFailure(new TestFailure(getDescription(), new Exception("No runnable methods")));
-			notifier.fireTestFinished(getDescription());
-		}
-		for (Method method : fTestMethods) {
-			try {
-				invokeTestMethod(method, notifier);
-			} catch (StoppedByUserException e) {
-				throw e;
-			} catch (Exception e) {
-				notifier.fireNonTestFailure(e);
-			}
-		}
+		if (fTestMethods.isEmpty())
+			testAborted(notifier, getDescription());
+		for (Method method : fTestMethods)
+			invokeTestMethod(method, notifier);
+	}
+
+	private void testAborted(RunNotifier notifier, Description description) {
+		// TODO: duped!
+		// TODO: envious
+		notifier.fireTestStarted(description);
+		notifier.fireTestFailure(new Failure(description, new Exception("No runnable methods")));
+		notifier.fireTestFinished(description);
 	}
 
 	@Override
@@ -64,8 +62,19 @@ public class TestClassMethodsRunner extends Runner implements Filterable, Sortab
 		return getTestClass().getConstructor().newInstance();
 	}
 
-	protected void invokeTestMethod(Method method, RunNotifier notifier) throws Exception {
-		new TestMethodRunner(createTest(), method, notifier, methodDescription(method)).run();
+	protected void invokeTestMethod(Method method, RunNotifier notifier) {
+		Object test;
+		try {
+			test= createTest();
+		} catch (Exception e) {
+			testAborted(notifier, methodDescription(method));
+			return;
+		}
+		createMethodRunner(test, method, notifier).run();
+	}
+
+	protected TestMethodRunner createMethodRunner(Object test, Method method, RunNotifier notifier) {
+		return new TestMethodRunner(test, method, notifier, methodDescription(method));
 	}
 
 	protected String testName(Method method) {
