@@ -18,8 +18,7 @@ import static org.junit.Assert.*;
 // TODO: better factoring here
 public class CustomRunnerTest {
 	public static class CustomRunner extends TestClassRunner {
-		public CustomRunner(Class<? extends Object> klass)
-				throws InitializationError {
+		public CustomRunner(Class<?> klass) throws InitializationError {
 			super(klass, new TestClassMethodsRunner(klass) {
 				@Override
 				protected TestMethodRunner createMethodRunner(Object test, Method method, RunNotifier notifier) {
