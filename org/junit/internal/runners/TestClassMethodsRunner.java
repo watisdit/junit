@@ -19,10 +19,10 @@ import org.junit.runner.notification.Failure;
 
 public class TestClassMethodsRunner extends Runner implements Filterable, Sortable {
 	private final List<Method> fTestMethods;
-	private final Class<? extends Object> fTestClass;
-	
-	// This assumes that some containing runner will perform validation of the test methods
-	public TestClassMethodsRunner(Class<? extends Object> klass) {
+	private final Class<?> fTestClass;
+
+	// This assumes that some containing runner will perform validation of the test methods	
+	public TestClassMethodsRunner(Class<?> klass) throws InitializationError {
 		fTestClass= klass;
 		fTestMethods= new TestIntrospector(getTestClass()).getTestMethods(Test.class);
 	}
@@ -101,7 +101,7 @@ public class TestClassMethodsRunner extends Runner implements Filterable, Sortab
 		});
 	}
 
-	protected Class<? extends Object> getTestClass() {
+	protected Class<?> getTestClass() {
 		return fTestClass;
 	}
 }

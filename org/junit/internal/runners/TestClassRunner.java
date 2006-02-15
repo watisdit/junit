@@ -14,14 +14,14 @@ import org.junit.runner.notification.Failure;
 
 public class TestClassRunner extends Runner implements Filterable, Sortable {
 	protected final Runner fEnclosedRunner;
-	private final Class<? extends Object> fTestClass;
+	private final Class<?> fTestClass;
 
-	public TestClassRunner(Class<? extends Object> klass) throws InitializationError {
+	public TestClassRunner(Class<?> klass) throws InitializationError {
 		this(klass, new TestClassMethodsRunner(klass));
 	}
 	
 	// TODO: Should be Class<?> everywhere
-	public TestClassRunner(Class<? extends Object> klass, Runner runner) throws InitializationError {
+	public TestClassRunner(Class<?> klass, Runner runner) throws InitializationError {
 		fTestClass= klass;
 		fEnclosedRunner= runner;
 		MethodValidator methodValidator= new MethodValidator(klass);
@@ -69,7 +69,7 @@ public class TestClassRunner extends Runner implements Filterable, Sortable {
 		sorter.apply(fEnclosedRunner);
 	}
 
-	protected Class<? extends Object> getTestClass() {
+	protected Class<?> getTestClass() {
 		return fTestClass;
 	}
 }
