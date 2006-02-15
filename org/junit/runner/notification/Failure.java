@@ -11,7 +11,7 @@ import org.junit.runner.Description;
  */
 public class Failure {
 	private final Description fDescription;
-	protected Throwable fThrownException;
+	private Throwable fThrownException;
 
 	/**
 	 * Constructs a TestFailure with the given plan and exception.
