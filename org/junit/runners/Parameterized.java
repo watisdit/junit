@@ -42,7 +42,7 @@ public class Parameterized extends TestClassRunner {
 
 		private final Constructor fConstructor;
 
-		private TestClassRunnerForParameters(Class<?> klass, Object[] parameters, int i) {
+		private TestClassRunnerForParameters(Class<?> klass, Object[] parameters, int i) throws InitializationError {
 			super(klass);
 			fParameters= parameters;
 			fParameterSetNumber= i;

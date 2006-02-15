@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.internal.runners.InitializationError;
+import org.junit.internal.runners.MethodValidator;
 import org.junit.internal.runners.TestClassRunner;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
