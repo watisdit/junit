@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.junit.internal.runners.CompositeRunner;
-import org.junit.internal.runners.InitializationError;
+import org.junit.internal.runners.MethodValidator;
 import org.junit.internal.runners.TestClassMethodsRunner;
 import org.junit.internal.runners.TestClassRunner;
 
@@ -32,6 +32,8 @@ public class Parameterized extends TestClassRunner {
 		}
 		return returnThis;
 	}
+
+	// TODO: single-class this extension
 	
 	private static class TestClassRunnerForParameters extends TestClassMethodsRunner {
 		private final Object[] fParameters;
@@ -39,8 +41,8 @@ public class Parameterized extends TestClassRunner {
 		private final int fParameterSetNumber;
 
 		private final Constructor fConstructor;
-
-		private TestClassRunnerForParameters(Class<? extends Object> klass, Object[] parameters, int i) throws InitializationError {
+		
+		private TestClassRunnerForParameters(Class<? extends Object> klass, Object[] parameters, int i) {
 			super(klass);
 			fParameters= parameters;
 			fParameterSetNumber= i;
@@ -105,5 +107,11 @@ public class Parameterized extends TestClassRunner {
 	
 	public Parameterized(final Class<? extends Object> klass) throws Exception {
 		super(klass, new RunAllParameterMethods(klass));
+	}
+	
+	@Override
+	protected void validate(MethodValidator methodValidator) {
+		methodValidator.validateStaticMethods();
+		methodValidator.validateInstanceMethods();
 	}
 }

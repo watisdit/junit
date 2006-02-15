@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import junit.framework.JUnit4TestAdapter;
@@ -12,7 +13,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.internal.runners.InitializationError;
 import org.junit.internal.runners.MethodValidator;
+import org.junit.internal.runners.TestClassRunner;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -80,9 +83,18 @@ public class ParameterizedTestMethodTest {
 				{ EverythingWrong.class, 1 + 4 * 5 }, { SubWrong.class, 1 },
 				{ SubShadows.class, 0 } });
 	}
-
+	
+	private List<Throwable> validateAllMethods(Class<?> clazz) {
+		try {
+			new TestClassRunner(clazz);
+		} catch (InitializationError e) {
+			return e.getCauses();
+		}
+		return Collections.emptyList();
+	}
+	
 	@Test public void testFailures() throws Exception {
-		List<Throwable> problems= new MethodValidator(fClass).validateAllMethods();
+		List<Throwable> problems= validateAllMethods(fClass);
 		assertEquals(fErrorCount, problems.size());
 	}
 	public static junit.framework.Test suite() {

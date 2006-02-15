@@ -25,8 +25,13 @@ public class TestClassRunner extends Runner implements Filterable, Sortable {
 		fTestClass= klass;
 		fEnclosedRunner= runner;
 		MethodValidator methodValidator= new MethodValidator(klass);
-		methodValidator.validateStaticMethods();
+		validate(methodValidator);
 		methodValidator.assertValid();
+	}
+
+	// TODO: this is parallel to passed-in runner
+	protected void validate(MethodValidator methodValidator) {
+		methodValidator.validateAllMethods();
 	}
 
 	@Override
@@ -53,7 +58,6 @@ public class TestClassRunner extends Runner implements Filterable, Sortable {
 		return fEnclosedRunner.getDescription();
 	}
 	
-	// TODO: didn't catch non-public PluginLocationIsCorrect
 	// TODO: good behavior when createTest fails
 	
 	// TODO: dup?

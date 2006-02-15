@@ -3,6 +3,7 @@ package org.junit.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collections;
 import java.util.List;
 
 import junit.framework.JUnit4TestAdapter;
@@ -13,7 +14,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.internal.runners.MethodValidator;
+import org.junit.internal.runners.InitializationError;
+import org.junit.internal.runners.TestClassRunner;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 
@@ -50,7 +52,7 @@ public class TestMethodTest {
 	}
 	
 	@Test public void testFailures() throws Exception {
-		List<Throwable> problems= new MethodValidator(EverythingWrong.class).validateAllMethods();
+		List<Throwable> problems= validateAllMethods(EverythingWrong.class);
 		int errorCount= 1 + 4 * 5; // missing constructor plus four invalid methods for each annotation */
 		assertEquals(errorCount, problems.size());
 	}
@@ -66,7 +68,7 @@ public class TestMethodTest {
 	}
 
 	@Test public void validateInheritedMethods() throws Exception {
-		List<Throwable> problems= new MethodValidator(SubWrong.class).validateAllMethods();
+		List<Throwable> problems= validateAllMethods(SubWrong.class);
 		assertEquals(1, problems.size());
 	}
 
@@ -77,8 +79,17 @@ public class TestMethodTest {
 	}
 
 	@Test public void dontValidateShadowedMethods() throws Exception {
-		List<Throwable> problems= new MethodValidator(SubShadows.class).validateAllMethods();
+		List<Throwable> problems= validateAllMethods(SubShadows.class);
 		assertTrue(problems.isEmpty());
+	}
+
+	private List<Throwable> validateAllMethods(Class<?> clazz) {
+		try {
+			new TestClassRunner(clazz);
+		} catch (InitializationError e) {
+			return e.getCauses();
+		}
+		return Collections.emptyList();
 	}
 
 	static public class IgnoredTest {

@@ -24,13 +24,13 @@ public class MethodValidator {
 		fIntrospector= new TestIntrospector(testClass);
 	}
 
-	void validateInstanceMethods() {
+	public void validateInstanceMethods() {
 		validateTestMethods(After.class, false);
 		validateTestMethods(Before.class, false);
 		validateTestMethods(Test.class, false);
 	}
 
-	void validateStaticMethods() {
+	public void validateStaticMethods() {
 		validateTestMethods(BeforeClass.class, true);
 		validateTestMethods(AfterClass.class, true);
 	}

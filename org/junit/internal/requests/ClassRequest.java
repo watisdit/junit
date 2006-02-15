@@ -17,8 +17,6 @@ public class ClassRequest extends Request {
 	public ClassRequest(Class<? extends Object> each) {
 		fTestClass= each;
 	}
-
-	// TODO: could this just be a ClassesRequest with one class?
 	
 	@Override
 	public Runner getRunner() {
