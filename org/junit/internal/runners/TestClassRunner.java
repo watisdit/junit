@@ -20,7 +20,6 @@ public class TestClassRunner extends Runner implements Filterable, Sortable {
 		this(klass, new TestClassMethodsRunner(klass));
 	}
 	
-	// TODO: Should be Class<?> everywhere
 	public TestClassRunner(Class<?> klass, Runner runner) throws InitializationError {
 		fTestClass= klass;
 		fEnclosedRunner= runner;
