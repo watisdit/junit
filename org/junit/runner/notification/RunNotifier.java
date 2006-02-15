@@ -7,7 +7,6 @@ import java.util.List;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 
-
 public class RunNotifier {
 	private List<RunListener> fListeners= new ArrayList<RunListener>();
 	private boolean fPleaseStop= false;

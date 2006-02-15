@@ -14,7 +14,7 @@ public class RunWithTest {
 	private static String log;
 
 	public static class ExampleRunner extends Runner {
-		public ExampleRunner(Class<? extends Object> klass) {
+		public ExampleRunner(Class<?> klass) {
 			log+= "initialize";
 		}
 

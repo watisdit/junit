@@ -1,6 +1,7 @@
 package org.junit.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Assert;
 import org.junit.ComparisonFailure;
@@ -58,7 +59,7 @@ public class AssertionTest {
 		try {
 			assertEquals(new Object[] { true }, new Object[] { false });
 		} catch (AssertionError exception) {
-			assertEquals("arrays first differed at element 0; expected:<true> but was:<false>", exception
+			assertEquals("arrays first differed at element [0]; expected:<true> but was:<false>", exception
 					.getMessage());
 		}
 	}
@@ -68,7 +69,7 @@ public class AssertionTest {
 			assertEquals(new Object[] { true, true }, new Object[] { true,
 					false });
 		} catch (AssertionError exception) {
-			assertEquals("arrays first differed at element 1; expected:<true> but was:<false>", exception
+			assertEquals("arrays first differed at element [1]; expected:<true> but was:<false>", exception
 					.getMessage());
 		}
 	}
@@ -77,19 +78,32 @@ public class AssertionTest {
 		try {
 			assertEquals("message", new Object[] { true }, new Object[] { false });
 		} catch (AssertionError exception) {
-			assertEquals("message: arrays first differed at element 0; expected:<true> but was:<false>", exception
+			assertEquals("message: arrays first differed at element [0]; expected:<true> but was:<false>", exception
 					.getMessage());
 		}
 	}
 
 	@Test public void arraysDifferAtElement1withMessage() {
 		try {
-			assertEquals("message", new Object[] { true, true }, new Object[] { true,
-					false });
+			assertEquals("message", new Object[] {true, true}, new Object[] {true, false});
+			fail();
 		} catch (AssertionError exception) {
-			assertEquals("message: arrays first differed at element 1; expected:<true> but was:<false>", exception
-					.getMessage());
+			assertEquals("message: arrays first differed at element [1]; expected:<true> but was:<false>", exception.getMessage());
 		}
+	}
+	
+	@Test public void multiDimensionalArraysAreEqual() {
+		assertEquals(new Object[][]{{true, true}, {false, false}}, new Object[][]{{true, true}, {false, false}});
+	}
+	
+	@Test public void multiDimensionalArraysAreNotEqual() {
+		try {
+			assertEquals("message", new Object[][]{{true, true}, {false, false}}, new Object[][]{{true, true}, {false, true}});
+			fail();
+		} catch (AssertionError exception) {
+			assertEquals("message: arrays first differed at element [1][1]; expected:<false> but was:<true>", exception.getMessage());
+		}
+			
 	}
 	
 	@Test public void stringsDifferWithUserMessage() {
@@ -133,7 +147,6 @@ public class AssertionTest {
 		assertEquals(new Object(), new Object());
 	}
 	
-	//TODO where should ComparisonFailure live?
 	@Test(expected= ComparisonFailure.class) public void stringsNotEqual() {
 		assertEquals("abc", "def");
 	}

@@ -19,7 +19,7 @@ public class ClassesRequest extends Request {
 	@Override
 	public Runner getRunner() {
 		CompositeRunner runner= new CompositeRunner(fName);
-		for (Class<? extends Object> each : fClasses) {
+		for (Class<?> each : fClasses) {
 			Runner childRunner= Request.aClass(each).getRunner();
 			if (childRunner != null)
 				runner.add(childRunner);

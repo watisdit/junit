@@ -19,7 +19,7 @@ public class OldTestClassRunner extends Runner {
 	private Test fTest;
 	
 	@SuppressWarnings("unchecked")
-	public OldTestClassRunner(Class< ? extends Object> klass) {
+	public OldTestClassRunner(Class<?> klass) {
 		this(new TestSuite((Class<? extends TestCase>) klass));
 	}
 

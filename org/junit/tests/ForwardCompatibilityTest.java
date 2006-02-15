@@ -183,7 +183,7 @@ public class ForwardCompatibilityTest extends TestCase {
 	private static boolean wasRun= false;
 	
 	public static class MarkerRunner extends Runner {
-		public MarkerRunner(Class< ? extends Object> klass) {
+		public MarkerRunner(Class<?> klass) {
 		}
 
 		@Override

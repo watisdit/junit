@@ -17,9 +17,9 @@ public class MethodValidator {
 
 	private final List<Throwable> fErrors= new ArrayList<Throwable>();
 
-	private final Class<? extends Object> fTestClass;
+	private final Class<?> fTestClass;
 
-	public MethodValidator(Class<? extends Object> testClass) {
+	public MethodValidator(Class<?> testClass) {
 		fTestClass= testClass;
 		fIntrospector= new TestIntrospector(testClass);
 	}

@@ -7,17 +7,17 @@ import org.junit.runner.Request;
 import org.junit.runner.Runner;
 
 public class JUnit4TestAdapter implements Test {
-	private final Class<? extends Object> fNewTestClass;
+	private final Class<?> fNewTestClass;
 
 	private Runner fRunner;
 
 	private JUnit4TestAdapterCache fCache;
 
-	public JUnit4TestAdapter(Class<? extends Object> newTestClass) {
+	public JUnit4TestAdapter(Class<?> newTestClass) {
 		this(newTestClass, JUnit4TestAdapterCache.getDefault());
 	}
 
-	public JUnit4TestAdapter(final Class<? extends Object> newTestClass,
+	public JUnit4TestAdapter(final Class<?> newTestClass,
 			JUnit4TestAdapterCache cache) {
 		fCache = cache;
 		fNewTestClass = newTestClass;

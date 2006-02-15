@@ -41,8 +41,8 @@ public class Parameterized extends TestClassRunner {
 		private final int fParameterSetNumber;
 
 		private final Constructor fConstructor;
-		
-		private TestClassRunnerForParameters(Class<? extends Object> klass, Object[] parameters, int i) {
+
+		private TestClassRunnerForParameters(Class<?> klass, Object[] parameters, int i) {
 			super(klass);
 			fParameters= parameters;
 			fParameterSetNumber= i;
@@ -74,9 +74,9 @@ public class Parameterized extends TestClassRunner {
 	// TODO: I think this now eagerly reads parameters, which was never the point.
 	
 	public static class RunAllParameterMethods extends CompositeRunner {
-		private final Class<? extends Object> fKlass;
+		private final Class<?> fKlass;
 
-		public RunAllParameterMethods(Class<? extends Object> klass) throws Exception {
+		public RunAllParameterMethods(Class<?> klass) throws Exception {
 			super(klass.getName());
 			fKlass= klass;
 			int i= 0;
@@ -105,7 +105,7 @@ public class Parameterized extends TestClassRunner {
 		}
 	}
 	
-	public Parameterized(final Class<? extends Object> klass) throws Exception {
+	public Parameterized(final Class<?> klass) throws Exception {
 		super(klass, new RunAllParameterMethods(klass));
 	}
 	

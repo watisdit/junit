@@ -94,7 +94,7 @@ public class SortableTest {
 	
 	public static class UnsortableRunnersAreHandledWithoutCrashing {
 		public static class UnsortableRunner extends Runner {
-			public UnsortableRunner(Class<? extends Object> klass) {
+			public UnsortableRunner(Class<?> klass) {
 			}
 			
 			@Override

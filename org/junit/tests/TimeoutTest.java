@@ -3,6 +3,11 @@ package org.junit.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestResult;
 import org.junit.Test;
@@ -67,6 +72,10 @@ public class TimeoutTest {
 	
 	static public class InfiniteLoopTest {
 		@Test(timeout= 100) public void failure() {
+			infiniteLoop();
+		}
+
+		private void infiniteLoop() {
 			for(;;);
 		}
 	}
@@ -77,8 +86,11 @@ public class TimeoutTest {
 		assertEquals(1, result.getRunCount());
 		assertEquals(1, result.getFailureCount());
 		Throwable exception= result.getFailures().get(0).getException();
-		System.out.println(exception.getMessage());
 		assertTrue(exception.getMessage().contains("test timed out after 100 milliseconds"));
+		Writer buffer= new StringWriter();
+		PrintWriter writer= new PrintWriter(buffer);
+		exception.printStackTrace(writer);
+		assertTrue(exception.toString().contains("infiniteLoop")); // Make sure we have the stalled frame on the stack somewhere
 	}
 
 	@Test public void compatibility() {

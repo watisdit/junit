@@ -21,6 +21,6 @@ Before next JUnit 4 release:
 * Ant
 	* Basic task
 * support testing run once initialization code e.g. class Foo {{...}}
-* Command-line plug-in architecture
+* Automatically add failing tests to the Known Defects section of the README.html
 
 

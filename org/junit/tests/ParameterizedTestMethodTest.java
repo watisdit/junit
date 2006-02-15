@@ -14,7 +14,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.internal.runners.InitializationError;
-import org.junit.internal.runners.MethodValidator;
 import org.junit.internal.runners.TestClassRunner;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -53,7 +52,7 @@ public class ParameterizedTestMethodTest {
 		@Test public void fineT() {}
 	}
 
-	private Class<? extends Object> fClass;
+	private Class<?> fClass;
 	private int fErrorCount;
 
 	static public class SuperWrong {
@@ -72,7 +71,7 @@ public class ParameterizedTestMethodTest {
 		}
 	}
 
-	public ParameterizedTestMethodTest(Class<? extends Object> class1, int errorCount) {
+	public ParameterizedTestMethodTest(Class<?> class1, int errorCount) {
 		fClass= class1;
 		fErrorCount= errorCount;
 	}

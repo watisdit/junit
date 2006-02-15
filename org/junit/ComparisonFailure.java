@@ -1,9 +1,11 @@
 package org.junit;
 
 /**
- * Thrown when an assert equals for Strings failed.
+ * Thrown when an assertEquals(String, String) fails. Create and throw
+ * a <code>ComparisonFailure</code> manually if you want to show users the difference between two complex 
+ * strings.
  * 
- * Inspired by a patch from Alex Chaffee mailto:alex@purpletech.com
+ * Inspired by a patch from Alex Chaffee (alex@purpletech.com)
  */
 public class ComparisonFailure extends AssertionError {	
 	private static final int MAX_CONTEXT_LENGTH= 20;
@@ -36,14 +38,14 @@ public class ComparisonFailure extends AssertionError {
 	}
 	
 	/**
-	 * Gets the actual string value
+	 * Returns the actual value
 	 * @return the actual string value
 	 */
 	public String getActual() {
 		return fActual;
 	}
 	/**
-	 * Gets the expected string value
+	 * Returns the expected value
 	 * @return the expected string value
 	 */
 	public String getExpected() {

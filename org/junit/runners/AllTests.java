@@ -8,7 +8,7 @@ import junit.framework.Test;
 import org.junit.internal.runners.OldTestClassRunner;
 
 public class AllTests extends OldTestClassRunner {
-	private static Test suite(Class< ? extends Object> klass) throws Throwable {
+	private static Test suite(Class<?> klass) throws Throwable {
 		Method suiteMethod= null;
 		Test suite= null;
 		try {
@@ -24,7 +24,7 @@ public class AllTests extends OldTestClassRunner {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public AllTests(Class< ? extends Object> klass) throws Throwable {
+	public AllTests(Class<?> klass) throws Throwable {
 		super(suite(klass));
 	}
 }

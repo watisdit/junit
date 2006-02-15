@@ -14,9 +14,9 @@ import org.junit.Test.None;
 
 
 public class TestIntrospector {
-	private final Class< ? extends Object> fTestClass;
+	private final Class< ?> fTestClass;
 	
-	public TestIntrospector(Class<? extends Object> testClass) {
+	public TestIntrospector(Class<?> testClass) {
 		fTestClass= testClass;
 	}
 
@@ -51,9 +51,9 @@ public class TestIntrospector {
 		return false;
 	}
 
-	private List<Class> getSuperClasses(Class< ? extends Object> testClass) {
+	private List<Class> getSuperClasses(Class< ?> testClass) {
 		ArrayList<Class> results= new ArrayList<Class>();
-		Class<? extends Object> current= testClass;
+		Class<?> current= testClass;
 		while (current != null) {
 			results.add(current);
 			current= current.getSuperclass();
@@ -67,7 +67,7 @@ public class TestIntrospector {
 		return timeout;
 	}
 
-	Class< ? extends Throwable> expectedException(Method method) {
+	Class<? extends Throwable> expectedException(Method method) {
 		Test annotation= method.getAnnotation(Test.class);
 		if (annotation.expected() == None.class)
 			return null;

@@ -17,15 +17,15 @@ public class Suite extends TestClassRunner {
 		public Class[] value();
 	}
 
-	public Suite(Class< ? extends Object> klass) throws InitializationError {
+	public Suite(Class<?> klass) throws InitializationError {
 		this(klass, getAnnotatedClasses(klass));
 	}
 
-	public Suite(Class<? extends Object> klass, Class[] annotatedClasses) throws InitializationError {
+	public Suite(Class<?> klass, Class[] annotatedClasses) throws InitializationError {
 		super(klass, Request.classes(klass.getName(), annotatedClasses).getRunner());
 	}
 
-	private static Class[] getAnnotatedClasses(Class<? extends Object> klass) throws InitializationError {
+	private static Class[] getAnnotatedClasses(Class<?> klass) throws InitializationError {
 		SuiteClasses annotation= klass.getAnnotation(SuiteClasses.class);
 		if (annotation == null)
 			throw new InitializationError(String.format("class '%s' must have a SuiteClasses annotation", klass.getName()));

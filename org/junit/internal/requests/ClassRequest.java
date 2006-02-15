@@ -12,9 +12,9 @@ import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 
 public class ClassRequest extends Request {
-	private final Class<? extends Object> fTestClass;
+	private final Class<?> fTestClass;
 
-	public ClassRequest(Class<? extends Object> each) {
+	public ClassRequest(Class<?> each) {
 		fTestClass= each;
 	}
 	
@@ -31,7 +31,7 @@ public class ClassRequest extends Request {
 		}
 	}
 
-	Class getRunnerClass(Class< ? extends Object> testClass) {
+	Class getRunnerClass(Class<?> testClass) {
 		RunWith annotation= testClass.getAnnotation(RunWith.class);
 		if (annotation != null) {
 			return annotation.value();
@@ -42,7 +42,7 @@ public class ClassRequest extends Request {
 		}
 	}
 	
-	boolean isPre4Test(Class< ? extends Object> testClass) {
+	boolean isPre4Test(Class<?> testClass) {
 		return junit.framework.TestCase.class.isAssignableFrom(testClass);
 	}
 }

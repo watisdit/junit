@@ -19,7 +19,7 @@ public class InitializationErrorForwardCompatibilityTest {
 	public static class CantInitialize extends Runner {
 		private static final String UNIQUE_ERROR_MESSAGE= "Unique error message";
 
-		public CantInitialize(Class<? extends Object> klass) throws Exception {
+		public CantInitialize(Class<?> klass) throws Exception {
 			throw new Exception(UNIQUE_ERROR_MESSAGE);
 		}
 
@@ -92,7 +92,7 @@ public class InitializationErrorForwardCompatibilityTest {
 	}
 	
 	public static class InitializesWithError extends TestClassRunner {
-		public InitializesWithError(Class<? extends Object> klass) throws Exception {
+		public InitializesWithError(Class<?> klass) throws Exception {
 			super(klass);
 			throw new Exception();
 		}

@@ -22,7 +22,7 @@ public class TestClassMethodsRunner extends Runner implements Filterable, Sortab
 	private final Class<?> fTestClass;
 
 	// This assumes that some containing runner will perform validation of the test methods	
-	public TestClassMethodsRunner(Class<?> klass) throws InitializationError {
+	public TestClassMethodsRunner(Class<?> klass) {
 		fTestClass= klass;
 		fTestMethods= new TestIntrospector(getTestClass()).getTestMethods(Test.class);
 	}

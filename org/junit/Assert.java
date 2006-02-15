@@ -1,11 +1,14 @@
 package org.junit;
 
 /**
- * A set of assert methods. Messages are only displayed when an assertion fails.
- * These methods can be used directly: Assert.assertEquals(...). They
- * read better if they are referenced through static import:
- *   import static Assert.*;
- *   ...assertEquals(...);
+ * A set of assertion methods useful for writing tests. Only failed assertions are recorded.
+ * These methods can be used directly: <code>Assert.assertEquals(...)</code>, however, they
+ * read better if they are referenced through static import:<br>
+ * <code>
+ *   import static org.junit.Assert.*;<br>
+ *   ...<br>
+ *   &nbsp;&nbsp;assertEquals(...);<br>
+ *   </code>
  */
 
 public class Assert {
@@ -89,21 +92,26 @@ public class Assert {
 	 * Asserts that two object arrays are equal. If they are not, an
 	 * AssertionError is thrown with the given message.
 	 */
-	public static void assertEquals(String message, Object[] expected, Object[] actual) {
-		if (expected == actual)
+	public static void assertEquals(String message, Object[] expecteds, Object[] actuals) {
+		if (expecteds == actuals)
 			return;
 		String header = message == null ? "" : message + ": ";
-		if (expected == null)
+		if (expecteds == null)
 			fail(header + "expected array was null");
-		if (actual == null)
+		if (actuals == null)
 			fail(header + "actual array was null");
-		if (actual.length != expected.length)
-			fail(header + "array lengths differed, expected.length=" + expected.length + " actual.length=" + actual.length);
+		if (actuals.length != expecteds.length)
+			fail(header + "array lengths differed, expected.length=" + expecteds.length + " actual.length=" + actuals.length);
 
-		for (int i= 0; i < expected.length; i++) {
-			Object o1= expected[i];
-			Object o2= actual[i];
-			assertEquals(header + "arrays first differed at element " + i + ";", o1, o2);
+		for (int i= 0; i < expecteds.length; i++) {
+			Object o1= expecteds[i];
+			Object o2= actuals[i];
+			if (o1.getClass().isArray() && o2.getClass().isArray()) {
+				Object[] expected= (Object[]) o1;
+				Object[] actual= (Object[]) o2;
+				assertEquals(header + "arrays first differed at element " + i + ";", expected, actual);
+			} else
+				assertEquals(header + "arrays first differed at element [" + i + "];", o1, o2);
 		}
 	}
 
@@ -111,8 +119,8 @@ public class Assert {
 	 * Asserts that two object arrays are equal. If they are not, an
 	 * AssertionError is thrown.
 	 */
-	public static void assertEquals(Object[] objects1, Object[] objects2) {
-		assertEquals(null, objects1, objects2);
+	public static void assertEquals(Object[] expecteds, Object[] actuals) {
+		assertEquals(null, expecteds, actuals);
 	}
 
 	/**
