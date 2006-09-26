@@ -31,5 +31,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
+@RunSuperclassMethodsFirst
 public @interface BeforeClass {
 }

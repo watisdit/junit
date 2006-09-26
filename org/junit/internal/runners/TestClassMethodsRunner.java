@@ -25,9 +25,9 @@ public class TestClassMethodsRunner extends Runner implements Filterable, Sortab
 	// This assumes that some containing runner will perform validation of the test methods	
 	public TestClassMethodsRunner(Class<?> klass) {
 		fTestClass= klass;
-		fTestMethods= new TestIntrospector(getTestClass()).getTestMethods(Test.class);
+		fTestMethods= new JavaClass(klass).getTestMethods(Test.class);
 	}
-	
+
 	@Override
 	public void run(RunNotifier notifier) {
 		if (fTestMethods.isEmpty())
