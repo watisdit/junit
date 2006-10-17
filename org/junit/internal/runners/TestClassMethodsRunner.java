@@ -19,20 +19,26 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
 public class TestClassMethodsRunner extends Runner implements Filterable, Sortable {
-	private final List<Method> fTestMethods;
-	private final Class<?> fTestClass;
+	private final List<JavaMethod> fTestMethods;
+	private final JavaClass fTestClass;
+	private final JavaTestInterpreter fInterpreter;
 
 	// This assumes that some containing runner will perform validation of the test methods	
-	public TestClassMethodsRunner(Class<?> klass) {
+	public TestClassMethodsRunner(JavaClass klass, JavaTestInterpreter javaTestInterpreter) {
+		
+		// TODO: DUP?
 		fTestClass= klass;
-		fTestMethods= new JavaClass(klass).getTestMethods(Test.class);
+		fTestMethods= klass.getTestMethods(Test.class);
+		fInterpreter= javaTestInterpreter;
 	}
 
+	// TODO: rename method to element?
+	
 	@Override
 	public void run(RunNotifier notifier) {
 		if (fTestMethods.isEmpty())
 			testAborted(notifier, getDescription(), new Exception("No runnable methods"));
-		for (Method method : fTestMethods)
+		for (JavaMethod method : fTestMethods)
 			invokeTestMethod(method, notifier);
 	}
 
@@ -47,10 +53,13 @@ public class TestClassMethodsRunner extends Runner implements Filterable, Sortab
 	@Override
 	public Description getDescription() {
 		Description spec= Description.createSuiteDescription(getName());
-		List<Method> testMethods= fTestMethods;
-		for (Method method : testMethods)
+		for (JavaMethod method : fTestMethods)
 				spec.addChild(methodDescription(method));
 		return spec;
+	}
+
+	protected Description methodDescription(Method method) {
+		return methodDescription(new JavaMethod(method));
 	}
 
 	protected String getName() {
@@ -58,10 +67,10 @@ public class TestClassMethodsRunner extends Runner implements Filterable, Sortab
 	}
 	
 	protected Object createTest() throws Exception {
-		return getTestClass().getConstructor().newInstance();
+		return getTestClass().newTestObject();
 	}
 
-	protected void invokeTestMethod(Method method, RunNotifier notifier) {
+	private void invokeTestMethod(JavaMethod method, RunNotifier notifier) {
 		Object test;
 		try {
 			test= createTest();
@@ -75,21 +84,25 @@ public class TestClassMethodsRunner extends Runner implements Filterable, Sortab
 		createMethodRunner(test, method, notifier).run();
 	}
 
-	protected TestMethodRunner createMethodRunner(Object test, Method method, RunNotifier notifier) {
-		return new TestMethodRunner(test, method, notifier, methodDescription(method));
+	private TestMethodRunner createMethodRunner(Object test, JavaMethod method, RunNotifier notifier) {
+		return new TestMethodRunner(test, method, notifier, methodDescription(method), fInterpreter);
 	}
 
-	protected String testName(Method method) {
+	protected String testName(JavaModelElement method) {
 		return method.getName();
 	}
 
-	protected Description methodDescription(Method method) {
-		return Description.createTestDescription(getTestClass(), testName(method));
+	private Description methodDescription(JavaMethod method) {
+		return describe(method, getTestClass());
+	}
+
+	private Description describe(JavaMethod method, JavaClass testClass) {
+		return Description.createTestDescription(testClass.getTestClass(), testName(method));
 	}
 
 	public void filter(Filter filter) throws NoTestsRemainException {
-		for (Iterator iter= fTestMethods.iterator(); iter.hasNext();) {
-			Method method= (Method) iter.next();
+		for (Iterator<JavaMethod> iter= fTestMethods.iterator(); iter.hasNext();) {
+			JavaMethod method= iter.next();
 			if (!filter.shouldRun(methodDescription(method)))
 				iter.remove();
 		}
@@ -98,14 +111,14 @@ public class TestClassMethodsRunner extends Runner implements Filterable, Sortab
 	}
 
 	public void sort(final Sorter sorter) {
-		Collections.sort(fTestMethods, new Comparator<Method>() {
-			public int compare(Method o1, Method o2) {
+		Collections.sort(fTestMethods, new Comparator<JavaMethod>() {
+			public int compare(JavaMethod o1, JavaMethod o2) {
 				return sorter.compare(methodDescription(o1), methodDescription(o2));
 			}
 		});
 	}
 
-	protected Class<?> getTestClass() {
+	protected JavaClass getTestClass() {
 		return fTestClass;
 	}
 }
