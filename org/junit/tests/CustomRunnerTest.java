@@ -1,39 +1,23 @@
 package org.junit.tests;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.internal.runners.InitializationError;
-import org.junit.internal.runners.TestClassMethodsRunner;
-import org.junit.internal.runners.TestClassRunner;
-import org.junit.internal.runners.TestMethodRunner;
+import org.junit.internal.runners.JavaMethod;
+import org.junit.internal.runners.JavaTestInterpreter;
 import org.junit.runner.JUnitCore;
-import org.junit.runner.RunWith;
-import org.junit.runner.notification.RunNotifier;
-
-import static org.junit.Assert.*;
 
 // TODO: better factoring here
 public class CustomRunnerTest {
-	public static class CustomRunner extends TestClassRunner {
-		public CustomRunner(Class<?> klass) throws InitializationError {
-			super(klass, new TestClassMethodsRunner(klass) {
-				@Override
-				protected TestMethodRunner createMethodRunner(Object test, Method method, RunNotifier notifier) {
-					return new TestMethodRunner(test, method, notifier,
-							methodDescription(method)) {
-						@Override
-						protected void executeMethodBody()
-								throws IllegalAccessException,
-								InvocationTargetException {
-							super.executeMethodBody();
-							assertGlobalStateIsValid();
-						}
-					};				
-				}
-			});
+	public static class CustomInterpreter extends JavaTestInterpreter {
+		@Override
+		public void executeMethodBody(Object test, JavaMethod javaMethod)
+				throws IllegalAccessException, InvocationTargetException {
+			super.executeMethodBody(test, javaMethod);
+			assertGlobalStateIsValid();
 		}
 	}
 
@@ -41,7 +25,7 @@ public class CustomRunnerTest {
 		Assert.fail();
 	}
 
-	@RunWith(CustomRunner.class)
+	@InterpretWith(CustomInterpreter.class)
 	public static class UsesGlobalState {
 		@Test
 		public void foo() {

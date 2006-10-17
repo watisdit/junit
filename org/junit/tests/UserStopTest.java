@@ -2,6 +2,8 @@ package org.junit.tests;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.internal.runners.JavaMethod;
+import org.junit.internal.runners.JavaTestInterpreter;
 import org.junit.internal.runners.TestMethodRunner;
 import org.junit.runner.Description;
 import org.junit.runner.Request;
@@ -21,8 +23,9 @@ public class UserStopTest {
 	}
 
 	@Test(expected=StoppedByUserException.class) public void stopMethodRunner() throws Exception {
-		new TestMethodRunner(this, OneTest.class.getMethod("foo"), fNotifier,
-				Description.createTestDescription(OneTest.class, "foo")).run();
+		// TODO: is this a good test?
+		new TestMethodRunner(this, new JavaMethod(OneTest.class.getMethod("foo")), fNotifier,
+				Description.createTestDescription(OneTest.class, "foo"), new JavaTestInterpreter()).run();
 	}
 	
 	public static class OneTest {

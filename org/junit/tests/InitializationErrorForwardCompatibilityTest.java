@@ -10,6 +10,7 @@ import junit.framework.TestResult;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.internal.runners.EmptyDescription;
+import org.junit.internal.runners.JavaTestInterpreter;
 import org.junit.internal.runners.TestClassRunner;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
@@ -94,7 +95,7 @@ public class InitializationErrorForwardCompatibilityTest {
 	
 	public static class InitializesWithError extends TestClassRunner {
 		public InitializesWithError(Class<?> klass) throws Exception {
-			super(klass);
+			super(klass, new JavaTestInterpreter());
 			throw new Exception();
 		}
 	}
