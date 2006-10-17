@@ -7,6 +7,7 @@ import org.junit.internal.runners.TestClassRunner;
 import org.junit.runner.Request;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
+import org.junit.tests.InterpretWith;
 
 public class ClassRequest extends Request {
 	private final Class<?> fTestClass;
@@ -17,9 +18,15 @@ public class ClassRequest extends Request {
 	
 	@Override
 	public Runner getRunner() {
-		Class runnerClass= getRunnerClass(fTestClass);
 		try {
-			Constructor constructor= runnerClass.getConstructor(Class.class); // TODO good error message if no such constructor
+			InterpretWith annotation = fTestClass.getAnnotation(InterpretWith.class);
+			if (annotation != null)
+				return new TestClassRunner(fTestClass, annotation.value().newInstance());
+			
+			Class runnerClass= getRunnerClass(fTestClass);
+			
+			// TODO good error message if no such constructor
+			Constructor constructor= runnerClass.getConstructor(Class.class); 
 			Runner runner= (Runner) constructor
 					.newInstance(new Object[] { fTestClass });
 			return runner;
