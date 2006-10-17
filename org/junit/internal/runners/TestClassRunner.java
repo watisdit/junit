@@ -10,17 +10,22 @@ import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
-import org.junit.runner.notification.Failure;
 
 public class TestClassRunner extends Runner implements Filterable, Sortable {
 	protected final Runner fEnclosedRunner;
-	private final Class<?> fTestClass;
 
+	private final Class<?> fTestClass;
+	
 	public TestClassRunner(Class<?> klass) throws InitializationError {
-		this(klass, new TestClassMethodsRunner(klass));
+		this(klass, new JavaTestInterpreter());
 	}
 	
-	public TestClassRunner(Class<?> klass, Runner runner) throws InitializationError {
+	public TestClassRunner(Class<?> klass, JavaTestInterpreter interpreter) throws InitializationError {
+		this(klass, new TestClassMethodsRunner(new JavaClass(klass), interpreter));
+	}
+
+	public TestClassRunner(Class<?> klass, Runner runner)
+			throws InitializationError {
 		fTestClass= klass;
 		fEnclosedRunner= runner;
 		MethodValidator methodValidator= new MethodValidator(klass);
@@ -35,17 +40,12 @@ public class TestClassRunner extends Runner implements Filterable, Sortable {
 
 	@Override
 	public void run(final RunNotifier notifier) {
-		BeforeAndAfterRunner runner = new BeforeAndAfterRunner(getTestClass(),
-				BeforeClass.class, AfterClass.class, null) {		
+		BeforeAndAfterRunner runner= new BeforeAndAfterRunner(getTestClass(),
+				BeforeClass.class, AfterClass.class, null, new PerTestNotifier(notifier,
+						getDescription())) {
 			@Override
 			protected void runUnprotected() {
 				fEnclosedRunner.run(notifier);
-			}
-		
-			// TODO: looks very similar to other method of BeforeAfter, now
-			@Override
-			protected void addFailure(Throwable targetException) {
-				notifier.fireTestFailure(new Failure(getDescription(), targetException));
 			}
 		};
 
@@ -56,9 +56,9 @@ public class TestClassRunner extends Runner implements Filterable, Sortable {
 	public Description getDescription() {
 		return fEnclosedRunner.getDescription();
 	}
-	
+
 	// TODO: good behavior when createTest fails
-	
+
 	// TODO: dup?
 	public void filter(Filter filter) throws NoTestsRemainException {
 		filter.apply(fEnclosedRunner);
