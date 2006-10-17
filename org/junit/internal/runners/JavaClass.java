@@ -4,16 +4,17 @@
 package org.junit.internal.runners;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class JavaClass {
+public class JavaClass extends JavaModelElement {
 	// TODO: push out
 	private final Class<?> fClass;
 
-	JavaClass(Class<?> type) {
+	public JavaClass(Class<?> type) {
 		fClass= type;
 	}
 
@@ -27,14 +28,13 @@ class JavaClass {
 		return results;
 	}
 
-	List<Method> getTestMethods(MethodAnnotation methodAnnotation) {
-		List<Method> results= new ArrayList<Method>();
+	List<JavaMethod> getTestMethods(MethodAnnotation methodAnnotation) {
+		List<JavaMethod> results= new ArrayList<JavaMethod>();
 		for (JavaClass eachClass : getSuperClasses()) {
-			List<JavaMethod> methods= eachClass.getDeclaredMethods();
-			for (JavaMethod eachMethod : methods) {
+			for (JavaMethod eachMethod : eachClass.getDeclaredMethods()) {
 				Annotation annotation= eachMethod.getAnnotation(methodAnnotation);
 				if (annotation != null && ! eachMethod.isShadowedBy(results)) 
-					results.add(eachMethod.getMethod());
+					results.add(eachMethod);
 			}
 		}
 		if (methodAnnotation.runsTopToBottom())
@@ -51,7 +51,30 @@ class JavaClass {
 		return javaMethods;
 	}
 
-	List<Method> getTestMethods(Class<? extends Annotation> type) {
+	List<JavaMethod> getTestMethods(Class<? extends Annotation> type) {
 		return getTestMethods(new MethodAnnotation(type));
+	}
+
+	public Class getTestClass() {
+		return fClass;
+	}
+
+	void validateNoArgConstructor(List<Throwable> errors) {
+		try {
+			getTestClass().getConstructor();
+		} catch (Exception e) {
+			errors.add(new Exception("Test class should have public zero-argument constructor", e));
+		}
+	}
+
+	@Override
+	public String getName() {
+		return fClass.getName();
+	}
+
+	Object newTestObject()
+			throws InstantiationException, IllegalAccessException,
+			InvocationTargetException, NoSuchMethodException {
+		return getTestClass().getConstructor().newInstance();
 	}
 }
