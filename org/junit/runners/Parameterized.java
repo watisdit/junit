@@ -1,6 +1,6 @@
 package org.junit.runners;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
@@ -16,6 +16,9 @@ import java.util.Collection;
 import java.util.List;
 
 import org.junit.internal.runners.CompositeRunner;
+import org.junit.internal.runners.JavaClass;
+import org.junit.internal.runners.JavaModelElement;
+import org.junit.internal.runners.JavaTestInterpreter;
 import org.junit.internal.runners.MethodValidator;
 import org.junit.internal.runners.TestClassMethodsRunner;
 import org.junit.internal.runners.TestClassRunner;
@@ -73,8 +76,8 @@ public class Parameterized extends TestClassRunner {
 
 		private final Constructor fConstructor;
 
-		private TestClassRunnerForParameters(Class<?> klass, Object[] parameters, int i) {
-			super(klass);
+		private TestClassRunnerForParameters(JavaClass klass, Object[] parameters, int i) {
+			super(klass, new JavaTestInterpreter());
 			fParameters= parameters;
 			fParameterSetNumber= i;
 			fConstructor= getOnlyConstructor();
@@ -91,12 +94,12 @@ public class Parameterized extends TestClassRunner {
 		}
 		
 		@Override
-		protected String testName(final Method method) {
+		protected String testName(final JavaModelElement method) {
 			return String.format("%s[%s]", method.getName(), fParameterSetNumber);
 		}
 
 		private Constructor getOnlyConstructor() {
-			Constructor[] constructors= getTestClass().getConstructors();
+			Constructor[] constructors= getTestClass().getTestClass().getConstructors();
 			assertEquals(1, constructors.length);
 			return constructors[0];
 		}
@@ -105,9 +108,9 @@ public class Parameterized extends TestClassRunner {
 	// TODO: I think this now eagerly reads parameters, which was never the point.
 	
 	public static class RunAllParameterMethods extends CompositeRunner {
-		private final Class<?> fKlass;
+		private final JavaClass fKlass;
 
-		public RunAllParameterMethods(Class<?> klass) throws Exception {
+		public RunAllParameterMethods(JavaClass klass) throws Exception {
 			super(klass.getName());
 			fKlass= klass;
 			int i= 0;
@@ -124,7 +127,7 @@ public class Parameterized extends TestClassRunner {
 		}
 		
 		private Method getParametersMethod() throws Exception {
-			for (Method each : fKlass.getMethods()) {
+			for (Method each : fKlass.getTestClass().getMethods()) {
 				if (Modifier.isStatic(each.getModifiers())) {
 					Annotation[] annotations= each.getAnnotations();
 					for (Annotation annotation : annotations) {
@@ -139,7 +142,7 @@ public class Parameterized extends TestClassRunner {
 	}
 	
 	public Parameterized(final Class<?> klass) throws Exception {
-		super(klass, new RunAllParameterMethods(klass));
+		super(klass, new RunAllParameterMethods(new JavaClass(klass)));
 	}
 	
 	@Override
