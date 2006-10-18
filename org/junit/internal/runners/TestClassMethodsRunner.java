@@ -1,6 +1,5 @@
 package org.junit.internal.runners;
 
-import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Test;
 import org.junit.runner.Description;
@@ -38,7 +37,7 @@ public class TestClassMethodsRunner extends Runner implements Filterable,
 			notifier.testAborted(getDescription(), new Exception(
 					"No runnable methods"));
 		for (JavaMethod method : fTestMethods)
-			invokeTestMethod(method, notifier);
+			method.invokeTestMethod(notifier, fInterpreter);
 	}
 
 	@Override
@@ -48,22 +47,6 @@ public class TestClassMethodsRunner extends Runner implements Filterable,
 		for (JavaMethod method : fTestMethods)
 			spec.addChild(method.description());
 		return spec;
-	}
-
-	private void invokeTestMethod(JavaMethod method, RunNotifier notifier) {
-		Object test;
-		try {
-			test= method.getJavaClass().newInstance();
-		} catch (InvocationTargetException e) {
-			notifier.testAborted(method.description(), e.getCause());
-			return;
-		} catch (Exception e) {
-			notifier.testAborted(method.description(), e);
-			return;
-		}
-		TestEnvironment testEnvironment= new TestEnvironment(fInterpreter,
-				new PerTestNotifier(notifier, method.description()), test);
-		testEnvironment.run(method);
 	}
 
 	public void filter(Filter filter) throws NoTestsRemainException {

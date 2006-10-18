@@ -1,15 +1,12 @@
 package org.junit.tests;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.internal.runners.EmptyDescription;
 import org.junit.internal.runners.InitializationError;
+import org.junit.internal.runners.JavaTestInterpreter;
 import org.junit.internal.runners.TestClassRunner;
-import org.junit.runner.Description;
 import org.junit.runner.Request;
-import org.junit.runner.Runner;
-import org.junit.runner.notification.RunNotifier;
 
 public class ValidationTest {
 	public static class WrongBeforeClass {
@@ -21,17 +18,7 @@ public class ValidationTest {
 
 	@Test(expected=InitializationError.class)
 	public void testClassRunnerHandlesBeforeClassAndAfterClassValidation() throws InitializationError {
-		new TestClassRunner(WrongBeforeClass.class, new Runner() {
-			@Override
-			public Description getDescription() {
-				return new EmptyDescription();
-			}
-
-			@Override
-			public void run(RunNotifier notifier) {
-				// do nothing
-			}
-		});
+		new TestClassRunner(WrongBeforeClass.class, new JavaTestInterpreter());
 	}
 	
 	@Test

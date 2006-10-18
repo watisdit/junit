@@ -21,23 +21,24 @@ public class JavaClass extends JavaModelElement {
 		fClass= type;
 	}
 
-	public List<JavaClass> getSuperClasses(JavaTestInterpreter interpreter) {
+	public List<JavaClass> getSuperClasses() {
 		ArrayList<JavaClass> results= new ArrayList<JavaClass>();
 		results.add(this);
 
 		// TODO: this will not add parameterized superclasses (need to use
 		// interpreter here?)
 		if (fClass.getSuperclass() != null)
-			results.addAll(interpreter.interpretJavaClass(
-					fClass.getSuperclass()).getSuperClasses(interpreter));
+			results.addAll(new JavaClass(fClass.getSuperclass())
+					.getSuperClasses());
 		return results;
 	}
 
 	public JavaMethodList getMethods(MethodAnnotation methodAnnotation,
 			JavaTestInterpreter interpreter) {
 		JavaMethodList results= new JavaMethodList();
-		for (JavaClass eachClass : getSuperClasses(interpreter)) {
-			for (JavaMethod eachMethod : eachClass.getDeclaredMethods()) {
+		for (JavaClass eachClass : getSuperClasses()) {
+			for (JavaMethod eachMethod : eachClass
+					.getDeclaredMethods(interpreter)) {
 				Annotation annotation= eachMethod
 						.getAnnotation(methodAnnotation);
 				if (annotation != null && !eachMethod.isShadowedBy(results))
@@ -49,17 +50,13 @@ public class JavaClass extends JavaModelElement {
 		return results;
 	}
 
-	private List<JavaMethod> getDeclaredMethods() {
+	private List<JavaMethod> getDeclaredMethods(JavaTestInterpreter interpreter) {
 		Method[] declaredMethods= fClass.getDeclaredMethods();
 		ArrayList<JavaMethod> javaMethods= new ArrayList<JavaMethod>();
 		for (Method method : declaredMethods) {
-			javaMethods.add(makeJavaMethod(method));
+			javaMethods.add(interpreter.interpretJavaMethod(this, method));
 		}
 		return javaMethods;
-	}
-
-	protected JavaMethod makeJavaMethod(Method method) {
-		return new JavaMethod(this, method);
 	}
 
 	public JavaMethodList getMethods(Class<? extends Annotation> type,

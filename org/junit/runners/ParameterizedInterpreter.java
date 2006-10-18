@@ -8,56 +8,115 @@ import static org.junit.Assert.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.List;
 
+import org.junit.internal.runners.CompositeRunner;
+import org.junit.internal.runners.InitializationError;
 import org.junit.internal.runners.JavaClass;
 import org.junit.internal.runners.JavaMethod;
 import org.junit.internal.runners.JavaTestInterpreter;
+import org.junit.internal.runners.MethodValidator;
+import org.junit.internal.runners.TestClassMethodsRunner;
+import org.junit.runner.Runner;
+import org.junit.runners.Parameterized.Parameters;
 
 class ParameterizedInterpreter extends JavaTestInterpreter {
-	private final Object fEach;
+	private static class ParameterizedJavaClass extends JavaClass {
+		private final Object[] fParameters;
 
-	private final int fNumber;
+		private final int fNumber;
 
-	ParameterizedInterpreter(Object each, int number) {
-		fEach= each;
-		fNumber= number;
+		private ParameterizedJavaClass(Class<?> type, Object[] parameters,
+				int number) {
+			super(type);
+			fParameters= parameters;
+			fNumber= number;
+		}
+
+		// TODO: too many exceptions
+		@Override
+		protected Object newInstance() throws InstantiationException,
+				IllegalAccessException, InvocationTargetException,
+				NoSuchMethodException {
+			return getOnlyConstructor().newInstance(fParameters);
+		}
+
+		@Override
+		public String getName() {
+			return String.format("[%s]", fNumber);
+		}
+
+		private Constructor getOnlyConstructor() {
+			Constructor[] constructors= getTestClass().getConstructors();
+			assertEquals(1, constructors.length);
+			return constructors[0];
+		}
 	}
 
 	@Override
-	public JavaClass interpretJavaClass(Class<?> superclass) {
-		return new JavaClass(superclass) {
-			// TODO: too many exceptions
-			@Override
-			protected Object newInstance()
-					throws InstantiationException,
-					IllegalAccessException, InvocationTargetException,
-					NoSuchMethodException {
-				return getOnlyConstructor().newInstance(
-						(Object[]) fEach);
-			}
-
+	protected JavaMethod interpretJavaMethod(final JavaClass klass,
+			Method method) {
+		return new JavaMethod(klass, method) {
 			@Override
 			public String getName() {
-				return String.format("[%s]", fNumber);
-			}
-
-			@Override
-			protected JavaMethod makeJavaMethod(Method method) {
-				return new JavaMethod(this, method) {
-					@Override
-					public String getName() {
-						return String.format("%s[%s]", super.getName(),
-								fNumber);
-					}
-				};
-			}
-
-			private Constructor getOnlyConstructor() {
-				Constructor[] constructors= getTestClass()
-						.getConstructors();
-				assertEquals(1, constructors.length);
-				return constructors[0];
+				return String.format("%s%s", super.getName(), klass.getName());
 			}
 		};
+	}
+
+	// TODO: I think this now eagerly reads parameters, which was never the
+	// point.
+
+	// TODO: pull interpreter back in?
+	@Override
+	public Runner runnerFor(Class klass) throws InitializationError {
+		CompositeRunner runner= new CompositeRunner(klass.getName());
+		int i= 0;
+		for (final Object each : getParametersList(new JavaClass(klass))) {
+			if (each instanceof Object[]) {
+				runner
+						.add(new TestClassMethodsRunner(
+								new ParameterizedJavaClass(klass,
+										(Object[]) each, i++), this));
+			} else
+				throw new InitializationError(String.format(
+						"%s.%s() must return a Collection of arrays.", klass
+								.getName(), getParametersMethod(
+								new JavaClass(klass)).getName()));
+		}
+		return runner;
+	}
+
+	@Override
+	protected void validate(MethodValidator methodValidator) {
+		methodValidator.validateStaticMethods();
+		methodValidator.validateInstanceMethods();
+	}
+
+	private Collection getParametersList(JavaClass javaClass)
+			throws InitializationError {
+		JavaMethod parametersMethod= getParametersMethod(javaClass);
+		try {
+			return (Collection) parametersMethod.invoke(null);
+		} catch (Exception e) {
+			throw new InitializationError(e);
+		}
+	}
+
+	private JavaMethod getParametersMethod(JavaClass javaClass)
+			throws InitializationError {
+		// TODO: is this DUP?
+		List<JavaMethod> methods= javaClass.getMethods(Parameters.class,
+				new JavaTestInterpreter());
+
+		for (JavaMethod each : methods) {
+			if (each.isStatic() && each.isPublic()) {
+				return each;
+			}
+		}
+		throw new InitializationError(
+				"No public static parameters method on class "
+						+ javaClass.getName());
 	}
 }

@@ -4,17 +4,10 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.internal.runners.CompositeRunner;
-import org.junit.internal.runners.JavaClass;
-import org.junit.internal.runners.JavaMethod;
-import org.junit.internal.runners.JavaTestInterpreter;
-import org.junit.internal.runners.MethodValidator;
-import org.junit.internal.runners.TestClassMethodsRunner;
 import org.junit.internal.runners.TestClassRunner;
 
 /**
@@ -71,59 +64,6 @@ public class Parameterized extends TestClassRunner {
 	}
 
 	public Parameterized(final Class<?> klass) throws Exception {
-		super(klass, buildCompositeRunner(new JavaClass(klass)));
-	}
-
-	// TODO: I think this now eagerly reads parameters, which was never the
-	// point.
-
-	// TODO: pull interpreter back in?
-	private static CompositeRunner buildCompositeRunner(
-			final JavaClass klass) throws Exception {
-		CompositeRunner runner= new CompositeRunner(klass.getName());
-		int i= 0;
-		for (final Object each : getParametersList(klass)) {
-			if (each instanceof Object[]) {
-				final int parameterSetNumber= i++;
-				JavaTestInterpreter interpreter= new ParameterizedInterpreter(
-						each, parameterSetNumber);
-				runner
-						.add(new TestClassMethodsRunner(interpreter
-								.interpretJavaClass(klass.getTestClass()),
-								interpreter));
-			} else
-				throw new Exception(String.format(
-						"%s.%s() must return a Collection of arrays.", klass
-								.getName(), getParametersMethod(klass)
-								.getName()));
-		}
-		return runner;
-	}
-
-	@Override
-	protected void validate(MethodValidator methodValidator) {
-		methodValidator.validateStaticMethods();
-		methodValidator.validateInstanceMethods();
-	}
-
-	// TODO: make non-static
-	static private Collection getParametersList(JavaClass javaClass)
-			throws IllegalAccessException, InvocationTargetException, Exception {
-		return (Collection) getParametersMethod(javaClass).invoke(null);
-	}
-
-	static private JavaMethod getParametersMethod(JavaClass javaClass)
-			throws Exception {
-		// TODO: is this DUP?
-		List<JavaMethod> methods= javaClass.getMethods(Parameters.class,
-				new JavaTestInterpreter());
-
-		for (JavaMethod each : methods) {
-			if (each.isStatic() && each.isPublic()) {
-				return each;
-			}
-		}
-		throw new Exception("No public static parameters method on class "
-				+ javaClass.getName());
+		super(klass, new ParameterizedInterpreter());
 	}
 }

@@ -15,6 +15,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.Test.None;
 import org.junit.runner.Description;
+import org.junit.runner.notification.RunNotifier;
+
+// TODO: check names of various "run" methods
 
 public class JavaMethod extends JavaModelElement {
 	// TODO: push out
@@ -149,24 +152,42 @@ public class JavaMethod extends JavaModelElement {
 		return Before.class;
 	}
 
-	public void runWithoutBeforeAndAfter(TestEnvironment environment, Object test) {
+	public void runWithoutBeforeAndAfter(TestEnvironment environment,
+			Object test) {
 		try {
 			environment.getInterpreter().executeMethodBody(test, this);
 			if (expectsException())
-				environment.addFailure(new AssertionError("Expected exception: "
-						+ expectedException().getName()));
+				environment
+						.addFailure(new AssertionError("Expected exception: "
+								+ expectedException().getName()));
 		} catch (InvocationTargetException e) {
 			Throwable actual= e.getTargetException();
 			if (!expectsException())
 				environment.addFailure(actual);
 			else if (isUnexpected(actual)) {
 				String message= "Unexpected exception, expected<"
-						+ expectedException().getName()
-						+ "> but was<" + actual.getClass().getName() + ">";
+						+ expectedException().getName() + "> but was<"
+						+ actual.getClass().getName() + ">";
 				environment.addFailure(new Exception(message, actual));
 			}
 		} catch (Throwable e) {
 			environment.addFailure(e);
 		}
+	}
+
+	void invokeTestMethod(RunNotifier notifier, JavaTestInterpreter interpreter) {
+		Object test;
+		try {
+			test= getJavaClass().newInstance();
+		} catch (InvocationTargetException e) {
+			notifier.testAborted(description(), e.getCause());
+			return;
+		} catch (Exception e) {
+			notifier.testAborted(description(), e);
+			return;
+		}
+		TestEnvironment testEnvironment= new TestEnvironment(interpreter,
+				new PerTestNotifier(notifier, description()), test);
+		testEnvironment.run(this);
 	}
 }

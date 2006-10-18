@@ -1,6 +1,6 @@
 package org.junit.tests;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.Comparator;
 
@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.internal.runners.EmptyDescription;
 import org.junit.internal.runners.InitializationError;
+import org.junit.internal.runners.JavaTestInterpreter;
 import org.junit.internal.runners.TestClassRunner;
 import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
@@ -27,7 +28,7 @@ public class SortableTest {
 			}
 		};
 	}
-	
+
 	private static Comparator<Description> backward() {
 		return new Comparator<Description>() {
 			public int compare(Description o1, Description o2) {
@@ -38,88 +39,142 @@ public class SortableTest {
 
 	public static class TestClassRunnerIsSortable {
 		private static String log= "";
-		
+
 		public static class SortMe {
-			@Test public void a() { log+= "a"; }
-			@Test public void b() { log+= "b"; }
-			@Test public void c() { log+= "c"; }
+			@Test
+			public void a() {
+				log+= "a";
+			}
+
+			@Test
+			public void b() {
+				log+= "b";
+			}
+
+			@Test
+			public void c() {
+				log+= "c";
+			}
 		}
-		
-		@Before public void resetLog() {
+
+		@Before
+		public void resetLog() {
 			log= "";
 		}
-		
-		@Test public void sortingForwardWorksOnTestClassRunner() {
+
+		@Test
+		public void sortingForwardWorksOnTestClassRunner() {
 			Request forward= Request.aClass(SortMe.class).sortWith(forward());
-			
+
 			new JUnitCore().run(forward);
 			assertEquals("abc", log);
 		}
 
-		@Test public void sortingBackwardWorksOnTestClassRunner() {
+		@Test
+		public void sortingBackwardWorksOnTestClassRunner() {
 			Request backward= Request.aClass(SortMe.class).sortWith(backward());
-			
+
 			new JUnitCore().run(backward);
 			assertEquals("cba", log);
 		}
-		
-		@RunWith(Enclosed.class) 
+
+		@RunWith(Enclosed.class)
 		public static class Enclosing {
 			public static class A {
-				@Test public void a() { log+= "Aa"; }
-				@Test public void b() { log+= "Ab"; }
-				@Test public void c() { log+= "Ac"; }				
+				@Test
+				public void a() {
+					log+= "Aa";
+				}
+
+				@Test
+				public void b() {
+					log+= "Ab";
+				}
+
+				@Test
+				public void c() {
+					log+= "Ac";
+				}
 			}
+
 			public static class B {
-				@Test public void a() { log+= "Ba"; }
-				@Test public void b() { log+= "Bb"; }
-				@Test public void c() { log+= "Bc"; }								
+				@Test
+				public void a() {
+					log+= "Ba";
+				}
+
+				@Test
+				public void b() {
+					log+= "Bb";
+				}
+
+				@Test
+				public void c() {
+					log+= "Bc";
+				}
 			}
 		}
 
-		@Test public void sortingForwardWorksOnSuite() {
-			Request forward= Request.aClass(Enclosing.class).sortWith(forward());
-			
+		@Test
+		public void sortingForwardWorksOnSuite() {
+			Request forward= Request.aClass(Enclosing.class)
+					.sortWith(forward());
+
 			new JUnitCore().run(forward);
 			assertEquals("AaAbAcBaBbBc", log);
 		}
 
-		@Test public void sortingBackwardWorksOnSuite() {
-			Request backward= Request.aClass(Enclosing.class).sortWith(backward());
-			
+		@Test
+		public void sortingBackwardWorksOnSuite() {
+			Request backward= Request.aClass(Enclosing.class).sortWith(
+					backward());
+
 			new JUnitCore().run(backward);
 			assertEquals("BcBbBaAcAbAa", log);
 		}
 
 	}
-	
+
 	public static class UnsortableRunnersAreHandledWithoutCrashing {
 		public static class UnsortableRunner extends Runner {
 			public UnsortableRunner(Class<?> klass) {
 			}
-			
+
 			@Override
 			public Description getDescription() {
 				return new EmptyDescription();
 			}
-			
+
 			@Override
 			public void run(RunNotifier notifier) {
 			}
 		}
-		
+
 		@RunWith(UnsortableRunner.class)
 		public static class Unsortable {
-			@Test public void a() {}		
+			@Test
+			public void a() {
+			}
 		}
-		
-		@Test public void unsortablesAreHandledWithoutCrashing() {
-			Request unsorted= Request.aClass(Unsortable.class).sortWith(forward());
+
+		@Test
+		public void unsortablesAreHandledWithoutCrashing() {
+			Request unsorted= Request.aClass(Unsortable.class).sortWith(
+					forward());
 			new JUnitCore().run(unsorted);
 		}
-		
-		@Test public void testClassRunnerCanBeWrappedAroundUnsortable() throws InitializationError {
-			TestClassRunner runner= new TestClassRunner(Unsortable.class, new UnsortableRunner(Unsortable.class));
+
+		@Test
+		public void testClassRunnerCanBeWrappedAroundUnsortable()
+				throws InitializationError {
+			TestClassRunner runner= new TestClassRunner(Unsortable.class,
+					new JavaTestInterpreter() {
+						@Override
+						public Runner runnerFor(Class<?> klass)
+								throws InitializationError {
+							return new UnsortableRunner(klass);
+						}
+					});
 			runner.sort(new Sorter(forward()));
 		}
 	}
