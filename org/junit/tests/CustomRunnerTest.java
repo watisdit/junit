@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.internal.runners.JavaMethod;
+import org.junit.internal.javamodel.JavaMethod;
 import org.junit.internal.runners.JavaTestInterpreter;
 import org.junit.runner.JUnitCore;
 

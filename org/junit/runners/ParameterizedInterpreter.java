@@ -12,10 +12,10 @@ import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.List;
 
+import org.junit.internal.javamodel.JavaClass;
+import org.junit.internal.javamodel.JavaMethod;
 import org.junit.internal.runners.CompositeRunner;
 import org.junit.internal.runners.InitializationError;
-import org.junit.internal.runners.JavaClass;
-import org.junit.internal.runners.JavaMethod;
 import org.junit.internal.runners.JavaTestInterpreter;
 import org.junit.internal.runners.MethodValidator;
 import org.junit.internal.runners.TestClassMethodsRunner;
@@ -56,7 +56,7 @@ class ParameterizedInterpreter extends JavaTestInterpreter {
 	}
 
 	@Override
-	protected JavaMethod interpretJavaMethod(final JavaClass klass,
+	public JavaMethod interpretJavaMethod(final JavaClass klass,
 			Method method) {
 		return new JavaMethod(klass, method) {
 			@Override
@@ -71,7 +71,7 @@ class ParameterizedInterpreter extends JavaTestInterpreter {
 
 	// TODO: pull interpreter back in?
 	@Override
-	public Runner runnerFor(Class klass) throws InitializationError {
+	public Runner buildRunner(Class klass) throws InitializationError {
 		CompositeRunner runner= new CompositeRunner(klass.getName());
 		int i= 0;
 		for (final Object each : getParametersList(new JavaClass(klass))) {

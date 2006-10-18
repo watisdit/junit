@@ -1,5 +1,7 @@
 package org.junit.internal.runners;
 
+import org.junit.internal.javamodel.JavaClass;
+import org.junit.internal.javamodel.JavaMethodList;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;

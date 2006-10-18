@@ -3,6 +3,8 @@ package org.junit.internal.runners;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.junit.internal.javamodel.JavaClass;
+import org.junit.internal.javamodel.JavaMethod;
 import org.junit.runner.Runner;
 
 public class JavaTestInterpreter {
@@ -25,7 +27,7 @@ public class JavaTestInterpreter {
 		javaMethod.invoke(test);
 	}
 
-	public Runner runnerFor(Class<?> klass) throws InitializationError {
+	public Runner buildRunner(Class<?> klass) throws InitializationError {
 		MethodValidator methodValidator= new MethodValidator(klass);
 		validate(methodValidator);
 		methodValidator.assertValid();
@@ -36,7 +38,7 @@ public class JavaTestInterpreter {
 		methodValidator.validateAllMethods();
 	}
 	
-	protected JavaMethod interpretJavaMethod(final JavaClass klass, Method method) {
+	public JavaMethod interpretJavaMethod(final JavaClass klass, Method method) {
 		return new JavaMethod(klass, method);
 	}
 }

@@ -1,12 +1,12 @@
-package org.junit.internal.runners;
+package org.junit.internal.javamodel;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import org.junit.internal.runners.TestEnvironment;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.manipulation.NoTestsRemainException;
@@ -24,7 +24,7 @@ public class JavaMethodList extends JavaModelElement implements
 		fJavaClass= javaClass;
 	}
 
-	void filter(Filter filter) throws NoTestsRemainException {
+	public void filter(Filter filter) throws NoTestsRemainException {
 		for (Iterator<JavaMethod> iter= fMethods.iterator(); iter.hasNext();) {
 			JavaMethod method= iter.next();
 			if (!filter.shouldRun(method.description()))
@@ -34,29 +34,12 @@ public class JavaMethodList extends JavaModelElement implements
 			throw new NoTestsRemainException();
 	}
 
-	void filter(final Sorter sorter) {
+	public void filter(final Sorter sorter) {
 		Collections.sort(fMethods, new Comparator<JavaMethod>() {
 			public int compare(JavaMethod o1, JavaMethod o2) {
 				return sorter.compare(o1.description(), o2.description());
 			}
 		});
-	}
-
-	@Override
-	public Class<? extends Annotation> getAfterAnnotation() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Class<? extends Annotation> getBeforeAnnotation() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public JavaClass getJavaClass() {
-		return fJavaClass;
 	}
 
 	@Override
@@ -89,7 +72,7 @@ public class JavaMethodList extends JavaModelElement implements
 		return spec;
 	}
 
-	void run(TestEnvironment environment) {
+	public void run(TestEnvironment environment) {
 		if (isEmpty())
 			// TODO: DUP
 			environment.getRunNotifier().testAborted(description(), new Exception(

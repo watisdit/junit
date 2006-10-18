@@ -1,5 +1,6 @@
 package org.junit.internal.runners;
 
+import org.junit.internal.javamodel.JavaClass;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -21,12 +22,7 @@ public class TestClassRunner extends Runner implements Filterable, Sortable {
 	public TestClassRunner(Class<?> klass, JavaTestInterpreter interpreter)
 			throws InitializationError {
 		fTestClass= klass;
-		fEnclosedRunner= interpreter.runnerFor(klass);
-	}
-
-	// TODO: this is parallel to passed-in runner
-	protected void validate(MethodValidator methodValidator) {
-		methodValidator.validateAllMethods();
+		fEnclosedRunner= interpreter.buildRunner(klass);
 	}
 
 	@Override

@@ -170,7 +170,7 @@ public class SortableTest {
 			TestClassRunner runner= new TestClassRunner(Unsortable.class,
 					new JavaTestInterpreter() {
 						@Override
-						public Runner runnerFor(Class<?> klass)
+						public Runner buildRunner(Class<?> klass)
 								throws InitializationError {
 							return new UnsortableRunner(klass);
 						}

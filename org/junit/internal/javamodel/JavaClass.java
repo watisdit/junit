@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.junit.internal.runners;
+package org.junit.internal.javamodel;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -13,9 +13,11 @@ import java.util.List;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.internal.runners.JavaTestInterpreter;
+import org.junit.internal.runners.MethodAnnotation;
 import org.junit.runner.Description;
 
-public class JavaClass extends JavaModelElement {
+public class JavaClass extends WrappedJavaModelElement {
 	// TODO: push out
 	private final Class<?> fClass;
 
@@ -83,7 +85,7 @@ public class JavaClass extends JavaModelElement {
 		return fClass;
 	}
 
-	void validateNoArgConstructor(List<Throwable> errors) {
+	public void validateNoArgConstructor(List<Throwable> errors) {
 		try {
 			getTestClass().getConstructor();
 		} catch (Exception e) {

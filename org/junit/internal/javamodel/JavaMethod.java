@@ -1,12 +1,11 @@
 /**
  * 
  */
-package org.junit.internal.runners;
+package org.junit.internal.javamodel;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,11 +18,13 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.Test.None;
+import org.junit.internal.runners.MethodAnnotation;
+import org.junit.internal.runners.TestEnvironment;
 import org.junit.runner.Description;
 
 // TODO: check names of various "run" methods
 
-public class JavaMethod extends JavaModelElement {
+public class JavaMethod extends WrappedJavaModelElement {
 	// TODO: push out
 	private final Method fMethod;
 
@@ -81,19 +82,6 @@ public class JavaMethod extends JavaModelElement {
 	public Description description() {
 		return Description.createTestDescription(fJavaClass.getTestClass(),
 				getName());
-	}
-
-	public boolean isStatic() {
-		return Modifier.isStatic(getModifiers());
-	}
-
-	// TODO: sort methods
-	private int getModifiers() {
-		return fMethod.getModifiers();
-	}
-
-	public boolean isPublic() {
-		return Modifier.isPublic(getModifiers());
 	}
 
 	// TODO: push out

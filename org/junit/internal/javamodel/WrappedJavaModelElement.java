@@ -1,28 +1,18 @@
-package org.junit.internal.runners;
+package org.junit.internal.javamodel;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.junit.runner.Description;
-import org.junit.runner.notification.Failure;
+import org.junit.internal.runners.FailedBefore;
 import org.junit.runner.notification.RunNotifier;
 
-public abstract class JavaModelElement {
-	public abstract String getName();
-
+public abstract class WrappedJavaModelElement extends JavaModelElement {
 	public abstract Class<? extends Annotation> getBeforeAnnotation();
-
+	
 	public abstract Class<? extends Annotation> getAfterAnnotation();
-
+	
 	public abstract JavaClass getJavaClass();
-
-	public void addFailure(RunNotifier runNotifier, Throwable targetException) {
-		runNotifier.fireTestFailure(new Failure(description(), targetException));
-	}
-
-	protected abstract Description description();
-
 	void runAfters(Object test, RunNotifier runNotifier) {
 		// TODO: train wreck
 		for (Method after : getJavaClass().getMethods(
@@ -51,7 +41,7 @@ public abstract class JavaModelElement {
 		}
 	}
 
-	void runWithBeforeAndAfter(Runnable protectThis, Object test, RunNotifier runNotifier) {
+	public void runWithBeforeAndAfter(Runnable protectThis, Object test, RunNotifier runNotifier) {
 		try {
 			runBefores(test, runNotifier);
 			protectThis.run();

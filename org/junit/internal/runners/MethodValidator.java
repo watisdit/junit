@@ -11,6 +11,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.internal.javamodel.JavaClass;
 
 public class MethodValidator {
 	private final List<Throwable> fErrors= new ArrayList<Throwable>();

@@ -45,7 +45,7 @@ public class Suite extends TestClassRunner {
 	public Suite(Class<?> klass, final Class[] annotatedClasses) throws InitializationError {
 		super(klass, new JavaTestInterpreter() {
 			@Override
-			public Runner runnerFor(Class<?> klass) throws InitializationError {
+			public Runner buildRunner(Class<?> klass) throws InitializationError {
 				return Request.classes(klass.getName(), annotatedClasses)
 						.getRunner();
 			}

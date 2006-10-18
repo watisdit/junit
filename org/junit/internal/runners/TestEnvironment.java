@@ -17,7 +17,7 @@ public class TestEnvironment {
 		fNotifier= notifier;
 	}
 
-	JavaTestInterpreter getInterpreter() {
+	public JavaTestInterpreter getInterpreter() {
 		return fInterpreter;
 	}
 

@@ -1,7 +1,6 @@
 package org.junit.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,7 +14,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.internal.runners.InitializationError;
-import org.junit.internal.runners.JavaTestInterpreter;
 import org.junit.internal.runners.MethodValidator;
 import org.junit.internal.runners.TestClassRunner;
 import org.junit.runner.JUnitCore;
@@ -87,7 +85,7 @@ public class TestMethodTest {
 
 	private List<Throwable> validateAllMethods(Class<?> clazz) {
 		try {
-			new TestClassRunner(clazz, new JavaTestInterpreter());
+			new TestClassRunner(clazz);
 		} catch (InitializationError e) {
 			return e.getCauses();
 		}
