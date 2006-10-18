@@ -7,12 +7,12 @@ import java.lang.annotation.Annotation;
 
 import org.junit.RunSuperclassMethodsFirst;
 
-final class MethodAnnotation {
+public class MethodAnnotation {
 	// TODO: push out
 	// TODO: package too big?
 	private final Class<? extends Annotation> fAnnotation;
 
-	MethodAnnotation(Class<? extends Annotation> annotation) {
+	public MethodAnnotation(Class<? extends Annotation> annotation) {
 		fAnnotation= annotation;
 	}
 

@@ -1,7 +1,5 @@
 package org.junit.internal.runners;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -15,13 +13,15 @@ public class TestClassRunner extends Runner implements Filterable, Sortable {
 	protected final Runner fEnclosedRunner;
 
 	private final Class<?> fTestClass;
-	
+
 	public TestClassRunner(Class<?> klass) throws InitializationError {
 		this(klass, new JavaTestInterpreter());
 	}
-	
-	public TestClassRunner(Class<?> klass, JavaTestInterpreter interpreter) throws InitializationError {
-		this(klass, new TestClassMethodsRunner(new JavaClass(klass), interpreter));
+
+	public TestClassRunner(Class<?> klass, JavaTestInterpreter interpreter)
+			throws InitializationError {
+		this(klass, new TestClassMethodsRunner(new JavaClass(klass),
+				interpreter));
 	}
 
 	public TestClassRunner(Class<?> klass, Runner runner)
@@ -40,16 +40,17 @@ public class TestClassRunner extends Runner implements Filterable, Sortable {
 
 	@Override
 	public void run(final RunNotifier notifier) {
-		BeforeAndAfterRunner runner= new BeforeAndAfterRunner(getTestClass(),
-				BeforeClass.class, AfterClass.class, null, new PerTestNotifier(notifier,
-						getDescription())) {
-			@Override
-			protected void runUnprotected() {
+		Runnable protectThis= new Runnable() {
+			public void run() {
 				fEnclosedRunner.run(notifier);
 			}
 		};
 
-		runner.runProtected();
+		TestEnvironment environment= new TestEnvironment(
+				new JavaTestInterpreter(), new PerTestNotifier(notifier,
+						getDescription()), null);
+		environment.runWithBeforeAndAfter(protectThis, new JavaClass(
+				getTestClass()));
 	}
 
 	@Override

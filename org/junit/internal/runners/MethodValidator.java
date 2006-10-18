@@ -49,7 +49,7 @@ public class MethodValidator {
 
 	private void validateTestMethods(Class<? extends Annotation> annotation,
 			boolean isStatic) {
-		List<JavaMethod> methods= fJavaClass.getTestMethods(annotation);
+		List<JavaMethod> methods= fJavaClass.getMethods(annotation, new JavaTestInterpreter());
 		for (JavaMethod eachMethod : methods) {
 			eachMethod.validateAsTestMethod(isStatic, fErrors);
 		}

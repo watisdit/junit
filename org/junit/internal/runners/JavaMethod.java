@@ -9,15 +9,21 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.Test.None;
+import org.junit.runner.Description;
 
 public class JavaMethod extends JavaModelElement {
 	// TODO: push out
 	private final Method fMethod;
 
-	public JavaMethod(Method current) {
+	private final JavaClass fJavaClass;
+
+	public JavaMethod(JavaClass javaClass, Method current) {
+		fJavaClass= javaClass;
 		fMethod= current;
 	}
 
@@ -25,8 +31,7 @@ public class JavaMethod extends JavaModelElement {
 		Method previous= previousJavaMethod.fMethod;
 		if (!previous.getName().equals(fMethod.getName()))
 			return false;
-		if (previous.getParameterTypes().length != fMethod
-				.getParameterTypes().length)
+		if (previous.getParameterTypes().length != fMethod.getParameterTypes().length)
 			return false;
 		for (int i= 0; i < previous.getParameterTypes().length; i++) {
 			if (!previous.getParameterTypes()[i].equals(fMethod
@@ -69,16 +74,16 @@ public class JavaMethod extends JavaModelElement {
 	}
 
 	boolean isUnexpected(Throwable exception) {
-		return ! expectedException().isAssignableFrom(exception.getClass());
+		return !expectedException().isAssignableFrom(exception.getClass());
 	}
 
 	boolean expectsException() {
 		return expectedException() != null;
 	}
 
-	void invoke(Object object) throws IllegalAccessException,
+	public Object invoke(Object object) throws IllegalAccessException,
 			InvocationTargetException {
-		fMethod.invoke(object);
+		return fMethod.invoke(object);
 	}
 
 	@Override
@@ -90,12 +95,14 @@ public class JavaMethod extends JavaModelElement {
 		Method each= fMethod;
 		if (Modifier.isStatic(each.getModifiers()) != isStatic) {
 			String state= isStatic ? "should" : "should not";
-			errors.add(new Exception("Method " + each.getName() + "() "
-					+ state + " be static"));
+			errors.add(new Exception("Method " + each.getName() + "() " + state
+					+ " be static"));
 		}
 		if (!Modifier.isPublic(each.getDeclaringClass().getModifiers()))
-			errors.add(new Exception("Class " + each.getDeclaringClass().getName()
-					+ " should be public"));
+			errors
+					.add(new Exception("Class "
+							+ each.getDeclaringClass().getName()
+							+ " should be public"));
 		if (!Modifier.isPublic(each.getModifiers()))
 			errors.add(new Exception("Method " + each.getName()
 					+ " should be public"));
@@ -107,25 +114,59 @@ public class JavaMethod extends JavaModelElement {
 					+ " should have no parameters"));
 	}
 
-	void runUnprotected(JavaTestInterpreter javaTestInterpreter, Object test, PerTestNotifier perTestNotifier) {
+	// TODO: push out
+	public Description description() {
+		return Description.createTestDescription(fJavaClass.getTestClass(),
+				getName());
+	}
+
+	public boolean isStatic() {
+		return Modifier.isStatic(getModifiers());
+	}
+
+	// TODO: sort methods
+	private int getModifiers() {
+		return fMethod.getModifiers();
+	}
+
+	public boolean isPublic() {
+		return Modifier.isPublic(getModifiers());
+	}
+
+	// TODO: push out
+	@Override
+	public JavaClass getJavaClass() {
+		return fJavaClass;
+	}
+
+	@Override
+	public Class<? extends Annotation> getAfterAnnotation() {
+		return After.class;
+	}
+
+	@Override
+	public Class<? extends Annotation> getBeforeAnnotation() {
+		return Before.class;
+	}
+
+	public void runWithoutBeforeAndAfter(TestEnvironment environment, Object test) {
 		try {
-			javaTestInterpreter.executeMethodBody(test, this);
+			environment.getInterpreter().executeMethodBody(test, this);
 			if (expectsException())
-				perTestNotifier.addFailure(new AssertionError(
-						"Expected exception: "
-								+ expectedException().getName()));
+				environment.addFailure(new AssertionError("Expected exception: "
+						+ expectedException().getName()));
 		} catch (InvocationTargetException e) {
 			Throwable actual= e.getTargetException();
 			if (!expectsException())
-				perTestNotifier.addFailure(actual);
+				environment.addFailure(actual);
 			else if (isUnexpected(actual)) {
 				String message= "Unexpected exception, expected<"
 						+ expectedException().getName()
 						+ "> but was<" + actual.getClass().getName() + ">";
-				perTestNotifier.addFailure(new Exception(message, actual));
+				environment.addFailure(new Exception(message, actual));
 			}
 		} catch (Throwable e) {
-			perTestNotifier.addFailure(e);
+			environment.addFailure(e);
 		}
 	}
 }
