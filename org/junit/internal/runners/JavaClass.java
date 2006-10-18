@@ -12,6 +12,8 @@ import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.Description;
 
 public class JavaClass extends JavaModelElement {
 	// TODO: push out
@@ -33,15 +35,13 @@ public class JavaClass extends JavaModelElement {
 		return results;
 	}
 
-	public JavaMethodList getMethods(MethodAnnotation methodAnnotation,
-			JavaTestInterpreter interpreter) {
-		JavaMethodList results= new JavaMethodList();
+	public List<Method> getMethods(MethodAnnotation methodAnnotation) {
+		List<Method> results= new ArrayList<Method>();
 		for (JavaClass eachClass : getSuperClasses()) {
-			for (JavaMethod eachMethod : eachClass
-					.getDeclaredMethods(interpreter)) {
+			for (Method eachMethod : eachClass.getDeclaredMethods()) {
 				Annotation annotation= eachMethod
-						.getAnnotation(methodAnnotation);
-				if (annotation != null && !eachMethod.isShadowedBy(results))
+						.getAnnotation(methodAnnotation.getAnnotationClass());
+				if (annotation != null && !isShadowedBy(eachMethod, results))
 					results.add(eachMethod);
 			}
 		}
@@ -50,18 +50,33 @@ public class JavaClass extends JavaModelElement {
 		return results;
 	}
 
-	private List<JavaMethod> getDeclaredMethods(JavaTestInterpreter interpreter) {
-		Method[] declaredMethods= fClass.getDeclaredMethods();
-		ArrayList<JavaMethod> javaMethods= new ArrayList<JavaMethod>();
-		for (Method method : declaredMethods) {
-			javaMethods.add(interpreter.interpretJavaMethod(this, method));
+	private boolean isShadowedBy(Method target, Method previous) {
+		if (!previous.getName().equals(target.getName()))
+			return false;
+		if (previous.getParameterTypes().length != target.getParameterTypes().length)
+			return false;
+		for (int i= 0; i < previous.getParameterTypes().length; i++) {
+			if (!previous.getParameterTypes()[i].equals(target
+					.getParameterTypes()[i]))
+				return false;
 		}
-		return javaMethods;
+		return true;
 	}
 
-	public JavaMethodList getMethods(Class<? extends Annotation> type,
-			JavaTestInterpreter interpreter) {
-		return getMethods(new MethodAnnotation(type), interpreter);
+	boolean isShadowedBy(Method target, List<Method> results) {
+		for (Method each : results) {
+			if (isShadowedBy(target, each))
+				return true;
+		}
+		return false;
+	}
+
+	private Method[] getDeclaredMethods() {
+		return fClass.getDeclaredMethods();
+	}
+
+	public List<Method> getMethods(Class<? extends Annotation> type) {
+		return getMethods(new MethodAnnotation(type));
 	}
 
 	public Class getTestClass() {
@@ -102,5 +117,19 @@ public class JavaClass extends JavaModelElement {
 	@Override
 	public JavaClass getJavaClass() {
 		return this;
+	}
+
+	public JavaMethodList getTestMethods(JavaTestInterpreter javaTestInterpreter) {
+		List<Method> methods= getMethods(Test.class);
+		JavaMethodList list= new JavaMethodList(this);
+		for (Method method : methods) {
+			list.add(javaTestInterpreter.interpretJavaMethod(this, method));
+		}
+		return list;
+	}
+
+	@Override
+	protected Description description() {
+		return Description.createSuiteDescription(fClass);
 	}
 }

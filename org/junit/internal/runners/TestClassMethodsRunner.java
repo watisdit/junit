@@ -1,7 +1,5 @@
 package org.junit.internal.runners;
 
-
-import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -15,17 +13,13 @@ public class TestClassMethodsRunner extends Runner implements Filterable,
 		Sortable {
 	private final JavaMethodList fTestMethods;
 
-	private final JavaClass fTestClass;
-
 	private final JavaTestInterpreter fInterpreter;
 
 	// This assumes that some containing runner will perform validation of the
 	// test methods
 	public TestClassMethodsRunner(JavaClass klass,
 			JavaTestInterpreter javaTestInterpreter) {
-		// TODO: DUP?
-		fTestClass= klass;
-		fTestMethods= klass.getMethods(Test.class, javaTestInterpreter);
+		fTestMethods= klass.getTestMethods(javaTestInterpreter);
 		fInterpreter= javaTestInterpreter;
 	}
 
@@ -33,20 +27,12 @@ public class TestClassMethodsRunner extends Runner implements Filterable,
 
 	@Override
 	public void run(RunNotifier notifier) {
-		if (fTestMethods.isEmpty())
-			notifier.testAborted(getDescription(), new Exception(
-					"No runnable methods"));
-		for (JavaMethod method : fTestMethods)
-			method.invokeTestMethod(notifier, fInterpreter);
+		fTestMethods.run(new TestEnvironment(fInterpreter, notifier));
 	}
 
 	@Override
 	public Description getDescription() {
-		Description spec= Description.createSuiteDescription(fTestClass
-				.getName());
-		for (JavaMethod method : fTestMethods)
-			spec.addChild(method.description());
-		return spec;
+		return fTestMethods.description();
 	}
 
 	public void filter(Filter filter) throws NoTestsRemainException {

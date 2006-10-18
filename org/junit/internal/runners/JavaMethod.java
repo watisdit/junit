@@ -7,7 +7,12 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,7 +20,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.Test.None;
 import org.junit.runner.Description;
-import org.junit.runner.notification.RunNotifier;
 
 // TODO: check names of various "run" methods
 
@@ -28,28 +32,6 @@ public class JavaMethod extends JavaModelElement {
 	public JavaMethod(JavaClass javaClass, Method current) {
 		fJavaClass= javaClass;
 		fMethod= current;
-	}
-
-	private boolean isShadowedBy(JavaMethod previousJavaMethod) {
-		Method previous= previousJavaMethod.fMethod;
-		if (!previous.getName().equals(fMethod.getName()))
-			return false;
-		if (previous.getParameterTypes().length != fMethod.getParameterTypes().length)
-			return false;
-		for (int i= 0; i < previous.getParameterTypes().length; i++) {
-			if (!previous.getParameterTypes()[i].equals(fMethod
-					.getParameterTypes()[i]))
-				return false;
-		}
-		return true;
-	}
-
-	boolean isShadowedBy(List<JavaMethod> results) {
-		for (JavaMethod each : results) {
-			if (isShadowedBy(each))
-				return true;
-		}
-		return false;
 	}
 
 	public Annotation getAnnotation(MethodAnnotation methodAnnotation) {
@@ -94,30 +76,8 @@ public class JavaMethod extends JavaModelElement {
 		return fMethod.getName();
 	}
 
-	void validateAsTestMethod(boolean isStatic, List<Throwable> errors) {
-		Method each= fMethod;
-		if (Modifier.isStatic(each.getModifiers()) != isStatic) {
-			String state= isStatic ? "should" : "should not";
-			errors.add(new Exception("Method " + each.getName() + "() " + state
-					+ " be static"));
-		}
-		if (!Modifier.isPublic(each.getDeclaringClass().getModifiers()))
-			errors
-					.add(new Exception("Class "
-							+ each.getDeclaringClass().getName()
-							+ " should be public"));
-		if (!Modifier.isPublic(each.getModifiers()))
-			errors.add(new Exception("Method " + each.getName()
-					+ " should be public"));
-		if (each.getReturnType() != Void.TYPE)
-			errors.add(new Exception("Method " + each.getName()
-					+ " should be void"));
-		if (each.getParameterTypes().length != 0)
-			errors.add(new Exception("Method " + each.getName()
-					+ " should have no parameters"));
-	}
-
 	// TODO: push out
+	@Override
 	public Description description() {
 		return Description.createTestDescription(fJavaClass.getTestClass(),
 				getName());
@@ -154,40 +114,93 @@ public class JavaMethod extends JavaModelElement {
 
 	public void runWithoutBeforeAndAfter(TestEnvironment environment,
 			Object test) {
+		// TODO: is this envious of environment?
 		try {
 			environment.getInterpreter().executeMethodBody(test, this);
 			if (expectsException())
-				environment
-						.addFailure(new AssertionError("Expected exception: "
-								+ expectedException().getName()));
+				addFailure(environment.getRunNotifier(), new AssertionError(
+						"Expected exception: " + expectedException().getName()));
 		} catch (InvocationTargetException e) {
 			Throwable actual= e.getTargetException();
 			if (!expectsException())
-				environment.addFailure(actual);
+				addFailure(environment.getRunNotifier(), actual);
 			else if (isUnexpected(actual)) {
 				String message= "Unexpected exception, expected<"
 						+ expectedException().getName() + "> but was<"
 						+ actual.getClass().getName() + ">";
-				environment.addFailure(new Exception(message, actual));
+				addFailure(environment.getRunNotifier(), new Exception(message,
+						actual));
 			}
 		} catch (Throwable e) {
-			environment.addFailure(e);
+			// TODO: DUP on environment.getRunNotifier
+			addFailure(environment.getRunNotifier(), e);
 		}
 	}
 
-	void invokeTestMethod(RunNotifier notifier, JavaTestInterpreter interpreter) {
+	void invokeTestMethod(TestEnvironment testEnvironment) {
 		Object test;
 		try {
 			test= getJavaClass().newInstance();
-		} catch (InvocationTargetException e) {
-			notifier.testAborted(description(), e.getCause());
-			return;
 		} catch (Exception e) {
-			notifier.testAborted(description(), e);
+			testEnvironment.getRunNotifier().testAborted(description(), e);
 			return;
 		}
-		TestEnvironment testEnvironment= new TestEnvironment(interpreter,
-				new PerTestNotifier(notifier, description()), test);
-		testEnvironment.run(this);
+		run(testEnvironment, test);
+	}
+
+	void runWithoutTimeout(final Object test,
+			final TestEnvironment testEnvironment) {
+		// TODO: is this envious now? Yes
+		runWithBeforeAndAfter(new Runnable() {
+			public void run() {
+				runWithoutBeforeAndAfter(testEnvironment, test);
+			}
+		}, test, testEnvironment.getRunNotifier());
+		// TODO: ugly
+	}
+
+	void runWiteTimeout(long timeout, final Object test,
+			final TestEnvironment testEnvironment) {
+		ExecutorService service= Executors.newSingleThreadExecutor();
+		Callable<Object> callable= new Callable<Object>() {
+			public Object call() throws Exception {
+				runWithoutTimeout(test, testEnvironment);
+				return null;
+			}
+		};
+		Future<Object> result= service.submit(callable);
+		service.shutdown();
+		try {
+			boolean terminated= service.awaitTermination(timeout,
+					TimeUnit.MILLISECONDS);
+			if (!terminated)
+				service.shutdownNow();
+			result.get(timeout, TimeUnit.MILLISECONDS); // throws the exception
+			// if one occurred
+			// during the invocation
+		} catch (TimeoutException e) {
+			addFailure(testEnvironment.getRunNotifier(), new Exception(String
+					.format("test timed out after %d milliseconds", timeout)));
+		} catch (Exception e) {
+			// TODO: DUP
+			addFailure(testEnvironment.getRunNotifier(), e);
+		}
+	}
+
+	void run(TestEnvironment environment, Object test) {
+		if (isIgnored()) {
+			environment.getRunNotifier().fireTestIgnored(description());
+			return;
+		}
+		environment.getRunNotifier().fireTestStarted(description());
+		try {
+			long timeout= getTimeout();
+			if (timeout > 0)
+				runWiteTimeout(timeout, test, environment);
+			else
+				runWithoutTimeout(test, environment);
+		} finally {
+			environment.getRunNotifier().fireTestFinished(description());
+		}
 	}
 }

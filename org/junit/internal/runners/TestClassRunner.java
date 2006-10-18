@@ -14,8 +14,6 @@ public class TestClassRunner extends Runner implements Filterable, Sortable {
 
 	private final Class<?> fTestClass;
 
-	private JavaTestInterpreter fInterpreter;
-
 	public TestClassRunner(Class<?> klass) throws InitializationError {
 		this(klass, new JavaTestInterpreter());
 	}
@@ -24,7 +22,6 @@ public class TestClassRunner extends Runner implements Filterable, Sortable {
 			throws InitializationError {
 		fTestClass= klass;
 		fEnclosedRunner= interpreter.runnerFor(klass);
-		fInterpreter= interpreter;
 	}
 
 	// TODO: this is parallel to passed-in runner
@@ -40,10 +37,8 @@ public class TestClassRunner extends Runner implements Filterable, Sortable {
 			}
 		};
 
-		TestEnvironment environment= new TestEnvironment(fInterpreter,
-				new PerTestNotifier(notifier, getDescription()), null);
-		environment.runWithBeforeAndAfter(protectThis, new JavaClass(
-				getTestClass()));
+		new JavaClass(getTestClass()).runWithBeforeAndAfter(protectThis, null,
+				notifier);
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 package org.junit.internal.runners;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,9 +51,31 @@ public class MethodValidator {
 
 	private void validateTestMethods(Class<? extends Annotation> annotation,
 			boolean isStatic) {
-		List<JavaMethod> methods= fJavaClass.getMethods(annotation, new JavaTestInterpreter());
-		for (JavaMethod eachMethod : methods) {
-			eachMethod.validateAsTestMethod(isStatic, fErrors);
+		for (Method eachMethod : fJavaClass.getMethods(annotation)) {
+			validateAsTestMethod(eachMethod, isStatic, fErrors);
 		}
+	}
+	
+
+	void validateAsTestMethod(Method each, boolean isStatic, List<Throwable> errors) {
+		if (Modifier.isStatic(each.getModifiers()) != isStatic) {
+			String state= isStatic ? "should" : "should not";
+			errors.add(new Exception("Method " + each.getName() + "() " + state
+					+ " be static"));
+		}
+		if (!Modifier.isPublic(each.getDeclaringClass().getModifiers()))
+			errors
+					.add(new Exception("Class "
+							+ each.getDeclaringClass().getName()
+							+ " should be public"));
+		if (!Modifier.isPublic(each.getModifiers()))
+			errors.add(new Exception("Method " + each.getName()
+					+ " should be public"));
+		if (each.getReturnType() != Void.TYPE)
+			errors.add(new Exception("Method " + each.getName()
+					+ " should be void"));
+		if (each.getParameterTypes().length != 0)
+			errors.add(new Exception("Method " + each.getName()
+					+ " should have no parameters"));
 	}
 }

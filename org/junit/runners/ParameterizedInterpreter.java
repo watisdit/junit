@@ -8,6 +8,7 @@ import static org.junit.Assert.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.List;
 
@@ -96,7 +97,7 @@ class ParameterizedInterpreter extends JavaTestInterpreter {
 
 	private Collection getParametersList(JavaClass javaClass)
 			throws InitializationError {
-		JavaMethod parametersMethod= getParametersMethod(javaClass);
+		Method parametersMethod= getParametersMethod(javaClass);
 		try {
 			return (Collection) parametersMethod.invoke(null);
 		} catch (Exception e) {
@@ -104,14 +105,14 @@ class ParameterizedInterpreter extends JavaTestInterpreter {
 		}
 	}
 
-	private JavaMethod getParametersMethod(JavaClass javaClass)
+	private Method getParametersMethod(JavaClass javaClass)
 			throws InitializationError {
 		// TODO: is this DUP?
-		List<JavaMethod> methods= javaClass.getMethods(Parameters.class,
-				new JavaTestInterpreter());
+		List<Method> methods= javaClass.getMethods(Parameters.class);
 
-		for (JavaMethod each : methods) {
-			if (each.isStatic() && each.isPublic()) {
+		for (Method each : methods) {
+			int mods= each.getModifiers();
+			if (Modifier.isStatic(mods) && Modifier.isPublic(mods)) {
 				return each;
 			}
 		}

@@ -25,10 +25,6 @@ public class JavaTestInterpreter {
 		javaMethod.invoke(test);
 	}
 
-	public JavaClass interpretJavaClass(Class<?> superclass) {
-		return new JavaClass(superclass);
-	}
-
 	public Runner runnerFor(Class<?> klass) throws InitializationError {
 		MethodValidator methodValidator= new MethodValidator(klass);
 		validate(methodValidator);

@@ -2,6 +2,7 @@ package org.junit.runner.notification;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 
 import org.junit.runner.Description;
 
@@ -22,8 +23,16 @@ public class Failure {
 	 * @param thrownException the exception that was thrown while running the test
 	 */
 	public Failure(Description description, Throwable thrownException) {
-		fThrownException = thrownException;
+		fThrownException = findRootCause(thrownException);
 		fDescription= description;
+	}
+
+	private static Throwable findRootCause(Throwable thrownException) {
+		if (thrownException instanceof InvocationTargetException) {
+			InvocationTargetException ite= (InvocationTargetException) thrownException;
+			return findRootCause(ite.getTargetException());
+		}
+		return thrownException;
 	}
 
 	/**
