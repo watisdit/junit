@@ -18,8 +18,8 @@ public class MethodValidator {
 
 	private final JavaClass fJavaClass;
 
-	public MethodValidator(Class<?> testClass) {
-		fJavaClass= new JavaClass(testClass);
+	public MethodValidator(JavaClass testClass) {
+		fJavaClass= testClass;
 	}
 
 	public void validateInstanceMethods() {

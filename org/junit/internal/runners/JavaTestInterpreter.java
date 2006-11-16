@@ -28,10 +28,11 @@ public class JavaTestInterpreter {
 	}
 
 	public Runner buildRunner(Class<?> klass) throws InitializationError {
-		MethodValidator methodValidator= new MethodValidator(klass);
+		JavaClass built= buildClass(klass);
+		MethodValidator methodValidator= new MethodValidator(built);
 		validate(methodValidator);
 		methodValidator.assertValid();
-		return new TestClassMethodsRunner(new JavaClass(klass), this);
+		return new TestClassMethodsRunner(built, this);
 	}
 
 	protected void validate(MethodValidator methodValidator) {
@@ -40,5 +41,9 @@ public class JavaTestInterpreter {
 	
 	public JavaMethod interpretJavaMethod(final JavaClass klass, Method method) {
 		return new JavaMethod(klass, method);
+	}
+
+	public JavaClass buildClass(Class<?> superclass) {
+		return new JavaClass(superclass, this);
 	}
 }

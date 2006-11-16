@@ -29,8 +29,8 @@ class ParameterizedInterpreter extends JavaTestInterpreter {
 		private final int fNumber;
 
 		private ParameterizedJavaClass(Class<?> type, Object[] parameters,
-				int number) {
-			super(type);
+				int number, JavaTestInterpreter interpreter) {
+			super(type, interpreter);
 			fParameters= parameters;
 			fNumber= number;
 		}
@@ -56,8 +56,7 @@ class ParameterizedInterpreter extends JavaTestInterpreter {
 	}
 
 	@Override
-	public JavaMethod interpretJavaMethod(final JavaClass klass,
-			Method method) {
+	public JavaMethod interpretJavaMethod(final JavaClass klass, Method method) {
 		return new JavaMethod(klass, method) {
 			@Override
 			public String getName() {
@@ -73,18 +72,19 @@ class ParameterizedInterpreter extends JavaTestInterpreter {
 	@Override
 	public Runner buildRunner(Class klass) throws InitializationError {
 		CompositeRunner runner= new CompositeRunner(klass.getName());
+		JavaClass simpleClass= buildClass(klass);
 		int i= 0;
-		for (final Object each : getParametersList(new JavaClass(klass))) {
+		for (final Object each : getParametersList(simpleClass)) {
 			if (each instanceof Object[]) {
 				runner
 						.add(new TestClassMethodsRunner(
 								new ParameterizedJavaClass(klass,
-										(Object[]) each, i++), this));
+										(Object[]) each, i++, this), this));
 			} else
 				throw new InitializationError(String.format(
 						"%s.%s() must return a Collection of arrays.", klass
-								.getName(), getParametersMethod(
-								new JavaClass(klass)).getName()));
+								.getName(), getParametersMethod(simpleClass)
+								.getName()));
 		}
 		return runner;
 	}

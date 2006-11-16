@@ -16,12 +16,14 @@ import org.junit.Test;
 import org.junit.internal.runners.JavaTestInterpreter;
 import org.junit.internal.runners.MethodAnnotation;
 import org.junit.runner.Description;
+import org.junit.runner.notification.RunNotifier;
 
 public class JavaClass extends WrappedJavaModelElement {
 	// TODO: push out
 	private final Class<?> fClass;
 
-	public JavaClass(Class<?> type) {
+	public JavaClass(Class<?> type, JavaTestInterpreter interpreter) {
+		super(interpreter);
 		fClass= type;
 	}
 
@@ -32,7 +34,7 @@ public class JavaClass extends WrappedJavaModelElement {
 		// TODO: this will not add parameterized superclasses (need to use
 		// interpreter here?)
 		if (fClass.getSuperclass() != null)
-			results.addAll(new JavaClass(fClass.getSuperclass())
+			results.addAll(getInterpreter().buildClass(fClass.getSuperclass())
 					.getSuperClasses());
 		return results;
 	}
@@ -131,7 +133,13 @@ public class JavaClass extends WrappedJavaModelElement {
 	}
 
 	@Override
-	protected Description description() {
+	public Description getDescription() {
 		return Description.createSuiteDescription(fClass);
+	}
+
+	@Override
+	public void run(RunNotifier notifier) {
+		// TODO Auto-generated method stub
+		
 	}
 }

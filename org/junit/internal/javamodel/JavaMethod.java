@@ -19,8 +19,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.Test.None;
 import org.junit.internal.runners.MethodAnnotation;
-import org.junit.internal.runners.TestEnvironment;
 import org.junit.runner.Description;
+import org.junit.runner.notification.RunNotifier;
 
 // TODO: check names of various "run" methods
 
@@ -31,6 +31,7 @@ public class JavaMethod extends WrappedJavaModelElement {
 	private final JavaClass fJavaClass;
 
 	public JavaMethod(JavaClass javaClass, Method current) {
+		super(javaClass.getInterpreter());
 		fJavaClass= javaClass;
 		fMethod= current;
 	}
@@ -79,7 +80,7 @@ public class JavaMethod extends WrappedJavaModelElement {
 
 	// TODO: push out
 	@Override
-	public Description description() {
+	public Description getDescription() {
 		return Description.createTestDescription(fJavaClass.getTestClass(),
 				getName());
 	}
@@ -100,59 +101,56 @@ public class JavaMethod extends WrappedJavaModelElement {
 		return Before.class;
 	}
 
-	public void runWithoutBeforeAndAfter(TestEnvironment environment,
-			Object test) {
+	public void runWithoutBeforeAndAfter(RunNotifier notifier, Object test) {
 		// TODO: is this envious of environment?
 		try {
-			environment.getInterpreter().executeMethodBody(test, this);
+			getInterpreter().executeMethodBody(test, this);
 			if (expectsException())
-				addFailure(environment.getRunNotifier(), new AssertionError(
-						"Expected exception: " + expectedException().getName()));
+				addFailure(notifier, new AssertionError("Expected exception: "
+						+ expectedException().getName()));
 		} catch (InvocationTargetException e) {
 			Throwable actual= e.getTargetException();
 			if (!expectsException())
-				addFailure(environment.getRunNotifier(), actual);
+				addFailure(notifier, actual);
 			else if (isUnexpected(actual)) {
 				String message= "Unexpected exception, expected<"
 						+ expectedException().getName() + "> but was<"
 						+ actual.getClass().getName() + ">";
-				addFailure(environment.getRunNotifier(), new Exception(message,
-						actual));
+				addFailure(notifier, new Exception(message, actual));
 			}
 		} catch (Throwable e) {
 			// TODO: DUP on environment.getRunNotifier
-			addFailure(environment.getRunNotifier(), e);
+			addFailure(notifier, e);
 		}
 	}
 
-	void invokeTestMethod(TestEnvironment testEnvironment) {
+	void invokeTestMethod(RunNotifier notifier) {
 		Object test;
 		try {
 			test= getJavaClass().newInstance();
 		} catch (Exception e) {
-			testEnvironment.getRunNotifier().testAborted(description(), e);
+			notifier.testAborted(getDescription(), e);
 			return;
 		}
-		run(testEnvironment, test);
+		run(notifier, test);
 	}
 
-	void runWithoutTimeout(final Object test,
-			final TestEnvironment testEnvironment) {
+	void runWithoutTimeout(final Object test, final RunNotifier notifier) {
 		// TODO: is this envious now? Yes
 		runWithBeforeAndAfter(new Runnable() {
 			public void run() {
-				runWithoutBeforeAndAfter(testEnvironment, test);
+				runWithoutBeforeAndAfter(notifier, test);
 			}
-		}, test, testEnvironment.getRunNotifier());
+		}, test, notifier);
 		// TODO: ugly
 	}
 
 	void runWiteTimeout(long timeout, final Object test,
-			final TestEnvironment testEnvironment) {
+			final RunNotifier notifier) {
 		ExecutorService service= Executors.newSingleThreadExecutor();
 		Callable<Object> callable= new Callable<Object>() {
 			public Object call() throws Exception {
-				runWithoutTimeout(test, testEnvironment);
+				runWithoutTimeout(test, notifier);
 				return null;
 			}
 		};
@@ -167,28 +165,33 @@ public class JavaMethod extends WrappedJavaModelElement {
 			// if one occurred
 			// during the invocation
 		} catch (TimeoutException e) {
-			addFailure(testEnvironment.getRunNotifier(), new Exception(String
-					.format("test timed out after %d milliseconds", timeout)));
+			addFailure(notifier, new Exception(String.format(
+					"test timed out after %d milliseconds", timeout)));
 		} catch (Exception e) {
 			// TODO: DUP
-			addFailure(testEnvironment.getRunNotifier(), e);
+			addFailure(notifier, e);
 		}
 	}
 
-	void run(TestEnvironment environment, Object test) {
+	void run(RunNotifier notifier, Object test) {
 		if (isIgnored()) {
-			environment.getRunNotifier().fireTestIgnored(description());
+			notifier.fireTestIgnored(getDescription());
 			return;
 		}
-		environment.getRunNotifier().fireTestStarted(description());
+		notifier.fireTestStarted(getDescription());
 		try {
 			long timeout= getTimeout();
 			if (timeout > 0)
-				runWiteTimeout(timeout, test, environment);
+				runWiteTimeout(timeout, test, notifier);
 			else
-				runWithoutTimeout(test, environment);
+				runWithoutTimeout(test, notifier);
 		} finally {
-			environment.getRunNotifier().fireTestFinished(description());
+			notifier.fireTestFinished(getDescription());
 		}
+	}
+
+	@Override
+	public void run(RunNotifier notifier) {
+		invokeTestMethod(notifier);
 	}
 }

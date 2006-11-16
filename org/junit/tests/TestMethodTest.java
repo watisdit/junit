@@ -14,6 +14,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.internal.runners.InitializationError;
+import org.junit.internal.runners.JavaTestInterpreter;
 import org.junit.internal.runners.MethodValidator;
 import org.junit.internal.runners.TestClassRunner;
 import org.junit.runner.JUnitCore;
@@ -119,7 +120,8 @@ public class TestMethodTest {
 	}
 	
 	@Test public void overloaded() {
-		MethodValidator validator= new MethodValidator(Confused.class);
+		// TODO: DUP?
+		MethodValidator validator= new MethodValidator(new JavaTestInterpreter().buildClass(Confused.class));
 		List<Throwable> errors= validator.validateAllMethods();
 		assertEquals(1, errors.size());
 	}

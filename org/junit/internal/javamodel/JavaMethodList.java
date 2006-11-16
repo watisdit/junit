@@ -6,14 +6,16 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import org.junit.internal.runners.TestEnvironment;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
+import org.junit.runner.manipulation.Filterable;
 import org.junit.runner.manipulation.NoTestsRemainException;
+import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
+import org.junit.runner.notification.RunNotifier;
 
 public class JavaMethodList extends JavaModelElement implements
-		Iterable<JavaMethod> {
+		Iterable<JavaMethod>, Filterable, Sortable {
 	private static final long serialVersionUID= 1L;
 
 	private final JavaClass fJavaClass;
@@ -21,23 +23,24 @@ public class JavaMethodList extends JavaModelElement implements
 	private List<JavaMethod> fMethods= new ArrayList<JavaMethod>();
 
 	public JavaMethodList(JavaClass javaClass) {
+		super(javaClass.getInterpreter());
 		fJavaClass= javaClass;
 	}
 
 	public void filter(Filter filter) throws NoTestsRemainException {
 		for (Iterator<JavaMethod> iter= fMethods.iterator(); iter.hasNext();) {
 			JavaMethod method= iter.next();
-			if (!filter.shouldRun(method.description()))
+			if (!filter.shouldRun(method.getDescription()))
 				iter.remove();
 		}
 		if (fMethods.isEmpty())
 			throw new NoTestsRemainException();
 	}
 
-	public void filter(final Sorter sorter) {
+	public void sort(final Sorter sorter) {
 		Collections.sort(fMethods, new Comparator<JavaMethod>() {
 			public int compare(JavaMethod o1, JavaMethod o2) {
-				return sorter.compare(o1.description(), o2.description());
+				return sorter.compare(o1.getDescription(), o2.getDescription());
 			}
 		});
 	}
@@ -64,21 +67,22 @@ public class JavaMethodList extends JavaModelElement implements
 	}
 
 	@Override
-	public Description description() {
+	public Description getDescription() {
 		Description spec= Description.createSuiteDescription(fJavaClass
 				.getName());
 		for (JavaMethod method : this)
-			spec.addChild(method.description());
+			spec.addChild(method.getDescription());
 		return spec;
 	}
 
-	public void run(TestEnvironment environment) {
+	@Override
+	public void run(RunNotifier notifier) {
 		if (isEmpty())
 			// TODO: DUP
-			environment.getRunNotifier().testAborted(description(), new Exception(
+			notifier.testAborted(getDescription(), new Exception(
 					"No runnable methods"));
 		for (JavaMethod method : this) {
-			method.invokeTestMethod(environment);
+			method.invokeTestMethod(notifier);
 		}
 	}
 }

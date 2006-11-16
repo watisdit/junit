@@ -15,26 +15,23 @@ public class TestClassMethodsRunner extends Runner implements Filterable,
 		Sortable {
 	private final JavaMethodList fTestMethods;
 
-	private final JavaTestInterpreter fInterpreter;
-
 	// This assumes that some containing runner will perform validation of the
 	// test methods
 	public TestClassMethodsRunner(JavaClass klass,
 			JavaTestInterpreter javaTestInterpreter) {
 		fTestMethods= klass.getTestMethods(javaTestInterpreter);
-		fInterpreter= javaTestInterpreter;
 	}
 
 	// TODO: rename method to element?
 
 	@Override
 	public void run(RunNotifier notifier) {
-		fTestMethods.run(new TestEnvironment(fInterpreter, notifier));
+		fTestMethods.run(notifier);
 	}
 
 	@Override
 	public Description getDescription() {
-		return fTestMethods.description();
+		return fTestMethods.getDescription();
 	}
 
 	public void filter(Filter filter) throws NoTestsRemainException {
@@ -42,6 +39,6 @@ public class TestClassMethodsRunner extends Runner implements Filterable,
 	}
 
 	public void sort(final Sorter sorter) {
-		fTestMethods.filter(sorter);
+		fTestMethods.sort(sorter);
 	}
 }

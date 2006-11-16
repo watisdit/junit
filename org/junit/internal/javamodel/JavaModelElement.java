@@ -1,16 +1,27 @@
 package org.junit.internal.javamodel;
 
-import org.junit.runner.Description;
+import org.junit.internal.runners.JavaTestInterpreter;
+import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
-public abstract class JavaModelElement {
+public abstract class JavaModelElement extends Runner {
+	// TODO: only construct through interpreter
+	
+	private final JavaTestInterpreter fInterpreter;
+
+	public JavaModelElement(JavaTestInterpreter interpreter) {
+		fInterpreter = interpreter;
+	}
+	
 	public abstract String getName();
 
 	public void addFailure(RunNotifier runNotifier, Throwable targetException) {
 		runNotifier
-				.fireTestFailure(new Failure(description(), targetException));
+				.fireTestFailure(new Failure(getDescription(), targetException));
 	}
-
-	protected abstract Description description();
+	
+	protected JavaTestInterpreter getInterpreter() {
+		return fInterpreter;
+	}
 }

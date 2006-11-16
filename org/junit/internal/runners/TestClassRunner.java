@@ -1,6 +1,5 @@
 package org.junit.internal.runners;
 
-import org.junit.internal.javamodel.JavaClass;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -15,6 +14,8 @@ public class TestClassRunner extends Runner implements Filterable, Sortable {
 
 	private final Class<?> fTestClass;
 
+	private final JavaTestInterpreter fInterpreter;
+
 	public TestClassRunner(Class<?> klass) throws InitializationError {
 		this(klass, new JavaTestInterpreter());
 	}
@@ -22,6 +23,7 @@ public class TestClassRunner extends Runner implements Filterable, Sortable {
 	public TestClassRunner(Class<?> klass, JavaTestInterpreter interpreter)
 			throws InitializationError {
 		fTestClass= klass;
+		fInterpreter= interpreter;
 		fEnclosedRunner= interpreter.buildRunner(klass);
 	}
 
@@ -33,7 +35,7 @@ public class TestClassRunner extends Runner implements Filterable, Sortable {
 			}
 		};
 
-		new JavaClass(getTestClass()).runWithBeforeAndAfter(protectThis, null,
+		fInterpreter.buildClass(getTestClass()).runWithBeforeAndAfter(protectThis, null,
 				notifier);
 	}
 
